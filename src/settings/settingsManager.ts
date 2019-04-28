@@ -37,8 +37,9 @@ export class SettingsManager {
                         r: Math.random() * 2 + 0.05
                     })
                 }
-            } else if (diff < 0) {
-                for (let i = 0; i < diff; i++) {
+            }
+            else if (diff < 0) {
+                for (let i = 0; i < -diff; i++) {
                     starLayer.stars.splice(Math.floor(Math.random() * starLayer.stars.length), 1);
                 }
             }

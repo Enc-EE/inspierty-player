@@ -52,16 +52,15 @@ export class InspiertyPlayerView extends LayoutView {
     }
 
     public removeStarLayer = () => {
-        for (const starLayer of App.settings.starLayers) {
-            if (this.starLayers.firstOrDefault(x => x.starLayer == starLayer) == null) {
-                var layer = this.starLayers.first(x => x.starLayer == starLayer);
-                this.children.remove(x => x == layer);
-                this.starLayers.remove(x => x == layer);
-                this.triggerUpdateLayout();
-
-                var animator = this.starAnimators.first(x => x.starLayer == starLayer);
+        for (const starLayerDraws of this.starLayers) {
+            if (App.settings.starLayers.firstOrDefault(x => x == starLayerDraws.starLayer) == null) {
+                var animator = this.starAnimators.first(x => x.starLayer == starLayerDraws.starLayer);
                 this.anim.removeUpdateFunction(animator.update);
                 this.starAnimators.removeItem(animator);
+
+                this.children.remove(x => x == starLayerDraws);
+                this.starLayers.remove(x => x == starLayerDraws);
+                this.triggerUpdateLayout();
             }
         }
     }

@@ -22,13 +22,12 @@ export class StarLayerDrawer extends LayoutView {
     }
 
     private updateNumberOfStars = () => {
-        if (this.starLayer.stars.length != this.children.length) {
-            this.triggerUpdateLayout();
-        }
+        this.triggerUpdateLayout();
     }
 
     public updateLayout(ctx: CanvasRenderingContext2D, bounds: Rectangle): void {
         this.children = [];
+
         for (const star of this.starLayer.stars) {
             this.children.push(new StarRenderObject(star));
         }

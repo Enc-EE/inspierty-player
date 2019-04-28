@@ -11,6 +11,7 @@ import { App } from "../app";
 import { SettingOperation } from "../settings/settingOperation";
 import { VerticalAlignementOption } from "../../enc/src/ui/alignement/verticalAlignementOption";
 import { HorizontalAlignementOption } from "../../enc/src/ui/alignement/horizontalAlignementOption";
+import { StarLayerView } from "./starLayerView";
 
 export class SettingsOverlayView extends LayoutView {
     private viewModel: SettingsOverlayViewModel = new SettingsOverlayViewModel();
@@ -21,6 +22,7 @@ export class SettingsOverlayView extends LayoutView {
 
     private layerButtons: Button[] = [];
     private addLayerBtn: Button;
+    private detailedStarLayerView: StarLayerView;
 
     constructor() {
         super();
@@ -47,6 +49,8 @@ export class SettingsOverlayView extends LayoutView {
 
 
         App.settingManager.update.addEventListener(this.settingsUpdated);
+
+
     }
 
     private settingsUpdated = (operation: SettingOperation) => {
@@ -56,13 +60,13 @@ export class SettingsOverlayView extends LayoutView {
                     if (!this.layerButtons.map(x => x.tag).contains(starLayer)) {
                         this.settingsList.removeControl(this.addLayerBtn);
                         var btnForLayer = new Button();
-                        btnForLayer.text = "Remove Layer";
+                        btnForLayer.text = "Edit Layer";
                         btnForLayer.tag = starLayer;
                         btnForLayer.properties.fillStyle = "white";
                         this.settingsList.addControl(btnForLayer);
                         this.layerButtons.push(btnForLayer);
                         btnForLayer.clicked.addEventListener((sender: Control) => {
-                            App.settingManager.removeStarLayer(starLayer);
+                            this.toggleShowHideStarLayerView(starLayer);
                         });
                         this.settingsList.addControl(this.addLayerBtn);
                         break;
@@ -77,7 +81,29 @@ export class SettingsOverlayView extends LayoutView {
                         break;
                     }
                 }
+                this.children.removeItem(this.detailedStarLayerView);
+                this.detailedStarLayerView = undefined;
                 break;
+        }
+    }
+    private toggleShowHideStarLayerView = (starLayer: StarLayer) => {
+        if (!this.detailedStarLayerView) {
+            var view = new StarLayerView(starLayer);
+            this.detailedStarLayerView = view;
+            this.children.push(this.detailedStarLayerView);
+            this.triggerUpdateLayout();
+        }
+        else if (this.detailedStarLayerView.starLayer != starLayer) {
+            this.children.removeItem(this.detailedStarLayerView);
+            this.detailedStarLayerView = undefined;
+            var view = new StarLayerView(starLayer);
+            this.detailedStarLayerView = view;
+            this.children.push(this.detailedStarLayerView);
+            this.triggerUpdateLayout();
+        }
+        else {
+            this.children.removeItem(this.detailedStarLayerView);
+            this.detailedStarLayerView = undefined;
         }
     }
 
@@ -91,9 +117,10 @@ export class SettingsOverlayView extends LayoutView {
 
     public updateLayout(ctx: CanvasRenderingContext2D, bounds: Rectangle): void {
         this.showOverLayerButton.align(ctx, new Point(bounds.x, bounds.y));
-        console.log(this.showOverLayerButton.bounds.height);
-        
         this.settingsList.updateLayout(ctx, new Rectangle(0, this.showOverLayerButton.bounds.height * 2, 0, 0));
+        if (this.detailedStarLayerView) {
+            this.detailedStarLayerView.updateLayout(ctx, new Rectangle(this.settingsList.bounds.x + this.settingsList.bounds.width, this.showOverLayerButton.bounds.height * 2, 0, 0));
+        }
     }
 
     public mouseMove = (ev: MouseEvent) => {
@@ -128,6 +155,8 @@ export class SettingsOverlayView extends LayoutView {
                 if (this.viewModel.state == SettingsOverlayViewModelState.visible) {
                     setTimeout(this.mouseInactivityHandler, this.inactivityTimeout);
                     this.children.removeItemIfExists(this.settingsList);
+                    this.children.removeItemIfExists(this.detailedStarLayerView);
+                    this.detailedStarLayerView = undefined;
                 }
                 this.viewModel.state = SettingsOverlayViewModelState.beforeVisible;
                 break;

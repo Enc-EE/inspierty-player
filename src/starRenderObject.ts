@@ -2,6 +2,10 @@ import { RenderObject } from "../enc/src/ui/renderObject";
 import { Star } from "./models/star";
 
 export class StarRenderObject extends RenderObject {
+    mouseDown(ev: MouseEvent): void {
+    }
+    mouseUp(ev: MouseEvent): void {
+    }
 
     constructor(private star: Star) {
         super();
