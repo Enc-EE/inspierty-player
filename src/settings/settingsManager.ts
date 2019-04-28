@@ -25,4 +25,24 @@ export class SettingsManager {
         App.settings.starLayers.removeItem(starLayer);
         this.update.dispatchEvent(SettingOperation.RemoveStarLayer);
     }
+
+    public changeNumberOfStars = (starLayer: StarLayer, numberOfStars: number) => {
+        if (numberOfStars > 0) {
+            var diff = numberOfStars - starLayer.stars.length;
+            if (diff > 0) {
+                for (let i = 0; i < diff; i++) {
+                    starLayer.stars.push({
+                        x: Math.random() * App.settings.width,
+                        y: Math.random() * App.settings.height,
+                        r: Math.random() * 2 + 0.05
+                    })
+                }
+            } else if (diff < 0) {
+                for (let i = 0; i < diff; i++) {
+                    starLayer.stars.splice(Math.floor(Math.random() * starLayer.stars.length), 1);
+                }
+            }
+            this.update.dispatchEvent(SettingOperation.ChangeNumberOfStars);
+        }
+    }
 }

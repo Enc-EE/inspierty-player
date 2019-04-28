@@ -9,6 +9,8 @@ import { ListView } from "../../enc/src/ui/layoutControls/listView";
 import { StarLayer } from "../models/starLayer";
 import { App } from "../app";
 import { SettingOperation } from "../settings/settingOperation";
+import { VerticalAlignementOption } from "../../enc/src/ui/alignement/verticalAlignementOption";
+import { HorizontalAlignementOption } from "../../enc/src/ui/alignement/horizontalAlignementOption";
 
 export class SettingsOverlayView extends LayoutView {
     private viewModel: SettingsOverlayViewModel = new SettingsOverlayViewModel();
@@ -17,28 +19,64 @@ export class SettingsOverlayView extends LayoutView {
     private showOverLayerButton: Button;
     private settingsList: ListView;
 
+    private layerButtons: Button[] = [];
+    private addLayerBtn: Button;
+
     constructor() {
         super();
         this.showOverLayerButton = new Button();
         this.showOverLayerButton.text = "Show/Hide Settings";
         this.showOverLayerButton.properties.fillStyle = "green";
-        this.showOverLayerButton.verticalAlign = "top";
-        this.showOverLayerButton.horizontalAlign = "left";
+        this.showOverLayerButton.alignement.verticalAlign = VerticalAlignementOption.Top;
+        this.showOverLayerButton.alignement.horizontalAlign = HorizontalAlignementOption.Left;
         this.showOverLayerButton.clicked.addEventListener(this.showHideOverlayClicked);
         this.showOverLayerButton.properties.backgroundFillStyle = "rgba(0, 0, 0, 0.5)";
         this.children.push(this.showOverLayerButton);
         this.settingsList = new ListView();
-        var btn1 = new Button();
-        btn1.properties.fillStyle = "white";
-        this.settingsList.items.push(btn1);
+        this.settingsList.alignement.horizontalAlign = HorizontalAlignementOption.Left;
+        this.settingsList.alignement.verticalAlign = VerticalAlignementOption.Top;
+
+        var btnForNewLayer = new Button();
+        btnForNewLayer.text = "Add Layer";
+        btnForNewLayer.properties.fillStyle = "white";
+        this.settingsList.addControl(btnForNewLayer);
+        btnForNewLayer.clicked.addEventListener((sender: Control) => {
+            App.settingManager.addStarLayer();
+        });
+        this.addLayerBtn = btnForNewLayer;
+
+
         App.settingManager.update.addEventListener(this.settingsUpdated);
     }
 
     private settingsUpdated = (operation: SettingOperation) => {
         switch (operation) {
             case SettingOperation.AddStarLayer:
+                for (const starLayer of App.settings.starLayers) {
+                    if (!this.layerButtons.map(x => x.tag).contains(starLayer)) {
+                        this.settingsList.removeControl(this.addLayerBtn);
+                        var btnForLayer = new Button();
+                        btnForLayer.text = "Remove Layer";
+                        btnForLayer.tag = starLayer;
+                        btnForLayer.properties.fillStyle = "white";
+                        this.settingsList.addControl(btnForLayer);
+                        this.layerButtons.push(btnForLayer);
+                        btnForLayer.clicked.addEventListener((sender: Control) => {
+                            App.settingManager.removeStarLayer(starLayer);
+                        });
+                        this.settingsList.addControl(this.addLayerBtn);
+                        break;
+                    }
+                }
+                break;
             case SettingOperation.RemoveStarLayer:
-                this.updateSettings();
+                for (const settingsLayer of this.layerButtons) {
+                    if (!App.settings.starLayers.contains(settingsLayer.tag)) {
+                        this.settingsList.removeControl(settingsLayer);
+                        this.layerButtons.removeItem(settingsLayer);
+                        break;
+                    }
+                }
                 break;
         }
     }
@@ -53,8 +91,9 @@ export class SettingsOverlayView extends LayoutView {
 
     public updateLayout(ctx: CanvasRenderingContext2D, bounds: Rectangle): void {
         this.showOverLayerButton.align(ctx, new Point(bounds.x, bounds.y));
-        this.settingsList.updateLayout(ctx, new Rectangle(100, 100, 400, 400));
-
+        console.log(this.showOverLayerButton.bounds.height);
+        
+        this.settingsList.updateLayout(ctx, new Rectangle(0, this.showOverLayerButton.bounds.height * 2, 0, 0));
     }
 
     public mouseMove = (ev: MouseEvent) => {
@@ -95,32 +134,9 @@ export class SettingsOverlayView extends LayoutView {
             case SettingsOverlayViewModelState.visible:
                 if (this.viewModel.state == SettingsOverlayViewModelState.beforeVisible) {
                     this.children.push(this.settingsList);
-                    this.updateSettings();
                 }
                 this.viewModel.state = SettingsOverlayViewModelState.visible;
                 break;
         }
-    }
-
-    private updateSettings() {
-        this.settingsList.items = [];
-        for (const layer of App.settings.starLayers) {
-            var btnForLayer = new Button();
-            btnForLayer.text = "Remove Layer";
-            btnForLayer.tag = layer;
-            btnForLayer.properties.fillStyle = "white";
-            this.settingsList.items.push(btnForLayer);
-            btnForLayer.clicked.addEventListener((sender: Control) => {
-                App.settingManager.removeStarLayer(layer);
-            });
-        }
-        var btnForNewLayer = new Button();
-        btnForNewLayer.text = "Add Layer";
-        btnForNewLayer.properties.fillStyle = "white";
-        this.settingsList.items.push(btnForNewLayer);
-        btnForNewLayer.clicked.addEventListener((sender: Control) => {
-            App.settingManager.addStarLayer();
-        });
-        this.triggerUpdateLayout();
     }
 }
