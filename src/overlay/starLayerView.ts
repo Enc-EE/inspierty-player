@@ -33,10 +33,22 @@ export class StarLayerView extends LayoutView {
         this.children.push(slider);
         this.settingsList.addControl(slider);
         slider.valueChanged.addEventListener(this.numberOfStarsChanged);
+
+        var sliderSpeed = new Slider();
+        sliderSpeed.minValue = 0;
+        sliderSpeed.maxValue = 30;
+        sliderSpeed.currentValue = starLayer.speed;
+        this.children.push(sliderSpeed);
+        this.settingsList.addControl(sliderSpeed);
+        sliderSpeed.valueChanged.addEventListener(this.speedChanged);
     }
 
     public numberOfStarsChanged = (numberOfStars: number) => {
         App.settingManager.changeNumberOfStars(this.starLayer, Math.round(numberOfStars));
+    }
+
+    public speedChanged = (speed: number) => {
+        App.settingManager.changeSpeed(this.starLayer, speed);
     }
 
     public updateLayout(ctx: CanvasRenderingContext2D, bounds: Rectangle): void {

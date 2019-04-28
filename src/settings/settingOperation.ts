@@ -1,5 +1,6 @@
 export enum SettingOperation {
     AddStarLayer,
     RemoveStarLayer,
-    ChangeNumberOfStars
+    ChangeNumberOfStars,
+    ChangeSpeed
 }

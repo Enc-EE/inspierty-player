@@ -46,4 +46,9 @@ export class SettingsManager {
             this.update.dispatchEvent(SettingOperation.ChangeNumberOfStars);
         }
     }
+
+    public changeSpeed = (starLayer: StarLayer, speed: number) => {
+        starLayer.speed = speed;
+        this.update.dispatchEvent(SettingOperation.ChangeSpeed);
+    }
 }
