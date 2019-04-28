@@ -7,6 +7,7 @@ import { StarLayer } from "./models/starLayer";
 import { App } from "./app";
 import { StarLayerAnimator } from "./starLayerAnimator";
 import { EAnimation } from "../enc/src/eAnimation";
+import { SettingOperation } from "./settings/settingOperation";
 
 export class InspiertyPlayerView extends LayoutView {
     private starLayers: StarLayerDrawer[] = [];
@@ -20,31 +21,49 @@ export class InspiertyPlayerView extends LayoutView {
         this.settingsOverlay = new SettingsOverlayView();
         this.children.push(this.settingsOverlay);
         this.anim = new EAnimation();
-        App.settings.onAddStarLayer.addEventListener(this.addStarLayer);
-        App.settings.onRemoveStarLayer.addEventListener(this.removeStarLayer);
+        App.settingManager.update.addEventListener(this.appSettingsUpdated);
     }
 
-    public addStarLayer = (starLayer: StarLayer) => {
-        var layer = new StarLayerDrawer(starLayer);
-        this.starLayers.push(layer);
-        this.children.splice(0, 0, layer);
-        this.triggerUpdateLayout();
-
-        var animator = new StarLayerAnimator(starLayer);
-        this.anim.addUpdateFunction(animator.update);
-        this.starAnimators.push(animator);
+    private appSettingsUpdated = (operation: SettingOperation) => {
+        switch (operation) {
+            case SettingOperation.AddStarLayer:
+                this.addStarLayer();
+                break;
+            case SettingOperation.RemoveStarLayer:
+                this.removeStarLayer();
+                break;
+        }
     }
 
-    public removeStarLayer = (starLayer: StarLayer) => {
-        var layer = this.starLayers.first(x => x.starLayer == starLayer);
-        this.children.remove(x => x == layer);
-        this.starLayers.remove(x => x == layer);
+    public addStarLayer = () => {
+        for (const starLayer of App.settings.starLayers) {
+            if (this.starLayers.firstOrDefault(x => x.starLayer == starLayer) == null) {
+                var layer = new StarLayerDrawer(starLayer);
+                this.starLayers.push(layer);
+                this.children.splice(0, 0, layer);
+                this.triggerUpdateLayout();
 
-        var animator = this.starAnimators.first(x => x.starLayer == starLayer);
-        this.anim.removeUpdateFunction(animator.update);
-        this.starAnimators.removeItem(animator);
+                var animator = new StarLayerAnimator(starLayer);
+                this.anim.addUpdateFunction(animator.update);
+                this.starAnimators.push(animator);
+                break;
+            }
+        }
+    }
 
-        this.triggerUpdateLayout();
+    public removeStarLayer = () => {
+        for (const starLayer of App.settings.starLayers) {
+            if (this.starLayers.firstOrDefault(x => x.starLayer == starLayer) == null) {
+                var layer = this.starLayers.first(x => x.starLayer == starLayer);
+                this.children.remove(x => x == layer);
+                this.starLayers.remove(x => x == layer);
+                this.triggerUpdateLayout();
+
+                var animator = this.starAnimators.first(x => x.starLayer == starLayer);
+                this.anim.removeUpdateFunction(animator.update);
+                this.starAnimators.removeItem(animator);
+            }
+        }
     }
 
     public updateLayout(ctx: CanvasRenderingContext2D, bounds: Rectangle): void {

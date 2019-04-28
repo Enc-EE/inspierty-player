@@ -8,6 +8,7 @@ import { Control } from "../../enc/src/ui/controls/control";
 import { ListView } from "../../enc/src/ui/layoutControls/listView";
 import { StarLayer } from "../models/starLayer";
 import { App } from "../app";
+import { SettingOperation } from "../settings/settingOperation";
 
 export class SettingsOverlayView extends LayoutView {
     private viewModel: SettingsOverlayViewModel = new SettingsOverlayViewModel();
@@ -30,16 +31,16 @@ export class SettingsOverlayView extends LayoutView {
         var btn1 = new Button();
         btn1.properties.fillStyle = "white";
         this.settingsList.items.push(btn1);
-        App.settings.onAddStarLayer.addEventListener(this.addStarLayer);
-        App.settings.onRemoveStarLayer.addEventListener(this.removeStarLayer);
+        App.settingManager.update.addEventListener(this.settingsUpdated);
     }
 
-    public addStarLayer = (starLayer: StarLayer) => {
-        this.updateSettings();
-    }
-
-    public removeStarLayer = (starLayer: StarLayer) => {
-        this.updateSettings();
+    private settingsUpdated = (operation: SettingOperation) => {
+        switch (operation) {
+            case SettingOperation.AddStarLayer:
+            case SettingOperation.RemoveStarLayer:
+                this.updateSettings();
+                break;
+        }
     }
 
     private showHideOverlayClicked = (sender: Control) => {
@@ -110,7 +111,7 @@ export class SettingsOverlayView extends LayoutView {
             btnForLayer.properties.fillStyle = "white";
             this.settingsList.items.push(btnForLayer);
             btnForLayer.clicked.addEventListener((sender: Control) => {
-                App.settings.removeStarLayer(layer);
+                App.settingManager.removeStarLayer(layer);
             });
         }
         var btnForNewLayer = new Button();
@@ -118,7 +119,7 @@ export class SettingsOverlayView extends LayoutView {
         btnForNewLayer.properties.fillStyle = "white";
         this.settingsList.items.push(btnForNewLayer);
         btnForNewLayer.clicked.addEventListener((sender: Control) => {
-            App.settings.addStarLayer();
+            App.settingManager.addStarLayer();
         });
         this.triggerUpdateLayout();
     }
