@@ -8,19 +8,22 @@ import { App } from "./app";
 import { StarLayerAnimator } from "./starLayerAnimator";
 import { EAnimation } from "../enc/src/eAnimation";
 import { SettingOperation } from "./settings/settingOperation";
+import { Dinject } from "../enc/src/dinject";
 
 export class InspiertyPlayerView extends LayoutView {
     private starLayers: StarLayerDrawer[] = [];
     private starAnimators: StarLayerAnimator[] = [];
     private settingsOverlay: SettingsOverlayView;
-    anim: EAnimation;
+
+    private animation: EAnimation;
 
     constructor() {
         super();
 
+        this.animation = Dinject.getInstance("animation");
+
         this.settingsOverlay = new SettingsOverlayView();
         this.children.push(this.settingsOverlay);
-        this.anim = new EAnimation();
         App.settingManager.update.addEventListener(this.appSettingsUpdated);
     }
 
@@ -44,7 +47,7 @@ export class InspiertyPlayerView extends LayoutView {
                 this.triggerUpdateLayout();
 
                 var animator = new StarLayerAnimator(starLayer);
-                this.anim.addUpdateFunction(animator.update);
+                this.animation.addUpdateFunction(animator.update);
                 this.starAnimators.push(animator);
                 break;
             }
@@ -55,7 +58,7 @@ export class InspiertyPlayerView extends LayoutView {
         for (const starLayerDraws of this.starLayers) {
             if (App.settings.starLayers.firstOrDefault(x => x == starLayerDraws.starLayer) == null) {
                 var animator = this.starAnimators.first(x => x.starLayer == starLayerDraws.starLayer);
-                this.anim.removeUpdateFunction(animator.update);
+                this.animation.removeUpdateFunction(animator.update);
                 this.starAnimators.removeItem(animator);
 
                 this.children.remove(x => x == starLayerDraws);

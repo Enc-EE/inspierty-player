@@ -3,7 +3,6 @@ import { Rectangle } from "../../enc/src/geometry/rectangle";
 import { SettingsOverlayViewModel } from "./settingsOverlayViewModel";
 import { SettingsOverlayViewModelState } from "./settingsOverlayViewModelState";
 import { Button } from "../../enc/src/ui/controls/button";
-import { Point } from "../../enc/src/geometry/point";
 import { Control } from "../../enc/src/ui/controls/control";
 import { ListView } from "../../enc/src/ui/layoutControls/listView";
 import { StarLayer } from "../models/starLayer";
@@ -41,7 +40,7 @@ export class SettingsOverlayView extends LayoutView {
         var btnForNewLayer = new Button();
         btnForNewLayer.text = "Add Layer";
         btnForNewLayer.properties.fillStyle = "white";
-        this.settingsList.addControl(btnForNewLayer);
+        this.settingsList.addItem(btnForNewLayer);
         btnForNewLayer.clicked.addEventListener((sender: Control) => {
             App.settingManager.addStarLayer();
         });
@@ -58,17 +57,17 @@ export class SettingsOverlayView extends LayoutView {
             case SettingOperation.AddStarLayer:
                 for (const starLayer of App.settings.starLayers) {
                     if (!this.layerButtons.map(x => x.tag).contains(starLayer)) {
-                        this.settingsList.removeControl(this.addLayerBtn);
+                        this.settingsList.removeItem(this.addLayerBtn);
                         var btnForLayer = new Button();
                         btnForLayer.text = "Edit Layer";
                         btnForLayer.tag = starLayer;
                         btnForLayer.properties.fillStyle = "white";
-                        this.settingsList.addControl(btnForLayer);
+                        this.settingsList.addItem(btnForLayer);
                         this.layerButtons.push(btnForLayer);
                         btnForLayer.clicked.addEventListener((sender: Control) => {
                             this.toggleShowHideStarLayerView(starLayer);
                         });
-                        this.settingsList.addControl(this.addLayerBtn);
+                        this.settingsList.addItem(this.addLayerBtn);
                         break;
                     }
                 }
@@ -76,7 +75,7 @@ export class SettingsOverlayView extends LayoutView {
             case SettingOperation.RemoveStarLayer:
                 for (const settingsLayer of this.layerButtons) {
                     if (!App.settings.starLayers.contains(settingsLayer.tag)) {
-                        this.settingsList.removeControl(settingsLayer);
+                        this.settingsList.removeItem(settingsLayer);
                         this.layerButtons.removeItem(settingsLayer);
                         break;
                     }
@@ -116,10 +115,14 @@ export class SettingsOverlayView extends LayoutView {
     }
 
     public updateLayout(ctx: CanvasRenderingContext2D, bounds: Rectangle): void {
-        this.showOverLayerButton.align(ctx, new Point(bounds.x, bounds.y));
-        this.settingsList.updateLayout(ctx, new Rectangle(0, this.showOverLayerButton.bounds.height * 2, 0, 0));
+        super.updateLayout(ctx, bounds);
+        this.showOverLayerButton.updateLayout(ctx, bounds);
+        var space = this.showOverLayerButton.dimensions.height * 2;
+        this.settingsList.updateLayout(ctx, new Rectangle(bounds.x, bounds.y + space, bounds.width, bounds.height - space));
         if (this.detailedStarLayerView) {
-            this.detailedStarLayerView.updateLayout(ctx, new Rectangle(this.settingsList.bounds.x + this.settingsList.bounds.width, this.showOverLayerButton.bounds.height * 2, 0, 0));
+            console.log(this.settingsList.dimensions.width);
+            
+            this.detailedStarLayerView.updateLayout(ctx, new Rectangle(bounds.x + this.settingsList.dimensions.width, bounds.y + space, bounds.width, bounds.height - space));
         }
     }
 
@@ -143,14 +146,14 @@ export class SettingsOverlayView extends LayoutView {
     private setState = (state: SettingsOverlayViewModelState) => {
         switch (state) {
             case SettingsOverlayViewModelState.hidden:
-                this.showOverLayerButton.isVisible = false;
+                this.children.removeItem(this.showOverLayerButton);
                 this.viewModel.state = SettingsOverlayViewModelState.hidden;
                 break;
             case SettingsOverlayViewModelState.beforeVisible:
                 this.lastMoved = Date.now();
                 if (this.viewModel.state == SettingsOverlayViewModelState.hidden) {
                     setTimeout(this.mouseInactivityHandler, this.inactivityTimeout);
-                    this.showOverLayerButton.isVisible = true;
+                    this.children.addItemIfNotExists(this.showOverLayerButton);
                 }
                 if (this.viewModel.state == SettingsOverlayViewModelState.visible) {
                     setTimeout(this.mouseInactivityHandler, this.inactivityTimeout);

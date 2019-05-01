@@ -20,7 +20,7 @@ export class StarLayerView extends LayoutView {
         var btnForLayer = new Button();
         btnForLayer.text = "Remove Layer";
         btnForLayer.properties.fillStyle = "white";
-        this.settingsList.addControl(btnForLayer);
+        this.settingsList.addItem(btnForLayer);
         this.children.push(btnForLayer);
         btnForLayer.clicked.addEventListener((sender: Control) => {
             App.settingManager.removeStarLayer(this.starLayer);
@@ -31,7 +31,7 @@ export class StarLayerView extends LayoutView {
         slider.maxValue = 1000;
         slider.currentValue = starLayer.stars.length;
         this.children.push(slider);
-        this.settingsList.addControl(slider);
+        this.settingsList.addItem(slider);
         slider.valueChanged.addEventListener(this.numberOfStarsChanged);
 
         var sliderSpeed = new Slider();
@@ -39,7 +39,7 @@ export class StarLayerView extends LayoutView {
         sliderSpeed.maxValue = 30;
         sliderSpeed.currentValue = starLayer.speed;
         this.children.push(sliderSpeed);
-        this.settingsList.addControl(sliderSpeed);
+        this.settingsList.addItem(sliderSpeed);
         sliderSpeed.valueChanged.addEventListener(this.speedChanged);
     }
 
