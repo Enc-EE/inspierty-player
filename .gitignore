@@ -61,3 +61,6 @@ typings/
 .next
 
 enc/
+
+mp3-prod/
+mp3-demo/

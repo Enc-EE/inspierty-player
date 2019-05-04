@@ -5,28 +5,41 @@ import { SettingsManager } from "./settings/settingsManager";
 import { Dinject } from "../enc/src/dinject";
 import { EAnimation } from "../enc/src/eAnimation";
 import { ECanvas } from "../enc/src/ui/eCanvas";
+import { CanvasHelper } from "../enc/src/ui/canvasHelper";
+import { AudioManager } from "./audioManager";
 
 export class App {
     public static settings = new Settings(window.innerWidth, window.innerHeight);
     public static settingManager = new SettingsManager();
 
     public run = () => {
-        console.log("hi");
-
         document.body.style.backgroundColor = "black";
 
-        console.log("injection ready");
+        var audioManager = new AudioManager();
 
-        var canvas = ECanvas.createFullScreen();
-        var stage = new Stage(canvas);
-        var animation = new EAnimation();
-        animation.addUpdateFunction(canvas.draw);
+        console.log("loading app");
 
-        Dinject.addInstance("canvas", canvas);
-        Dinject.addInstance("stage", stage);
-        Dinject.addInstance("animation", animation);
+        Promise.all([
+            new CanvasHelper().loadFontawesomeFree(),
+            audioManager.reload()
+        ]).then(() => {
+            console.log("loaded app");
 
-        var view = new InspiertyPlayerView();
-        stage.setView(view);
+            var canvas = ECanvas.createFullScreen();
+            var stage = new Stage(canvas);
+            var animation = new EAnimation();
+            animation.addUpdateFunction(canvas.draw);
+
+            Dinject.addInstance("audio", audioManager);
+            Dinject.addInstance("canvas", canvas);
+            Dinject.addInstance("stage", stage);
+            Dinject.addInstance("animation", animation);
+
+            var view = new InspiertyPlayerView();
+            stage.setView(view);
+
+            App.settingManager.addStarLayer();
+            App.settingManager.addStarLayer();
+        });
     }
 }

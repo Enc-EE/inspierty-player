@@ -1,14 +1,13 @@
 import { LayoutView } from "../enc/src/ui/layoutControls/layoutView";
 import { Rectangle } from "../enc/src/geometry/rectangle";
-import { QuickDrawView } from "../enc/src/ui/quickDrawView";
 import { StarLayerDrawer } from "./starLayerDrawer";
 import { SettingsOverlayView } from "./overlay/settingsOverlayView";
-import { StarLayer } from "./models/starLayer";
 import { App } from "./app";
 import { StarLayerAnimator } from "./starLayerAnimator";
 import { EAnimation } from "../enc/src/eAnimation";
 import { SettingOperation } from "./settings/settingOperation";
 import { Dinject } from "../enc/src/dinject";
+import { PlayerView } from "./player/playerView";
 
 export class InspiertyPlayerView extends LayoutView {
     private starLayers: StarLayerDrawer[] = [];
@@ -16,6 +15,7 @@ export class InspiertyPlayerView extends LayoutView {
     private settingsOverlay: SettingsOverlayView;
 
     private animation: EAnimation;
+    playerView: PlayerView;
 
     constructor() {
         super();
@@ -23,6 +23,8 @@ export class InspiertyPlayerView extends LayoutView {
         this.animation = Dinject.getInstance("animation");
 
         this.settingsOverlay = new SettingsOverlayView();
+        this.playerView = new PlayerView();
+        this.children.push(this.playerView);
         this.children.push(this.settingsOverlay);
         App.settingManager.update.addEventListener(this.appSettingsUpdated);
     }
@@ -69,9 +71,11 @@ export class InspiertyPlayerView extends LayoutView {
     }
 
     public updateLayout(ctx: CanvasRenderingContext2D, bounds: Rectangle): void {
+        this.bounds = bounds;
         for (const layer of this.starLayers) {
             layer.updateLayout(ctx, bounds);
         }
         this.settingsOverlay.updateLayout(ctx, bounds);
+        this.playerView.updateLayout(ctx, bounds);
     }
 }

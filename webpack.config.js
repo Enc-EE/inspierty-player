@@ -25,7 +25,7 @@ module.exports = {
             },
             {
                 // asset file extensions
-                test: /\.(png|jpg|ogg)$/,
+                test: /\.(png|jpg|ogg|mp3)$/,
                 use: [
                     'file-loader'
                 ]

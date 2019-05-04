@@ -120,8 +120,6 @@ export class SettingsOverlayView extends LayoutView {
         var space = this.showOverLayerButton.dimensions.height * 2;
         this.settingsList.updateLayout(ctx, new Rectangle(bounds.x, bounds.y + space, bounds.width, bounds.height - space));
         if (this.detailedStarLayerView) {
-            console.log(this.settingsList.dimensions.width);
-            
             this.detailedStarLayerView.updateLayout(ctx, new Rectangle(bounds.x + this.settingsList.dimensions.width, bounds.y + space, bounds.width, bounds.height - space));
         }
     }
