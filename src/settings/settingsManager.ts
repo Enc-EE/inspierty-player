@@ -63,9 +63,7 @@ export class SettingsManager {
         }
         for (const star of starLayer.stars) {
             star.r = ((star.r - currentValueLow) / minFix * (highBorder - lowBorder)) + lowBorder;
-            
         }
-        console.log(starLayer.stars[0].r);
         this.update.dispatchEvent(SettingOperation.ChangeSpeed);
     }
 }

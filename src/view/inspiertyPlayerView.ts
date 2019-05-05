@@ -74,14 +74,11 @@ export class InspiertyPlayerView extends LayoutView {
 
     public updateLayout(ctx: CanvasRenderingContext2D, bounds: Rectangle): void {
         super.updateLayout(ctx, bounds);
+        console.log(bounds);
+        
 
         for (const child of this.children) {
             child.updateLayout(ctx, bounds);
         }
-        // for (const layer of this.starLayers) {
-        //     layer.updateLayout(ctx, bounds);
-        // }
-        // this.settingsOverlay.updateLayout(ctx, bounds);
-        // this.playerView.updateLayout(ctx, bounds);
     }
 }
