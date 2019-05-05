@@ -37,7 +37,7 @@ export class StarLayerView extends LayoutView {
 
         var sliderSpeed = new Slider();
         sliderSpeed.minValue = 0;
-        sliderSpeed.maxValue = 30;
+        sliderSpeed.maxValue = 20;
         sliderSpeed.currentValue = starLayer.speed;
         this.children.push(sliderSpeed);
         this.settingsList.addItem(sliderSpeed);
@@ -45,8 +45,8 @@ export class StarLayerView extends LayoutView {
 
         var sliderSize = new RangeSlider();
         var sizes = this.starLayer.stars.map(x => x.r);
-        sliderSize.minValue = 0.01;
-        sliderSize.maxValue = 5;
+        sliderSize.minValue = 0.001;
+        sliderSize.maxValue = 2;
         sliderSize.currentValueLow = Math.min(...sizes);
         sliderSize.currentValueHigh = Math.max(...sizes);
         this.children.push(sliderSize);

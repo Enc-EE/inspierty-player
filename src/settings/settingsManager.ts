@@ -31,10 +31,14 @@ export class SettingsManager {
             var diff = numberOfStars - starLayer.stars.length;
             if (diff > 0) {
                 for (let i = 0; i < diff; i++) {
+                    var sizes = starLayer.stars.map(x => x.r);
+                    var currentValueLow = Math.min(...sizes);
+                    var currentValueHigh = Math.max(...sizes);
+
                     starLayer.stars.push({
                         x: Math.random() * App.settings.width,
                         y: Math.random() * App.settings.height,
-                        r: Math.random() * 2 + 0.05
+                        r: Math.random() * (currentValueHigh - currentValueLow) + currentValueLow
                     })
                 }
             }
