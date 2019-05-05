@@ -10,13 +10,9 @@ import { AudioGraphNodeAnalyser } from "../enc/src/audio/audioGraphNodeAnalyser"
 // import JourneyAssetMP3 from "./assets/mp3-demo/demo_6_journey_to_the_planets.mp3"
 // import DriftingAssetMP3 from "./assets/mp3-demo/demo_7_drifting_into_the_atmosphere.mp3"
 
-import FaintAssetMP3 from "./assets/Trailer_Constellation.ogg"
-import PrismAssetMP3 from "./assets/Trailer_Constellation.ogg"
-import HopefulAssetMP3 from "./assets/Trailer_Constellation.ogg"
-import DeepAssetMP3 from "./assets/Trailer_Constellation.ogg"
-import GravityAssetMP3 from "./assets/Trailer_Constellation.ogg"
-import JourneyAssetMP3 from "./assets/Trailer_Constellation.ogg"
-import DriftingAssetMP3 from "./assets/Trailer_Constellation.ogg"
+import FaintAssetMP3 from "./assets/demo/Trailer_faintColor.mp3"
+import DeepAssetMP3 from "./assets/demo/Trailer_DeepField.mp3"
+import DriftingAssetMP3 from "./assets/demo/Trailer_DriftingIntoTheAtmosphere.mp3"
 
 export class AudioManager {
     private audioGraph: AudioGraph;
@@ -25,11 +21,11 @@ export class AudioManager {
 
     private songs = [
         FaintAssetMP3,
-        PrismAssetMP3,
-        HopefulAssetMP3,
+        // PrismAssetMP3,
+        // HopefulAssetMP3,
         DeepAssetMP3,
-        GravityAssetMP3,
-        JourneyAssetMP3,
+        // GravityAssetMP3,
+        // JourneyAssetMP3,
         DriftingAssetMP3
     ]
 
@@ -67,8 +63,12 @@ export class AudioManager {
         if (previousSongIndex == -1) {
             previousSongIndex = this.songs.length - 1;
         }
-        
+
         this.source.setUrl(this.songs[previousSongIndex]);
+    }
+
+    public getAnalyser = () => {
+        return this.analyser;
     }
 
     public stop = () => {

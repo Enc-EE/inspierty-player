@@ -9,6 +9,7 @@ import { SettingOperation } from "../settings/settingOperation";
 import { Dinject } from "../../enc/src/dinject";
 import { PlayerView } from "./playerView";
 import { BackgroundImageView } from "./backgroundImageView";
+import { FrontView } from "./frontView";
 
 export class InspiertyPlayerView extends LayoutView {
     private starLayers: StarLayerDrawer[] = [];
@@ -28,6 +29,7 @@ export class InspiertyPlayerView extends LayoutView {
         this.children.push(new BackgroundImageView());
         this.children.push(this.playerView);
         this.children.push(this.settingsOverlay);
+        this.children.push(new FrontView());
         App.settingManager.update.addEventListener(this.appSettingsUpdated);
     }
 
@@ -74,9 +76,6 @@ export class InspiertyPlayerView extends LayoutView {
 
     public updateLayout(ctx: CanvasRenderingContext2D, bounds: Rectangle): void {
         super.updateLayout(ctx, bounds);
-        console.log(bounds);
-        
-
         for (const child of this.children) {
             child.updateLayout(ctx, bounds);
         }

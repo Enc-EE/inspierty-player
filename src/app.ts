@@ -10,6 +10,8 @@ import { AudioManager } from "./audioManager";
 import { AssetManager } from "../enc/src/assetManager";
 
 import backgroundPng from "./assets/background.png"
+import logoFrontPng from "./assets/logo-front.png"
+import logoNovaPng from "./assets/logo-nova.png"
 
 export class App {
     public static settings = new Settings(window.innerWidth, window.innerHeight);
@@ -42,6 +44,8 @@ export class App {
                 var assetManager = new AssetManager();
                 Dinject.addInstance("assets", assetManager);
                 assetManager.addImage("background", backgroundPng);
+                assetManager.addImage("logo", logoFrontPng);
+                assetManager.addImage("logo-nova", logoNovaPng);
                 assetManager.load()
                     .then(() => {
                         resolve();
@@ -54,6 +58,8 @@ export class App {
             var view = new InspiertyPlayerView();
             stage.setView(view);
 
+            App.settingManager.addStarLayer();
+            App.settingManager.addStarLayer();
             App.settingManager.addStarLayer();
             App.settingManager.addStarLayer();
         });

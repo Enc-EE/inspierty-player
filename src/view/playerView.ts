@@ -16,6 +16,12 @@ export class PlayerView extends LayoutView {
     private nextIconText = "\uf051"
     private previousIconText = "\uf048"
 
+    // private playIconText = "play"
+    // private pauseIconText = "pause"
+    // private stopIconText = "stop"
+    // private nextIconText = "next"
+    // private previousIconText = "previous"
+
     constructor() {
         super();
 
@@ -39,6 +45,7 @@ export class PlayerView extends LayoutView {
                 audioManager.pause();
                 playPauseBtn.text = this.playIconText;
             }
+            this.triggerUpdateLayout();
         });
         listView.addItem(playPauseBtn);
 
@@ -51,6 +58,7 @@ export class PlayerView extends LayoutView {
             if (playPauseBtn.text == this.pauseIconText) {
                 playPauseBtn.text = this.playIconText;
             }
+            this.triggerUpdateLayout();
         });
         listView.addItem(stopBtn);
 

@@ -8,8 +8,12 @@ export class StarLayerAnimator {
     public update = (timeDiff: number) => {
         for (const star of this.starLayer.stars) {
             star.x += this.starLayer.speed * timeDiff;
+            star.y += this.starLayer.speed * timeDiff;
             if (star.x > App.settings.width) {
                 star.x -= App.settings.width;
+            }
+            if (star.y > App.settings.height) {
+                star.y -= App.settings.height;
             }
         }
     }

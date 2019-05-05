@@ -9,11 +9,11 @@ export class SettingsManager {
     public addStarLayer = () => {
         var layer = new StarLayer();
 
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < 300; i++) {
             layer.stars.push({
                 x: Math.random() * App.settings.width,
                 y: Math.random() * App.settings.height,
-                r: Math.random() * 2 + 0.05
+                r: Math.random() * 0.5 + 0.05
             })
         }
 
