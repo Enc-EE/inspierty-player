@@ -9,6 +9,7 @@ export class StarLayerDrawer extends LayoutView {
     constructor(public starLayer: StarLayer) {
         super();
         App.settingManager.update.addEventListener(this.settingsUpdated)
+        this.disableMouseEvents();
         this.triggerUpdateLayout();
     }
 

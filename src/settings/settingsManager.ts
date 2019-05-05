@@ -51,4 +51,21 @@ export class SettingsManager {
         starLayer.speed = speed;
         this.update.dispatchEvent(SettingOperation.ChangeSpeed);
     }
+
+    public changeSizes = (starLayer: StarLayer, lowBorder: number, highBorder: number) => {
+        var sizes = starLayer.stars.map(x => x.r);
+        var currentValueLow = Math.min(...sizes);
+        var currentValueHigh = Math.max(...sizes);
+
+        var minFix = (currentValueHigh - currentValueLow);
+        if (minFix <= 0) {
+            minFix = 0.0001
+        }
+        for (const star of starLayer.stars) {
+            star.r = ((star.r - currentValueLow) / minFix * (highBorder - lowBorder)) + lowBorder;
+            
+        }
+        console.log(starLayer.stars[0].r);
+        this.update.dispatchEvent(SettingOperation.ChangeSpeed);
+    }
 }

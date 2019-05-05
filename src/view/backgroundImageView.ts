@@ -12,7 +12,7 @@ export class BackgroundImageView extends LayoutView {
         var background = assetManager.getImage("background");
 
         var image = new EImage(background)
-        image.disableMouseMove();
+        image.disableMouseEvents();
         image.properties.imageScalingMode = ImageScalingMode.FitAndOverfill;
         this.children.push(image);
     }

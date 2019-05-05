@@ -8,6 +8,7 @@ import { App } from "../../app";
 import { HorizontalAlignementOption } from "../../../enc/src/ui/alignement/horizontalAlignementOption";
 import { VerticalAlignementOption } from "../../../enc/src/ui/alignement/verticalAlignementOption";
 import { Slider } from "../../../enc/src/ui/controls/slider";
+import { RangeSlider } from "../../../enc/src/ui/controls/rangeSlider";
 
 export class StarLayerView extends LayoutView {
     private settingsList: ListView;
@@ -41,6 +42,16 @@ export class StarLayerView extends LayoutView {
         this.children.push(sliderSpeed);
         this.settingsList.addItem(sliderSpeed);
         sliderSpeed.valueChanged.addEventListener(this.speedChanged);
+
+        var sliderSize = new RangeSlider();
+        var sizes = this.starLayer.stars.map(x => x.r);
+        sliderSize.minValue = 0.01;
+        sliderSize.maxValue = 5;
+        sliderSize.currentValueLow = Math.min(...sizes);
+        sliderSize.currentValueHigh = Math.max(...sizes);
+        this.children.push(sliderSize);
+        this.settingsList.addItem(sliderSize);
+        sliderSize.valuesChanged.addEventListener(this.sizesChanged);
     }
 
     public numberOfStarsChanged = (numberOfStars: number) => {
@@ -49,6 +60,10 @@ export class StarLayerView extends LayoutView {
 
     public speedChanged = (speed: number) => {
         App.settingManager.changeSpeed(this.starLayer, speed);
+    }
+
+    public sizesChanged = (lowBorder: number, highBorder: number) => {
+        App.settingManager.changeSizes(this.starLayer, lowBorder, highBorder);
     }
 
     public updateLayout(ctx: CanvasRenderingContext2D, bounds: Rectangle): void {
