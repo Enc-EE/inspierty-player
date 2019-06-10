@@ -11,7 +11,7 @@ export class StarRenderObject extends RenderObject {
         super();
     }
 
-    public render(ctx: CanvasRenderingContext2D): void {
+    public render = (ctx: CanvasRenderingContext2D): void => {
 
         var end = this.star.r * 3;
         var grad = ctx.createRadialGradient(this.star.x, this.star.y, this.star.r, this.star.x, this.star.y, end);
