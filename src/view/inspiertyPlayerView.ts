@@ -10,27 +10,38 @@ import { Dinject } from "../../enc/src/dinject";
 import { PlayerView } from "./playerView";
 import { BackgroundImageView } from "./backgroundImageView";
 import { FrontView } from "./frontView";
+import { LoadingView } from "./loadingView";
 
 export class InspiertyPlayerView extends LayoutView {
     private starLayers: StarLayerDrawer[] = [];
     private starAnimators: StarLayerAnimator[] = [];
-    private settingsOverlay: SettingsOverlayView;
 
     private animation: EAnimation;
-    playerView: PlayerView;
+
+    private loadingView: LoadingView;
 
     constructor() {
         super();
 
         this.animation = Dinject.getInstance("animation");
 
-        this.settingsOverlay = new SettingsOverlayView();
-        this.playerView = new PlayerView();
-        this.children.push(new BackgroundImageView());
-        this.children.push(this.playerView);
-        this.children.push(this.settingsOverlay);
-        this.children.push(new FrontView());
+        this.loadingView = new LoadingView();
+        this.children.push(this.loadingView);
+    }
+
+    public start = () => {
+        this.children.removeItem(this.loadingView);
+        var background = new BackgroundImageView();
+        this.children.push(background);
+        background.activate();
+        (document as any).testit = background;
+        this.children.push(new PlayerView());
+        var front = new FrontView();
+        this.children.push(front);
+        front.activate();
+        this.children.push(new SettingsOverlayView());
         App.settingManager.update.addEventListener(this.appSettingsUpdated);
+        this.triggerUpdateLayout();
     }
 
     private appSettingsUpdated = (operation: SettingOperation) => {

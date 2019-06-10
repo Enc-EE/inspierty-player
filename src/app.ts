@@ -20,6 +20,18 @@ export class App {
     public run = () => {
         document.body.style.backgroundColor = "black";
 
+        var canvas = ECanvas.createFullScreen();
+        var stage = new Stage(canvas);
+        var animation = new EAnimation();
+        animation.addUpdateFunction(canvas.draw);
+
+        Dinject.addInstance("canvas", canvas);
+        Dinject.addInstance("stage", stage);
+        Dinject.addInstance("animation", animation);
+
+        var view = new InspiertyPlayerView();
+        stage.setView(view);
+
         console.log("loading app");
         Promise.all([
             new CanvasHelper().loadFontawesomeFree(),
@@ -27,17 +39,6 @@ export class App {
                 var audioManager = new AudioManager();
                 audioManager.reload()
                 Dinject.addInstance("audio", audioManager);
-                resolve();
-            }),
-            new Promise((resolve, reject) => {
-                var canvas = ECanvas.createFullScreen();
-                var stage = new Stage(canvas);
-                var animation = new EAnimation();
-                animation.addUpdateFunction(canvas.draw);
-
-                Dinject.addInstance("canvas", canvas);
-                Dinject.addInstance("stage", stage);
-                Dinject.addInstance("animation", animation);
                 resolve();
             }),
             new Promise((resolve, reject) => {
@@ -54,14 +55,12 @@ export class App {
         ]).then(() => {
             console.log("loaded app");
 
-            var stage = Dinject.getInstance("stage") as Stage;
-            var view = new InspiertyPlayerView();
-            stage.setView(view);
+            App.settingManager.addStarLayer();
+            App.settingManager.addStarLayer();
+            App.settingManager.addStarLayer();
+            App.settingManager.addStarLayer();
 
-            App.settingManager.addStarLayer();
-            App.settingManager.addStarLayer();
-            App.settingManager.addStarLayer();
-            App.settingManager.addStarLayer();
+            view.start();
         });
     }
 }

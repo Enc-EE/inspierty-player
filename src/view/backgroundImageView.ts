@@ -7,7 +7,7 @@ import { ImageScalingMode } from "../../enc/src/ui/controls/imageScalingMode";
 
 export class BackgroundImageView extends LayoutView {
     constructor() {
-        super();
+        super(false);
         var assetManager = Dinject.getInstance("assets") as AssetManager;
         var background = assetManager.getImage("background");
 
