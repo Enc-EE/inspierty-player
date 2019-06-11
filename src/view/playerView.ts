@@ -23,7 +23,7 @@ export class PlayerView extends LayoutView {
     // private previousIconText = "previous"
 
     constructor() {
-        super();
+        super(false);
 
         var audioManager: AudioManager = Dinject.getInstance("audio");
 

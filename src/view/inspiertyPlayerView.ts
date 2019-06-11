@@ -31,15 +31,24 @@ export class InspiertyPlayerView extends LayoutView {
 
     public start = () => {
         this.children.removeItem(this.loadingView);
+
         var background = new BackgroundImageView();
         this.children.push(background);
         background.activate();
         (document as any).testit = background;
-        this.children.push(new PlayerView());
+
+        var playerView = new PlayerView();
+        this.children.push(playerView);
+        playerView.activate();
+
         var front = new FrontView();
         this.children.push(front);
         front.activate();
-        this.children.push(new SettingsOverlayView());
+
+        var settingsOverlay = new SettingsOverlayView();
+        this.children.push(settingsOverlay);
+        settingsOverlay.activate();
+
         App.settingManager.update.addEventListener(this.appSettingsUpdated);
         this.triggerUpdateLayout();
     }

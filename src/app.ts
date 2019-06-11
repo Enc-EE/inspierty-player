@@ -42,6 +42,11 @@ export class App {
                 resolve();
             }),
             new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve();
+                }, 2000);
+            }),
+            new Promise((resolve, reject) => {
                 var assetManager = new AssetManager();
                 Dinject.addInstance("assets", assetManager);
                 assetManager.addImage("background", backgroundPng);

@@ -24,7 +24,7 @@ export class SettingsOverlayView extends LayoutView {
     private detailedStarLayerView: StarLayerView;
 
     constructor() {
-        super();
+        super(false);
         this.showOverLayerButton = new Button();
         this.showOverLayerButton.text = "Show/Hide Settings";
         this.showOverLayerButton.properties.fillStyle = "green";
