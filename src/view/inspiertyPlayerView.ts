@@ -30,27 +30,34 @@ export class InspiertyPlayerView extends LayoutView {
     }
 
     public start = () => {
-        this.children.removeItem(this.loadingView);
-
-        var background = new BackgroundImageView();
-        this.children.push(background);
-        background.activate();
-        (document as any).testit = background;
-
-        var playerView = new PlayerView();
-        this.children.push(playerView);
-        playerView.activate();
-
-        var front = new FrontView();
-        this.children.push(front);
-        front.activate();
-
-        var settingsOverlay = new SettingsOverlayView();
-        this.children.push(settingsOverlay);
-        settingsOverlay.activate();
-
-        App.settingManager.update.addEventListener(this.appSettingsUpdated);
-        this.triggerUpdateLayout();
+        this.loadingView.deactivate(1);
+        setTimeout(() => {
+            this.children.removeItem(this.loadingView);
+    
+            var background = new BackgroundImageView();
+            background.deactivated();
+            this.children.push(background);
+            background.activate(3);
+            (document as any).testit = background;
+    
+            var playerView = new PlayerView();
+            playerView.deactivated();
+            this.children.push(playerView);
+            playerView.activate(3);
+    
+            var front = new FrontView();
+            front.deactivated();
+            this.children.push(front);
+            front.activate(3);
+    
+            var settingsOverlay = new SettingsOverlayView();
+            settingsOverlay.deactivated();
+            this.children.push(settingsOverlay);
+            settingsOverlay.activate(3);
+    
+            App.settingManager.update.addEventListener(this.appSettingsUpdated);
+            this.triggerUpdateLayout();
+        }, 1200);
     }
 
     private appSettingsUpdated = (operation: SettingOperation) => {

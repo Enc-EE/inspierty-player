@@ -16,7 +16,7 @@ export class FrontView extends LayoutView {
     private upperBorder = 0.9;
 
     constructor() {
-        super(false);
+        super();
         var assetManager = Dinject.getInstance("assets") as AssetManager;
 
         var audioManager = Dinject.getInstance("audio") as AudioManager;

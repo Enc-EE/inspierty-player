@@ -30,7 +30,9 @@ export class App {
         Dinject.addInstance("animation", animation);
 
         var view = new InspiertyPlayerView();
+        view.deactivated();
         stage.setView(view);
+        view.activate(1);
 
         console.log("loading app");
         Promise.all([
