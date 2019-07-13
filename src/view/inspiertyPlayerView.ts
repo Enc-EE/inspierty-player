@@ -22,22 +22,29 @@ export class InspiertyPlayerView extends LayoutView {
         super();
 
         this.animation = Dinject.getInstance("animation");
+        this.animation.lowPerformance.addEventListener(this.onLowPerformance);
 
         App.settingManager.update.addEventListener(this.appSettingsUpdated);
         var background = new BackgroundImageView();
         this.children.push(background);
         (document as any).testit = background;
-    
+
         var playerView = new PlayerView();
         this.children.push(playerView);
-    
+
         var front = new FrontView();
         this.children.push(front);
-    
+
         var settingsOverlay = new SettingsOverlayView();
         this.children.push(settingsOverlay);
-    
+
         this.triggerUpdateLayout();
+    }
+
+    private onLowPerformance = () => {
+        for (const starLayer of this.starLayers) {
+            App.settingManager.changeNumberOfStars(starLayer.starLayer, Math.round(starLayer.starLayer.stars.length * 0.9));
+        }
     }
 
     private appSettingsUpdated = (operation: SettingOperation) => {
