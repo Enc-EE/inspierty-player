@@ -12,6 +12,7 @@ import { AssetManager } from "../enc/src/assetManager";
 import backgroundPng from "./assets/background.png"
 import logoFrontPng from "./assets/logo-front.png"
 import logoNovaPng from "./assets/logo-nova.png"
+import { LoadingView } from "./view/loadingView";
 
 export class App {
     public static settings = new Settings(window.innerWidth, window.innerHeight);
@@ -29,10 +30,12 @@ export class App {
         Dinject.addInstance("stage", stage);
         Dinject.addInstance("animation", animation);
 
-        var view = new InspiertyPlayerView();
-        view.deactivated();
-        stage.setView(view);
-        view.activate(1);
+        var loadingView = new LoadingView();
+        loadingView.deactivated();
+        stage.setView(loadingView);
+        loadingView.activate(0.7);
+
+        var inspiertyPlayerView: InspiertyPlayerView;
 
         console.log("loading app");
         Promise.all([
@@ -56,18 +59,23 @@ export class App {
                 assetManager.addImage("logo-nova", logoNovaPng);
                 assetManager.load()
                     .then(() => {
+
+                        inspiertyPlayerView = new InspiertyPlayerView();
+                        inspiertyPlayerView.deactivated();
+
+                        App.settingManager.addStarLayer();
+                        App.settingManager.addStarLayer();
+                        App.settingManager.addStarLayer();
+                        App.settingManager.addStarLayer();
                         resolve();
                     })
             })
         ]).then(() => {
-            console.log("loaded app");
-
-            App.settingManager.addStarLayer();
-            App.settingManager.addStarLayer();
-            App.settingManager.addStarLayer();
-            App.settingManager.addStarLayer();
-
-            view.start();
+            loadingView.deactivate(0.7);
+            setTimeout(() => {
+                stage.setView(inspiertyPlayerView);
+                inspiertyPlayerView.activate(0.7);
+            }, 800);
         });
     }
 }

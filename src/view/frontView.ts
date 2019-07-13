@@ -28,7 +28,7 @@ export class FrontView extends LayoutView {
         this.disableMouseEvents();
 
         var logoNovaEImage = new EImage(logoNova);
-        logoNovaEImage.properties.imageScalingMode = ImageScalingMode.FitAndOverfill;
+        logoNovaEImage.properties.imageScalingMode = ImageScalingMode.FitAndSpace;
         this.children.push(logoNovaEImage);
 
         var func = logoNovaEImage.render
@@ -44,7 +44,7 @@ export class FrontView extends LayoutView {
         }
 
         var logoFront = new EImage(logo);
-        logoFront.properties.imageScalingMode = ImageScalingMode.FitAndOverfill;
+        logoFront.properties.imageScalingMode = ImageScalingMode.FitAndSpace;
         this.children.push(logoFront);
     }
 

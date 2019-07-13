@@ -31,7 +31,8 @@ export class AudioManager {
 
     constructor() {
         this.audioGraph = new AudioGraph();
-        this.source = this.audioGraph.addMediaElementSource("source", this.songs[0])
+        this.source = this.audioGraph.addMediaElementSource("source", this.songs[0]);
+        this.source.audioEnded.addEventListener(this.endedNext());
         this.analyser = this.audioGraph.addAnalyzer("analyser");
     }
 
@@ -73,5 +74,12 @@ export class AudioManager {
 
     public stop = () => {
         this.source.stop();
+    }
+
+    private endedNext(): () => void {
+        return () => {
+            this.next();
+            this.source.play();
+        };
     }
 }

@@ -22,16 +22,19 @@ export class SettingsOverlayView extends LayoutView {
     private layerButtons: Button[] = [];
     private addLayerBtn: Button;
     private detailedStarLayerView: StarLayerView;
+    private settingsIconText = "\uf013"
 
     constructor() {
         super();
         this.showOverLayerButton = new Button();
-        this.showOverLayerButton.text = "Show/Hide Settings";
-        this.showOverLayerButton.properties.fillStyle = "green";
+        this.showOverLayerButton.properties.fontPrefix = "900"
+        this.showOverLayerButton.properties.fontFamily = "'Font Awesome 5 Free'"
+        this.showOverLayerButton.text = this.settingsIconText;
         this.showOverLayerButton.alignement.verticalAlign = VerticalAlignementOption.Top;
         this.showOverLayerButton.alignement.horizontalAlign = HorizontalAlignementOption.Left;
         this.showOverLayerButton.clicked.addEventListener(this.showHideOverlayClicked);
         this.showOverLayerButton.properties.backgroundFillStyle = "rgba(0, 0, 0, 0.5)";
+
         this.children.push(this.showOverLayerButton);
         this.settingsList = new ListView();
         this.settingsList.alignement.horizontalAlign = HorizontalAlignementOption.Left;
@@ -129,6 +132,13 @@ export class SettingsOverlayView extends LayoutView {
             this.setState(SettingsOverlayViewModelState.beforeVisible);
         }
         super.mouseMove(ev);
+    }
+
+    public click = (ev: MouseEvent) => {
+        if (this.viewModel.state == SettingsOverlayViewModelState.hidden || this.viewModel.state == SettingsOverlayViewModelState.beforeVisible) {
+            this.setState(SettingsOverlayViewModelState.beforeVisible);
+        }
+        super.click(ev);
     }
 
     public mouseInactivityHandler = () => {
