@@ -76,6 +76,9 @@ export class App {
                 stage.setView(inspiertyPlayerView);
                 inspiertyPlayerView.activate(0.7);
             }, 800);
+        }).catch((error) => {
+            console.log(error);
+            alert(error);
         });
     }
 }
