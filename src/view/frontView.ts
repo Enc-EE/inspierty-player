@@ -9,6 +9,7 @@ import { AudioManager } from "../audioManager";
 import { AudioGraphNodeAnalyser } from "../../enc/src/audio/audioGraphNodeAnalyser";
 import { Label } from "../../enc/src/ui/controls/label";
 import { VerticalAlignementOption } from "../../enc/src/ui/alignement/verticalAlignementOption";
+import { HorizontalAlignementOption } from "../../enc/src/ui/alignement/horizontalAlignementOption";
 
 export class FrontView extends LayoutView {
     analyser: AudioGraphNodeAnalyser;
@@ -16,6 +17,7 @@ export class FrontView extends LayoutView {
     private frequencyIndex = 7;
     private lowerBorder = 0.4;
     private upperBorder = 0.9;
+    songName: Label;
 
     constructor() {
         super();
@@ -49,13 +51,18 @@ export class FrontView extends LayoutView {
         logoFront.properties.imageScalingMode = ImageScalingMode.FitAndSpace;
         this.children.push(logoFront);
 
+        audioManager.songChanged.addEventListener(this.songChanged);
+        this.songName = new Label();
+        this.songName.text = audioManager.currentSongName;
+        this.songName.properties.fillStyle = "blue"
+        this.songName.properties.fontFamily = "Operetta";
+        this.songName.alignement.verticalAlignmentRatio = 0.6;
+        this.children.push(this.songName);
+    }
 
-        var songName = new Label();
-        songName.text = "Name of the song";
-        songName.properties.fillStyle = "blue"
-        songName.properties.fontFamily = "Operetta";
-        songName.alignement.verticalAlignmentRatio = 0.6;
-        this.children.push(songName);
+    private songChanged = (songName: string) => {
+        this.songName.text = songName;
+        this.triggerUpdateLayout();
     }
 
     private calculateRelDataValue(dataValue: number) {

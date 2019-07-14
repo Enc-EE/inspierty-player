@@ -13,6 +13,7 @@ import { AudioGraphNodeAnalyser } from "../enc/src/audio/audioGraphNodeAnalyser"
 import FaintAssetMP3 from "./assets/demo/Trailer_faintColor.mp3"
 import DeepAssetMP3 from "./assets/demo/Trailer_DeepField.mp3"
 import DriftingAssetMP3 from "./assets/demo/Trailer_DriftingIntoTheAtmosphere.mp3"
+import { EEventT } from "../enc/src/eEvent";
 
 export class AudioManager {
     private audioGraph: AudioGraph;
@@ -20,18 +21,27 @@ export class AudioManager {
     private analyser: AudioGraphNodeAnalyser;
 
     private songs = [
-        FaintAssetMP3,
-        // PrismAssetMP3,
-        // HopefulAssetMP3,
-        DeepAssetMP3,
-        // GravityAssetMP3,
-        // JourneyAssetMP3,
-        DriftingAssetMP3
+        ["Faint Color", FaintAssetMP3],
+        // ["PrismAsset", PrismAssetMP3],
+        // ["HopefulAsset", HopefulAssetMP3],
+        ["Deep field", DeepAssetMP3],
+        // ["GravityAsset", GravityAssetMP3],
+        // ["JourneyAsset", JourneyAssetMP3],
+        ["Drifting into the Atmosphere", DriftingAssetMP3]
     ]
+
+    public songChanged = new EEventT<string>();
+
+    
+    public get currentSongName() : string {
+        var currentSongIndex = this.songs.map(x => x[1]).indexOf(this.source.url);
+        return this.songs[currentSongIndex][0];
+    }
+    
 
     constructor() {
         this.audioGraph = new AudioGraph();
-        this.source = this.audioGraph.addMediaElementSource("source", this.songs[0]);
+        this.source = this.audioGraph.addMediaElementSource("source", this.songs[0][1]);
         this.source.audioEnded.addEventListener(this.endedNext());
         this.analyser = this.audioGraph.addAnalyzer("analyser");
     }
@@ -49,23 +59,25 @@ export class AudioManager {
     }
 
     public next = () => {
-        var currentSongIndex = this.songs.indexOf(this.source.url);
+        var currentSongIndex = this.songs.map(x => x[1]).indexOf(this.source.url);
         var nextSongIndex = currentSongIndex + 1;
         if (nextSongIndex == this.songs.length) {
             nextSongIndex = 0;
         }
 
-        this.source.setUrl(this.songs[nextSongIndex]);
+        this.source.setUrl(this.songs[nextSongIndex][1]);
+        this.songChanged.dispatchEvent(this.songs[nextSongIndex][0]);
     }
 
     public previous = () => {
-        var currentSongIndex = this.songs.indexOf(this.source.url);
+        var currentSongIndex = this.songs.map(x => x[1]).indexOf(this.source.url);
         var previousSongIndex = currentSongIndex - 1;
         if (previousSongIndex == -1) {
             previousSongIndex = this.songs.length - 1;
         }
 
-        this.source.setUrl(this.songs[previousSongIndex]);
+        this.source.setUrl(this.songs[previousSongIndex][1]);
+        this.songChanged.dispatchEvent(this.songs[previousSongIndex][0]);
     }
 
     public getAnalyser = () => {
