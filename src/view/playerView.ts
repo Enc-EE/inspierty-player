@@ -29,7 +29,7 @@ export class PlayerView extends LayoutView {
 
         var listView = new ListView();
         listView.alignement.verticalAlign = VerticalAlignementOption.Bottom;
-        listView.alignement.margin.bottom = 10;
+        listView.alignement.margin.bottom = 20;
         listView.properties.orientation = Orientation.Horizontal;
         this.children.push(listView);
 

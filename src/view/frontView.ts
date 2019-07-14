@@ -7,6 +7,8 @@ import { ImageScalingMode } from "../../enc/src/ui/controls/imageScalingMode";
 import { EAnimation } from "../../enc/src/eAnimation";
 import { AudioManager } from "../audioManager";
 import { AudioGraphNodeAnalyser } from "../../enc/src/audio/audioGraphNodeAnalyser";
+import { Label } from "../../enc/src/ui/controls/label";
+import { VerticalAlignementOption } from "../../enc/src/ui/alignement/verticalAlignementOption";
 
 export class FrontView extends LayoutView {
     analyser: AudioGraphNodeAnalyser;
@@ -46,6 +48,14 @@ export class FrontView extends LayoutView {
         var logoFront = new EImage(logo);
         logoFront.properties.imageScalingMode = ImageScalingMode.FitAndSpace;
         this.children.push(logoFront);
+
+
+        var songName = new Label();
+        songName.text = "Name of the song";
+        songName.properties.fillStyle = "blue"
+        songName.properties.fontFamily = "Operetta";
+        songName.alignement.verticalAlignmentRatio = 0.6;
+        this.children.push(songName);
     }
 
     private calculateRelDataValue(dataValue: number) {
