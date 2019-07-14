@@ -54,15 +54,37 @@ export class FrontView extends LayoutView {
         audioManager.songChanged.addEventListener(this.songChanged);
         this.songName = new Label();
         this.songName.text = audioManager.currentSongName;
+        this.newSongName = audioManager.currentSongName;
+        this.songName.properties.fontSize = 30;
         this.songName.properties.fillStyle = "blue"
         this.songName.properties.fontFamily = "Operetta";
         this.songName.alignement.verticalAlignmentRatio = 0.6;
+        (document as any).x = this.songName;
         this.children.push(this.songName);
     }
 
+    private isSongAnimating = false;
+    private newSongName: string;
     private songChanged = (songName: string) => {
-        this.songName.text = songName;
-        this.triggerUpdateLayout();
+        this.newSongName = songName;
+        if (!this.isSongAnimating) {
+            this.isSongAnimating = true;
+            this.songName.deactivate(0.8);
+            setTimeout(() => {
+                this.songName.text = this.newSongName;
+                this.triggerUpdateLayout();
+                this.songName.activate(0.8);
+                setTimeout(() => {
+                    this.isSongAnimating = false;
+                }, 900);
+            }, 900);
+        } else {
+            setTimeout(() => {
+                if (this.newSongName == songName && this.songName.text != songName) {
+                    this.songChanged(songName);
+                }
+            }, 1000);
+        }
     }
 
     private calculateRelDataValue(dataValue: number) {
