@@ -10,6 +10,7 @@ import { AudioGraphNodeAnalyser } from "../../enc/src/audio/audioGraphNodeAnalys
 import { Label } from "../../enc/src/ui/controls/label";
 import { VerticalAlignementOption } from "../../enc/src/ui/alignement/verticalAlignementOption";
 import { HorizontalAlignementOption } from "../../enc/src/ui/alignement/horizontalAlignementOption";
+import { Style } from "./style";
 
 export class FrontView extends LayoutView {
     analyser: AudioGraphNodeAnalyser;
@@ -55,9 +56,9 @@ export class FrontView extends LayoutView {
         this.songName = new Label();
         this.songName.text = audioManager.currentSongName;
         this.newSongName = audioManager.currentSongName;
-        this.songName.properties.fontSize = 30;
-        this.songName.properties.fillStyle = "blue"
-        this.songName.properties.fontFamily = "Operetta";
+        this.songName.properties.fontSize = 40;
+        this.songName.properties.fillStyle = Style.mousOver;
+        this.songName.properties.fontFamily = "Georgia";
         this.songName.alignement.verticalAlignmentRatio = 0.6;
         (document as any).x = this.songName;
         this.children.push(this.songName);

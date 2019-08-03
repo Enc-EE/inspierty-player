@@ -11,6 +11,7 @@ import { SettingOperation } from "../../settings/settingOperation";
 import { VerticalAlignementOption } from "../../../enc/src/ui/alignement/verticalAlignementOption";
 import { HorizontalAlignementOption } from "../../../enc/src/ui/alignement/horizontalAlignementOption";
 import { StarLayerView } from "./starLayerView";
+import { Style } from "../style";
 
 export class SettingsOverlayView extends LayoutView {
     private viewModel: SettingsOverlayViewModel = new SettingsOverlayViewModel();
@@ -23,6 +24,7 @@ export class SettingsOverlayView extends LayoutView {
     private addLayerBtn: Button;
     private detailedStarLayerView: StarLayerView;
     private settingsIconText = "\uf013"
+    private settingsCloseIconText = "\uf00d"
 
     constructor() {
         super();
@@ -32,8 +34,10 @@ export class SettingsOverlayView extends LayoutView {
         this.showOverLayerButton.text = this.settingsIconText;
         this.showOverLayerButton.alignement.verticalAlign = VerticalAlignementOption.Top;
         this.showOverLayerButton.alignement.horizontalAlign = HorizontalAlignementOption.Left;
+        this.showOverLayerButton.properties.fillStyle = Style.fillStyle;
+        this.showOverLayerButton.properties.mouseOverFillStyle = Style.mousOver;
         this.showOverLayerButton.clicked.addEventListener(this.showHideOverlayClicked);
-        this.showOverLayerButton.properties.backgroundFillStyle = "rgba(0, 0, 0, 0.5)";
+        // this.showOverLayerButton.properties.backgroundFillStyle = "rgba(0, 0, 0, 0.5)";
 
         this.children.push(this.showOverLayerButton);
         this.settingsList = new ListView();
@@ -42,7 +46,7 @@ export class SettingsOverlayView extends LayoutView {
 
         var btnForNewLayer = new Button();
         btnForNewLayer.text = "Add Layer";
-        btnForNewLayer.properties.fillStyle = "white";
+        btnForNewLayer.properties.fillStyle = Style.fillStyle;
         this.settingsList.addItem(btnForNewLayer);
         btnForNewLayer.clicked.addEventListener((sender: Control) => {
             App.settingManager.addStarLayer();
@@ -64,7 +68,8 @@ export class SettingsOverlayView extends LayoutView {
                         var btnForLayer = new Button();
                         btnForLayer.text = "Edit Layer";
                         btnForLayer.tag = starLayer;
-                        btnForLayer.properties.fillStyle = "white";
+                        btnForLayer.properties.fillStyle = Style.fillStyle;
+                        btnForLayer.properties.mouseOverFillStyle = Style.mousOver;
                         this.settingsList.addItem(btnForLayer);
                         this.layerButtons.push(btnForLayer);
                         btnForLayer.clicked.addEventListener((sender: Control) => {
@@ -154,10 +159,12 @@ export class SettingsOverlayView extends LayoutView {
     private setState = (state: SettingsOverlayViewModelState) => {
         switch (state) {
             case SettingsOverlayViewModelState.hidden:
+                this.showOverLayerButton.text = this.settingsIconText;
                 this.children.removeItem(this.showOverLayerButton);
                 this.viewModel.state = SettingsOverlayViewModelState.hidden;
                 break;
             case SettingsOverlayViewModelState.beforeVisible:
+                this.showOverLayerButton.text = this.settingsIconText;
                 this.lastMoved = Date.now();
                 if (this.viewModel.state == SettingsOverlayViewModelState.hidden) {
                     setTimeout(this.mouseInactivityHandler, this.inactivityTimeout);
@@ -175,6 +182,7 @@ export class SettingsOverlayView extends LayoutView {
                 if (this.viewModel.state == SettingsOverlayViewModelState.beforeVisible) {
                     this.children.push(this.settingsList);
                 }
+                this.showOverLayerButton.text = this.settingsCloseIconText;
                 this.viewModel.state = SettingsOverlayViewModelState.visible;
                 break;
         }
