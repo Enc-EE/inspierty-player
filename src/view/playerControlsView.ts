@@ -9,19 +9,13 @@ import { Dinject } from "../../enc/src/dinject";
 import { AudioManager } from "../audioManager";
 import { Style } from "./style";
 
-export class PlayerView extends LayoutView {
+export class PlayerControlsView extends LayoutView {
 
-    private playIconText = "\uf04b"
-    private pauseIconText = "\uf04c"
-    private stopIconText = "\uf04d"
-    private nextIconText = "\uf051"
-    private previousIconText = "\uf048"
-
-    // private playIconText = "play"
-    // private pauseIconText = "pause"
-    // private stopIconText = "stop"
-    // private nextIconText = "next"
-    // private previousIconText = "previous"
+    private playIconText = "\uf04b" // "play"
+    private pauseIconText = "\uf04c" // "pause"
+    private stopIconText = "\uf04d" // "stop"
+    private nextIconText = "\uf051" // "next"
+    private previousIconText = "\uf048" // "previous"
 
     constructor() {
         super();
@@ -34,17 +28,12 @@ export class PlayerView extends LayoutView {
         listView.properties.orientation = Orientation.Horizontal;
         this.children.push(listView);
 
-        var playPauseBtn = new Button();
-        playPauseBtn.properties.fontPrefix = "900"
-        playPauseBtn.properties.fontFamily = "'Font Awesome 5 Free'"
-        playPauseBtn.text = this.playIconText;
-        playPauseBtn.properties.fillStyle = Style.fillStyle;
-        playPauseBtn.properties.mouseOverFillStyle = Style.mousOver;
-        playPauseBtn.clicked.addEventListener(() => {
+        var playPauseBtn = this.createBtn(this.playIconText, () => {
             if (playPauseBtn.text == this.playIconText) {
                 audioManager.play();
                 playPauseBtn.text = this.pauseIconText;
-            } else {
+            }
+            else {
                 audioManager.pause();
                 playPauseBtn.text = this.playIconText;
             }
@@ -52,13 +41,7 @@ export class PlayerView extends LayoutView {
         });
         listView.addItem(playPauseBtn);
 
-        var stopBtn = new Button();
-        stopBtn.properties.fontPrefix = "900"
-        stopBtn.properties.fontFamily = "'Font Awesome 5 Free'"
-        stopBtn.text = this.stopIconText;
-        stopBtn.properties.fillStyle = Style.fillStyle;
-        stopBtn.properties.mouseOverFillStyle = Style.mousOver;
-        stopBtn.clicked.addEventListener(() => {
+        var stopBtn = this.createBtn(this.stopIconText, () => {
             audioManager.stop();
             if (playPauseBtn.text == this.pauseIconText) {
                 playPauseBtn.text = this.playIconText;
@@ -66,28 +49,27 @@ export class PlayerView extends LayoutView {
             this.triggerUpdateLayout();
         });
         listView.addItem(stopBtn);
-
-        var previousBtn = new Button();
-        previousBtn.properties.fontPrefix = "900"
-        previousBtn.properties.fontFamily = "'Font Awesome 5 Free'"
-        previousBtn.text = this.previousIconText;
-        previousBtn.properties.fillStyle = Style.fillStyle;
-        previousBtn.properties.mouseOverFillStyle = Style.mousOver;
-        previousBtn.clicked.addEventListener(() => {
+        
+        var previousBtn = this.createBtn(this.previousIconText, () => {
             audioManager.previous();
         });
         listView.addItem(previousBtn);
-
-        var nextBtn = new Button();
-        nextBtn.properties.fontPrefix = "900"
-        nextBtn.properties.fontFamily = "'Font Awesome 5 Free'"
-        nextBtn.text = this.nextIconText;
-        nextBtn.properties.fillStyle = Style.fillStyle;
-        nextBtn.properties.mouseOverFillStyle = Style.mousOver;
-        nextBtn.clicked.addEventListener(() => {
+        
+        var nextBtn = this.createBtn(this.nextIconText, () => {
             audioManager.next();
         });
         listView.addItem(nextBtn);
+    }
+
+    private createBtn(iconText: string, event: () => void) {
+        var playPauseBtn = new Button();
+        playPauseBtn.properties.fontPrefix = "900";
+        playPauseBtn.properties.fontFamily = "'Font Awesome 5 Free'";
+        playPauseBtn.text = iconText;
+        playPauseBtn.properties.fillStyle = Style.fillStyle;
+        playPauseBtn.properties.mouseOverFillStyle = Style.mousOver;
+        playPauseBtn.clicked.addEventListener(event);
+        return playPauseBtn;
     }
 
     public updateLayout(ctx: CanvasRenderingContext2D, bounds: Rectangle) {

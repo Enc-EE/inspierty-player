@@ -4,15 +4,12 @@ import { AssetManager } from "../../enc/src/assetManager";
 import { EImage } from "../../enc/src/ui/controls/image";
 import { Rectangle } from "../../enc/src/geometry/rectangle";
 import { ImageScalingMode } from "../../enc/src/ui/controls/imageScalingMode";
-import { EAnimation } from "../../enc/src/eAnimation";
 import { AudioManager } from "../audioManager";
 import { AudioGraphNodeAnalyser } from "../../enc/src/audio/audioGraphNodeAnalyser";
 import { Label } from "../../enc/src/ui/controls/label";
-import { VerticalAlignementOption } from "../../enc/src/ui/alignement/verticalAlignementOption";
-import { HorizontalAlignementOption } from "../../enc/src/ui/alignement/horizontalAlignementOption";
 import { Style } from "./style";
 
-export class FrontView extends LayoutView {
+export class MainView extends LayoutView {
     analyser: AudioGraphNodeAnalyser;
 
     private frequencyIndex = 7;

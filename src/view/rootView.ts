@@ -7,12 +7,13 @@ import { StarLayerAnimator } from "./starLayerAnimator";
 import { EAnimation } from "../../enc/src/eAnimation";
 import { SettingOperation } from "../settings/settingOperation";
 import { Dinject } from "../../enc/src/dinject";
-import { PlayerView } from "./playerView";
-import { BackgroundImageView } from "./backgroundImageView";
-import { FrontView } from "./frontView";
-import { LoadingView } from "./loadingView";
+import { PlayerControlsView } from "./playerControlsView";
+import { MainView } from "./mainView";
+import { AssetManager } from "../../enc/src/assetManager";
+import { EImage } from "../../enc/src/ui/controls/image";
+import { ImageScalingMode } from "../../enc/src/ui/controls/imageScalingMode";
 
-export class InspiertyPlayerView extends LayoutView {
+export class RootView extends LayoutView {
     private starLayers: StarLayerDrawer[] = [];
     private starAnimators: StarLayerAnimator[] = [];
 
@@ -23,17 +24,15 @@ export class InspiertyPlayerView extends LayoutView {
 
         this.animation = Dinject.getInstance("animation");
         this.animation.lowPerformance.addEventListener(this.onLowPerformance);
-
         App.settingManager.update.addEventListener(this.appSettingsUpdated);
-        var background = new BackgroundImageView();
-        this.children.push(background);
-        (document as any).testit = background;
 
-        var playerView = new PlayerView();
-        this.children.push(playerView);
+        this.loadBackground();
 
-        var front = new FrontView();
+        var front = new MainView();
         this.children.push(front);
+
+        var playerView = new PlayerControlsView();
+        this.children.push(playerView);
 
         var settingsOverlay = new SettingsOverlayView();
         this.children.push(settingsOverlay);
@@ -86,6 +85,15 @@ export class InspiertyPlayerView extends LayoutView {
                 this.triggerUpdateLayout();
             }
         }
+    }
+
+    private loadBackground() {
+        var assetManager = Dinject.getInstance("assets") as AssetManager;
+        var background = assetManager.getImage("background");
+        var backgroundImage = new EImage(background);
+        backgroundImage.disableMouseEvents();
+        backgroundImage.properties.imageScalingMode = ImageScalingMode.FitAndOverfill;
+        this.children.push(backgroundImage);
     }
 
     public updateLayout(ctx: CanvasRenderingContext2D, bounds: Rectangle): void {

@@ -1,5 +1,5 @@
 import { Stage } from "../enc/src/ui/stage";
-import { InspiertyPlayerView } from "./view/inspiertyPlayerView";
+import { RootView } from "./view/rootView";
 import { Settings } from "./models/settings";
 import { SettingsManager } from "./settings/settingsManager";
 import { Dinject } from "../enc/src/dinject";
@@ -35,7 +35,7 @@ export class App {
         stage.setView(loadingView);
         loadingView.activate(0.7);
 
-        var inspiertyPlayerView: InspiertyPlayerView;
+        var inspiertyPlayerView: RootView;
 
         console.log("loading app");
         Promise.all([
@@ -60,7 +60,7 @@ export class App {
                 assetManager.load()
                     .then(() => {
 
-                        inspiertyPlayerView = new InspiertyPlayerView();
+                        inspiertyPlayerView = new RootView();
                         inspiertyPlayerView.deactivated();
 
                         App.settingManager.addStarLayer();
