@@ -96,9 +96,11 @@ export class SettingsView extends LayoutView {
                 }
                 if (this.settingsVisibilityState == SettingsVisibilityState.visible) {
                     setTimeout(this.mouseInactivityHandler, this.inactivityTimeout);
-                    this.settingsList.removeItem(this.subView);
-                    this.subView = null;
-                    this.settingsList.addItem(this.starLayersBtn);
+                    if (this.subView) {
+                        this.settingsList.removeItem(this.subView);
+                        this.subView = null;
+                        this.settingsList.addItem(this.starLayersBtn);
+                    }
                     this.children.removeItemIfExists(this.settingsList);
                 }
                 this.settingsVisibilityState = SettingsVisibilityState.beforeVisible;

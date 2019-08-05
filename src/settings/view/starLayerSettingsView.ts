@@ -25,7 +25,7 @@ export class StarLayerSettingsView extends NavigationView {
         this.settingsList.alignement.verticalAlign = VerticalAlignementOption.Top;
 
         var numberOfStarsValueLbl = new Label();
-        var numberOfStarsHead = this.createHead("Number of Stars", numberOfStarsValueLbl, starLayer.numberOfStars.get().toString());
+        var numberOfStarsHead = this.createHead("Number of Stars", numberOfStarsValueLbl, Math.round(starLayer.numberOfStars.get()).toString());
         this.settingsList.addItem(numberOfStarsHead);
         var numberOfStarsSldr = new Slider();
         numberOfStarsSldr.minValue = 50;
@@ -35,7 +35,7 @@ export class StarLayerSettingsView extends NavigationView {
         numberOfStarsSldr.currentValue = starLayer.numberOfStars.get();
         this.settingsList.addItem(numberOfStarsSldr);
         numberOfStarsSldr.valueChanged.addEventListener((value) => { this.starLayer.numberOfStars.set(Math.round(value)); });
-        starLayer.numberOfStars.OnChanged.addEventListener((oldValue: number, newValue: number) => { numberOfStarsValueLbl.text = newValue.toString(); })
+        starLayer.numberOfStars.OnChanged.addEventListener((oldValue: number, newValue: number) => { numberOfStarsValueLbl.text = Math.round(newValue).toString(); })
 
         var speedValueLbl = new Label();
         var speedHead = this.createHead("Speed", speedValueLbl, this.round(starLayer.speed.get()).toString());
