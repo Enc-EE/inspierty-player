@@ -40,6 +40,14 @@ export class SettingsView extends LayoutView {
         this.settingsList.addItem(this.starLayersBtn);
     }
 
+    private superSuperRender = this.render;
+    public render = (ctx: CanvasRenderingContext2D) => {
+        if (this.settingsVisibilityState == SettingsVisibilityState.visible) {
+            ctx.fillStyle = "rgba(0,0,0,0.8)"
+            ctx.fillRect(this.bounds.x, this.bounds.y, this.bounds.width * 3 / 4, this.bounds.height);
+        }
+        this.superSuperRender(ctx);
+    };
     // #region --- show hide settings
 
     private lastMoved = Date.now();
@@ -84,11 +92,13 @@ export class SettingsView extends LayoutView {
         switch (state) {
             case SettingsVisibilityState.hidden:
                 this.showHideSettingsBtn.text = this.settingsIconText;
+                this.showHideSettingsBtn.properties.backgroundFillStyle = undefined;
                 this.children.removeItem(this.showHideSettingsBtn);
                 this.settingsVisibilityState = SettingsVisibilityState.hidden;
                 break;
             case SettingsVisibilityState.beforeVisible:
                 this.showHideSettingsBtn.text = this.settingsIconText;
+                this.showHideSettingsBtn.properties.backgroundFillStyle = undefined;
                 this.lastMoved = Date.now();
                 if (this.settingsVisibilityState == SettingsVisibilityState.hidden) {
                     setTimeout(this.mouseInactivityHandler, this.inactivityTimeout);
@@ -110,6 +120,7 @@ export class SettingsView extends LayoutView {
                     this.children.push(this.settingsList);
                 }
                 this.showHideSettingsBtn.text = this.settingsCloseIconText;
+                this.showHideSettingsBtn.properties.backgroundFillStyle = "rgba(0,0,0,0.5)";
                 this.settingsVisibilityState = SettingsVisibilityState.visible;
                 break;
         }
