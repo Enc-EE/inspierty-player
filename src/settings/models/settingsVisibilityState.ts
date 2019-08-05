@@ -1,4 +1,4 @@
-export enum SettingsOverlayViewModelState {
+export enum SettingsVisibilityState {
     hidden,
     beforeVisible,
     visible

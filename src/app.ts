@@ -1,7 +1,5 @@
 import { Stage } from "../enc/src/ui/stage";
 import { RootView } from "./view/rootView";
-import { Settings } from "./models/settings";
-import { SettingsManager } from "./settings/settingsManager";
 import { Dinject } from "../enc/src/dinject";
 import { EAnimation } from "../enc/src/eAnimation";
 import { ECanvas } from "../enc/src/ui/eCanvas";
@@ -13,10 +11,11 @@ import backgroundPng from "./assets/background.png"
 import logoFrontPng from "./assets/logo-front.png"
 import logoNovaPng from "./assets/logo-nova.png"
 import { LoadingView } from "./view/loadingView";
+import { VisualizationModel } from "./models/visualizationModel";
+import { StarLayer } from "./models/starLayer";
 
 export class App {
-    public static settings = new Settings(window.innerWidth, window.innerHeight);
-    public static settingManager = new SettingsManager();
+    public static visualizationModel = new VisualizationModel(window.innerWidth, window.innerHeight);
 
     public run = () => {
         document.body.style.backgroundColor = "black";
@@ -63,10 +62,12 @@ export class App {
                         inspiertyPlayerView = new RootView();
                         inspiertyPlayerView.deactivated();
 
-                        App.settingManager.addStarLayer();
-                        App.settingManager.addStarLayer();
-                        App.settingManager.addStarLayer();
-                        App.settingManager.addStarLayer();
+                        for (let i = 0; i < 4; i++) {
+                            var starLayer = new StarLayer();
+                            starLayer.name.set("Stars " + (i + 1));
+                            App.visualizationModel.starLayers.add(starLayer);
+
+                        }
                         resolve();
                     })
             })

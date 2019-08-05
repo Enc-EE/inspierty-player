@@ -1,22 +1,17 @@
 import { LayoutView } from "../../enc/src/ui/layoutControls/layoutView";
 import { Rectangle } from "../../enc/src/geometry/rectangle";
-import { StarLayerDrawer } from "./starLayerDrawer";
-import { SettingsOverlayView } from "./overlay/settingsOverlayView";
-import { App } from "../app";
-import { StarLayerAnimator } from "./starLayerAnimator";
+import { SettingsView } from "../settings/view/settingsView";
 import { EAnimation } from "../../enc/src/eAnimation";
-import { SettingOperation } from "../settings/settingOperation";
 import { Dinject } from "../../enc/src/dinject";
 import { PlayerControlsView } from "./playerControlsView";
 import { MainView } from "./mainView";
 import { AssetManager } from "../../enc/src/assetManager";
 import { EImage } from "../../enc/src/ui/controls/image";
 import { ImageScalingMode } from "../../enc/src/ui/controls/imageScalingMode";
+import { StarLayerManagerView } from "./starLayers/starLayerManagerView";
+import { App } from "../app";
 
 export class RootView extends LayoutView {
-    private starLayers: StarLayerDrawer[] = [];
-    private starAnimators: StarLayerAnimator[] = [];
-
     private animation: EAnimation;
 
     constructor() {
@@ -24,9 +19,12 @@ export class RootView extends LayoutView {
 
         this.animation = Dinject.getInstance("animation");
         this.animation.lowPerformance.addEventListener(this.onLowPerformance);
-        App.settingManager.update.addEventListener(this.appSettingsUpdated);
+        // App.settingManager.update.addEventListener(this.appSettingsUpdated);
 
         this.loadBackground();
+
+        var starLayerManagerView = new StarLayerManagerView();
+        this.children.push(starLayerManagerView);
 
         var front = new MainView();
         this.children.push(front);
@@ -34,56 +32,15 @@ export class RootView extends LayoutView {
         var playerView = new PlayerControlsView();
         this.children.push(playerView);
 
-        var settingsOverlay = new SettingsOverlayView();
+        var settingsOverlay = new SettingsView();
         this.children.push(settingsOverlay);
 
         this.triggerUpdateLayout();
     }
 
     private onLowPerformance = () => {
-        for (const starLayer of this.starLayers) {
-            App.settingManager.changeNumberOfStars(starLayer.starLayer, Math.round(starLayer.starLayer.stars.length * 0.9));
-        }
-    }
-
-    private appSettingsUpdated = (operation: SettingOperation) => {
-        switch (operation) {
-            case SettingOperation.AddStarLayer:
-                this.addStarLayer();
-                break;
-            case SettingOperation.RemoveStarLayer:
-                this.removeStarLayer();
-                break;
-        }
-    }
-
-    public addStarLayer = () => {
-        for (const starLayer of App.settings.starLayers) {
-            if (this.starLayers.firstOrDefault(x => x.starLayer == starLayer) == null) {
-                var layer = new StarLayerDrawer(starLayer);
-                this.starLayers.push(layer);
-                this.children.splice(1, 0, layer);
-                this.triggerUpdateLayout();
-
-                var animator = new StarLayerAnimator(starLayer);
-                this.animation.addUpdateFunction(animator.update);
-                this.starAnimators.push(animator);
-                break;
-            }
-        }
-    }
-
-    public removeStarLayer = () => {
-        for (const starLayerDraws of this.starLayers) {
-            if (App.settings.starLayers.firstOrDefault(x => x == starLayerDraws.starLayer) == null) {
-                var animator = this.starAnimators.first(x => x.starLayer == starLayerDraws.starLayer);
-                this.animation.removeUpdateFunction(animator.update);
-                this.starAnimators.removeItem(animator);
-
-                this.children.remove(x => x == starLayerDraws);
-                this.starLayers.remove(x => x == starLayerDraws);
-                this.triggerUpdateLayout();
-            }
+        for (const starLayer of App.visualizationModel.starLayers.items) {
+            starLayer.numberOfStars.set(starLayer.numberOfStars.get() * 0.9);
         }
     }
 
