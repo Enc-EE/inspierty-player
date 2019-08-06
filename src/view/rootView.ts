@@ -10,6 +10,7 @@ import { EImage } from "../../enc/src/ui/controls/image";
 import { ImageScalingMode } from "../../enc/src/ui/controls/imageScalingMode";
 import { StarLayerManagerView } from "./starLayers/starLayerManagerView";
 import { App } from "../app";
+import { ShootingStarManager as ShootingStarManagerView } from "./shootingStars.ts/shootingStarManagerView";
 
 export class RootView extends LayoutView {
     private animation: EAnimation;
@@ -25,6 +26,9 @@ export class RootView extends LayoutView {
 
         var starLayerManagerView = new StarLayerManagerView();
         this.children.push(starLayerManagerView);
+
+        var shootingStarManagerView = new ShootingStarManagerView();
+        this.children.push(shootingStarManagerView);
 
         var front = new MainView();
         this.children.push(front);

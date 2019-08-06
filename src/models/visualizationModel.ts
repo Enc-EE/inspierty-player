@@ -1,6 +1,7 @@
 import { StarLayer } from "./starLayer";
 import { ObservableArray } from "../../enc/src/ui/observableArray";
 import { ObservableProperty } from "../../enc/src/ui/observableProperty";
+import { ShootingStarConfig } from "./shootingStarConfig";
 
 export class VisualizationModel {
     public width: ObservableProperty<number>;
@@ -10,4 +11,5 @@ export class VisualizationModel {
         this.height = new ObservableProperty<number>(height);
     }
     public starLayers = new ObservableArray<StarLayer>();
+    public shootingStars = new ShootingStarConfig();
 }

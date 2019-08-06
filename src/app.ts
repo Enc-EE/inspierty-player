@@ -23,6 +23,7 @@ export class App {
         var canvas = ECanvas.createFullScreen();
         var stage = new Stage(canvas);
         var animation = new EAnimation();
+        // animation.setFps(60);
         animation.addUpdateFunction(canvas.draw);
 
         Dinject.addInstance("canvas", canvas);
