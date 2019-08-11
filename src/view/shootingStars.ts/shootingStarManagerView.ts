@@ -29,7 +29,7 @@ export class ShootingStarManager extends LayoutView {
         if (this.shootingStarViews.length <= limit && this.waitSecondsForNextSpawn <= 0) {
             var data = this.analyser.getSpectrum();
             var relDataValue = this.calculateRelDataValue(data[this.frequencyIndex]);
-            if (Math.random() * relDataValue > 0.6) {
+            if (Math.random() * relDataValue > 0.2) {
                 var angle = Math.PI / 4;
                 var x = App.visualizationModel.width.get() / 2 - Math.cos(angle) * App.visualizationModel.width.get() / 1.5 + (App.visualizationModel.width.get() * Math.random() - App.visualizationModel.width.get() / 2);
                 var y = App.visualizationModel.height.get() / 2 - Math.sin(angle) * App.visualizationModel.width.get() / 1.5 + (App.visualizationModel.height.get() * Math.random() - App.visualizationModel.height.get() / 2);
@@ -39,7 +39,7 @@ export class ShootingStarManager extends LayoutView {
                 shootingStarView.y = y;
                 shootingStarView.angle = angle + Math.PI / 16 * Math.random() - Math.PI / 32;
                 shootingStarView.speed = 600 + Math.random() * 200;
-                shootingStarView.size = Math.round(Math.random() * 3) + 2;
+                shootingStarView.size = Math.round(Math.random() * 2) + 3;
                 shootingStarView.onDone.addEventListener(() => this.removeShootingStar(shootingStarView));
                 this.shootingStarViews.push(shootingStarView);
                 this.children.push(shootingStarView);

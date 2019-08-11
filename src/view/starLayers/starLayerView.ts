@@ -67,18 +67,18 @@ export class StarLayerView extends RenderObject {
 
     public render = (ctx: CanvasRenderingContext2D): void => {
         for (const star of this.stars) {
-            var end = star.r * 3;
-            var grad = ctx.createRadialGradient(star.x, star.y, star.r, star.x, star.y, end);
-            grad.addColorStop(0, 'rgba(255, 255, 255, 0.2)');
-            grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
-            ctx.fillStyle = grad;
-            ctx.arc(star.x, star.y, end, 0, Math.PI * 2);
-            ctx.fill();
-
             ctx.fillStyle = "white";
             ctx.beginPath();
             ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
             ctx.fill();
+
+            // var end = star.r * 3;
+            // var grad = ctx.createRadialGradient(star.x, star.y, star.r, star.x, star.y, end);
+            // grad.addColorStop(0, 'rgba(255, 255, 255, 0.2)');
+            // grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+            // ctx.fillStyle = grad;
+            // ctx.arc(star.x, star.y, end, 0, Math.PI * 2);
+            // ctx.fill();
         }
     }
 

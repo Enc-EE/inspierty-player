@@ -11,6 +11,8 @@ import { ImageScalingMode } from "../../enc/src/ui/controls/imageScalingMode";
 import { StarLayerManagerView } from "./starLayers/starLayerManagerView";
 import { App } from "../app";
 import { ShootingStarManager as ShootingStarManagerView } from "./shootingStars.ts/shootingStarManagerView";
+import { FpsView } from "../../enc/src/ui/fpsView";
+import { HorizontalAlignementOption } from "../../enc/src/ui/alignement/horizontalAlignementOption";
 
 export class RootView extends LayoutView {
     private animation: EAnimation;
@@ -38,6 +40,14 @@ export class RootView extends LayoutView {
 
         var settingsOverlay = new SettingsView();
         this.children.push(settingsOverlay);
+
+        if (process.env.NODE_ENV !== 'production') {
+            var fpsView = new FpsView(this.animation)
+            fpsView.bounds = new Rectangle(0, 0, window.innerWidth, window.innerHeight);
+            fpsView.alignement.horizontalAlign = HorizontalAlignementOption.Right;
+            // fpsView.triggerUpdateLayout();
+            this.children.push(fpsView);
+        }
 
         this.triggerUpdateLayout();
     }

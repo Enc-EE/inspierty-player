@@ -23,7 +23,7 @@ export class App {
         var canvas = ECanvas.createFullScreen();
         var stage = new Stage(canvas);
         var animation = new EAnimation();
-        // animation.setFps(60);
+        animation.setFps(60);
         animation.addUpdateFunction(canvas.draw);
 
         Dinject.addInstance("canvas", canvas);
@@ -63,11 +63,10 @@ export class App {
                         inspiertyPlayerView = new RootView();
                         inspiertyPlayerView.deactivated();
 
-                        for (let i = 0; i < 4; i++) {
+                        for (let i = 0; i < 3; i++) {
                             var starLayer = new StarLayer();
                             starLayer.name.set("Stars " + (i + 1));
                             App.visualizationModel.starLayers.add(starLayer);
-
                         }
                         resolve();
                     })

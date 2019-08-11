@@ -54,8 +54,8 @@ export class StarLayerSettingsView extends NavigationView {
         var sizeHead = this.createHead("Size", sizeValueLbl, this.round(starLayer.starRadiusLowerBorder.get()) + " - " + this.round(starLayer.starRadiusUpperBorder.get()));
         this.settingsList.addItem(sizeHead);
         var sizeSldr = new RangeSlider();
-        sizeSldr.minValue = 0.005;
-        sizeSldr.maxValue = 2;
+        sizeSldr.minValue = 0.25;
+        sizeSldr.maxValue = 1.5;
         sizeSldr.currentValueLow = starLayer.starRadiusLowerBorder.get();
         sizeSldr.currentValueHigh = starLayer.starRadiusUpperBorder.get();
         sizeSldr.properties.color1 = Style.fillStyle;
