@@ -29,15 +29,7 @@ export class PlayerControlsView extends LayoutView {
         this.children.push(listView);
 
         var playPauseBtn = this.createBtn(this.playIconText, () => {
-            if (playPauseBtn.text == this.playIconText) {
-                audioManager.play();
-                playPauseBtn.text = this.pauseIconText;
-            }
-            else {
-                audioManager.pause();
-                playPauseBtn.text = this.playIconText;
-            }
-            this.triggerUpdateLayout();
+            this.playPause(playPauseBtn, audioManager);
         });
         listView.addItem(playPauseBtn);
 
@@ -59,6 +51,25 @@ export class PlayerControlsView extends LayoutView {
             audioManager.next();
         });
         listView.addItem(nextBtn);
+
+        
+        document.addEventListener('keyup', (event) => {
+            if (event.keyCode == 32) { // space
+                this.playPause(playPauseBtn, audioManager);
+            }
+        });
+    }
+
+    private playPause(playPauseBtn: Button, audioManager: AudioManager) {
+        if (playPauseBtn.text == this.playIconText) {
+            audioManager.play();
+            playPauseBtn.text = this.pauseIconText;
+        }
+        else {
+            audioManager.pause();
+            playPauseBtn.text = this.playIconText;
+        }
+        this.triggerUpdateLayout();
     }
 
     private createBtn(iconText: string, event: () => void) {

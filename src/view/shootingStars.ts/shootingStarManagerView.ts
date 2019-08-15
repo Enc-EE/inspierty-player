@@ -1,4 +1,5 @@
 import { LayoutView } from "../../../enc/src/ui/layoutControls/layoutView";
+// import { ShootingStarView } from "./shootingStarView";
 import { ShootingStarView } from "./shootingStarView";
 import { App } from "../../app";
 import { Dinject } from "../../../enc/src/dinject";
