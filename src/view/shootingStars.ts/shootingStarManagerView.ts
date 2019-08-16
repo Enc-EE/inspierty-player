@@ -32,9 +32,9 @@ export class ShootingStarManager extends LayoutView {
             var relDataValue = this.calculateRelDataValue(data[this.frequencyIndex]);
             if (Math.random() * relDataValue > 0.6) {
                 var angle = Math.PI / 4;
+                angle = angle + Math.PI / 16 * Math.random() - Math.PI / 32;
 
-                var shootingStarView = new ShootingStarView();
-                var angle = angle + Math.PI / 16 * Math.random() - Math.PI / 32;
+                var shootingStarView = new ShootingStarView(Math.random() * 1.3 + 0.7);
                 shootingStarView.angle = angle;
 
                 var nonHitBorderRatio = 0.2;
@@ -93,8 +93,7 @@ export class ShootingStarManager extends LayoutView {
                 shootingStarView.x = spawnX - spawnOuterBorder;
                 shootingStarView.y = spawnY - spawnOuterBorder;
 
-                shootingStarView.speed = 600 + Math.random() * 200;
-                shootingStarView.size = Math.round(Math.random() * 2) + 3;
+                shootingStarView.speed = 50 + shootingStarView.size * 150 + Math.random() * 300;
                 shootingStarView.onDone.addEventListener(() => this.removeShootingStar(shootingStarView));
                 this.shootingStarViews.push(shootingStarView);
                 this.children.push(shootingStarView);

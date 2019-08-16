@@ -3,20 +3,20 @@ import { EEvent } from "../../../enc/src/eEvent";
 import { App } from "../../app";
 import { Dinject } from "../../../enc/src/dinject";
 import { EAnimation } from "../../../enc/src/eAnimation";
+import { Helper } from "../../../enc/src/helper";
 
 export class ShootingStarView extends RenderObject {
     public x: number;
     public y: number;
     public angle: number;
     public speed: number;
-    public size: number;
 
     public onDone = new EEvent();
     image: HTMLImageElement;
     xImageOffset: number;
     yImageOffset: number;
 
-    constructor() {
+    constructor(public size: number) {
         super();
 
         var animation = Dinject.getInstance("animation") as EAnimation;
@@ -26,9 +26,9 @@ export class ShootingStarView extends RenderObject {
 
     private createImgage = () => {
         var border = 2;
-        var length = 120;
-        var r = 2;
-        var thinR = 0.5;
+        var length = this.size * 50 + Math.random() * 80;
+        var r = this.size;
+        var thinR = this.size * (Math.random() / 4);
         const height = (border + r) * 2;
         this.xImageOffset = border + length;
         this.yImageOffset = height / 2;
@@ -50,8 +50,7 @@ export class ShootingStarView extends RenderObject {
 
         var imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
 
-
-        var newImageData = this.blur(imageData, 1);
+        var newImageData = Helper.blur(imageData, 1);
 
         tempCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
         tempCtx.putImageData(newImageData, 0, 0);
@@ -86,44 +85,6 @@ export class ShootingStarView extends RenderObject {
         if (this.x > App.visualizationModel.width.get() * 1.5 || this.x < -App.visualizationModel.width.get() / 2 || this.y > App.visualizationModel.height.get() * 1.5 || this.y < -App.visualizationModel.height.get() / 2) {
             this.onDone.dispatchEvent();
         }
-    }
-
-    private blur(imageData: ImageData, quadraticRadius: number) {
-        var tempCanvas = document.createElement("canvas");
-        tempCanvas.width = imageData.width;
-        tempCanvas.height = imageData.height;
-        var tempCtx = tempCanvas.getContext("2d");
-
-        var newImageData = tempCtx.createImageData(tempCanvas.width, tempCanvas.height);
-        for (let i = 0; i < imageData.data.length; i = i + 4) {
-            var r = imageData.data[i];
-            var g = imageData.data[i + 1];
-            var b = imageData.data[i + 2];
-            var a = imageData.data[i + 3];
-            var y = Math.floor(i / 4 / imageData.width);
-            var x = i / 4 - y * imageData.width;
-            var newR = 0;
-            var newG = 0;
-            var newB = 0;
-            var newA = 0;
-            var pixels = 0;
-            for (let blurY = y + -quadraticRadius; blurY < y + quadraticRadius + 1; blurY++) {
-                for (let blurX = x + -quadraticRadius; blurX < x + quadraticRadius + 1; blurX++) {
-                    if (blurY >= 0 && blurY < imageData.height && blurX >= 0 && blurX < imageData.width) {
-                        newR += imageData.data[(blurY * imageData.width + blurX) * 4];
-                        newG += imageData.data[(blurY * imageData.width + blurX) * 4 + 1];
-                        newB += imageData.data[(blurY * imageData.width + blurX) * 4 + 2];
-                        newA += imageData.data[(blurY * imageData.width + blurX) * 4 + 3];
-                        pixels++;
-                    }
-                }
-            }
-            newImageData.data[i] = newR / pixels;
-            newImageData.data[i + 1] = newG / pixels;
-            newImageData.data[i + 2] = newB / pixels;
-            newImageData.data[i + 3] = newA / pixels;
-        }
-        return newImageData;
     }
 
     private drawShootingStarPart(ctx: CanvasRenderingContext2D, lineWidth: number, shootingStar: ShootingStarView, length: number) {
