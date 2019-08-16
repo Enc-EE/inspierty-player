@@ -1,6 +1,6 @@
 import { LayoutView } from "../../../enc/src/ui/layoutControls/layoutView";
 // import { ShootingStarView } from "./shootingStarView";
-import { ShootingStarView } from "./shootingStarView";
+import { ShootingStarView } from "./shootingStarView2";
 import { App } from "../../app";
 import { Dinject } from "../../../enc/src/dinject";
 import { AudioManager } from "../../audioManager";
@@ -26,19 +26,73 @@ export class ShootingStarManager extends LayoutView {
     }
 
     update = (timeDiff: number) => {
-        var limit = 5;
+        var limit = 20;
         if (this.shootingStarViews.length <= limit && this.waitSecondsForNextSpawn <= 0) {
             var data = this.analyser.getSpectrum();
             var relDataValue = this.calculateRelDataValue(data[this.frequencyIndex]);
-            if (Math.random() * relDataValue > 0.2) {
+            if (Math.random() * relDataValue > 0.6) {
                 var angle = Math.PI / 4;
-                var x = App.visualizationModel.width.get() / 2 - Math.cos(angle) * App.visualizationModel.width.get() / 1.5 + (App.visualizationModel.width.get() * Math.random() - App.visualizationModel.width.get() / 2);
-                var y = App.visualizationModel.height.get() / 2 - Math.sin(angle) * App.visualizationModel.width.get() / 1.5 + (App.visualizationModel.height.get() * Math.random() - App.visualizationModel.height.get() / 2);
 
                 var shootingStarView = new ShootingStarView();
-                shootingStarView.x = x;
-                shootingStarView.y = y;
-                shootingStarView.angle = angle + Math.PI / 16 * Math.random() - Math.PI / 32;
+                var angle = angle + Math.PI / 16 * Math.random() - Math.PI / 32;
+                shootingStarView.angle = angle;
+
+                var nonHitBorderRatio = 0.2;
+                var spawnOuterBorder = 5;
+                var screenWidth = App.visualizationModel.width.get() + spawnOuterBorder * 2;
+                var screenHeight = App.visualizationModel.height.get() + spawnOuterBorder * 2;
+                var hitPointX = Math.random() * (screenWidth * (1 - nonHitBorderRatio * 2)) + screenWidth * nonHitBorderRatio;
+                var hitPointY = Math.random() * (screenHeight * (1 - nonHitBorderRatio * 2)) + screenHeight * nonHitBorderRatio;
+
+                var calcAngle = angle
+                var calcWidth = hitPointX;
+                var calcHeight = hitPointY;
+
+                var isBottom = true;
+                var isFirstHalfPi = true;
+                if (calcAngle > Math.PI) {
+                    isBottom = false;
+                    calcAngle = calcAngle - Math.PI;
+                    calcHeight = screenHeight - hitPointY;
+                    calcWidth = screenWidth - hitPointX;
+                }
+                if (calcAngle >= Math.PI / 2) {
+                    isFirstHalfPi = false;
+                    calcAngle = Math.PI / 2 - (calcAngle - Math.PI / 2);
+                    if (isBottom) {
+                        calcWidth = screenWidth - hitPointX;
+                    } else {
+                        calcWidth = hitPointX;
+                    }
+                }
+
+                var cutX = Math.tan(Math.PI / 2 - calcAngle) * calcHeight;
+                var cutY = Math.tan(calcAngle) * calcWidth;
+
+                var spawnX = 0;
+                var spawnY = 0
+                if (Math.abs(cutX) > calcWidth) {
+                    spawnX = calcWidth;
+                    spawnY = cutY;
+                } else {
+                    spawnX = cutX;
+                    spawnY = calcHeight;
+                }
+
+                if (isBottom) {
+                    spawnY = -spawnY;
+                    spawnX = -spawnX;
+                }
+                if (!isFirstHalfPi) {
+                    spawnX = -spawnX;
+                }
+
+                spawnX = spawnX + hitPointX;
+                spawnY = spawnY + hitPointY;
+
+                shootingStarView.x = spawnX - spawnOuterBorder;
+                shootingStarView.y = spawnY - spawnOuterBorder;
+
                 shootingStarView.speed = 600 + Math.random() * 200;
                 shootingStarView.size = Math.round(Math.random() * 2) + 3;
                 shootingStarView.onDone.addEventListener(() => this.removeShootingStar(shootingStarView));

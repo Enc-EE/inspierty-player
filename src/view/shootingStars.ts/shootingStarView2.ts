@@ -13,6 +13,8 @@ export class ShootingStarView extends RenderObject {
 
     public onDone = new EEvent();
     image: HTMLImageElement;
+    xImageOffset: number;
+    yImageOffset: number;
 
     constructor() {
         super();
@@ -23,16 +25,26 @@ export class ShootingStarView extends RenderObject {
     }
 
     private createImgage = () => {
+        var border = 2;
+        var length = 120;
+        var r = 2;
+        var thinR = 0.5;
+        const height = (border + r) * 2;
+        this.xImageOffset = border + length;
+        this.yImageOffset = height / 2;
+
         var tempCanvas = document.createElement("canvas");
-        tempCanvas.width = 120;
-        tempCanvas.height = 10;
+        tempCanvas.width = border + length + r + border;
+        tempCanvas.height = height;
         var tempCtx = tempCanvas.getContext("2d");
 
         tempCtx.beginPath();
-        tempCtx.moveTo(10, 5);
-        tempCtx.lineTo(105, 2);
-        tempCtx.bezierCurveTo(115, 2, 115, 8, 105, 8);
-        tempCtx.lineTo(10, 6);
+        tempCtx.moveTo(border, height / 2 - thinR);
+        tempCtx.lineTo(border + length, border);
+        tempCtx.bezierCurveTo(border + length + r, height / 2 - r, border + length + r, height / 2 + r, border + length, height / 2 + r);
+        tempCtx.lineTo(border, height / 2 + thinR);
+        tempCtx.closePath();
+
         tempCtx.fillStyle = "rgba(255, 255, 255, 1)"
         tempCtx.fill();
 
@@ -54,9 +66,10 @@ export class ShootingStarView extends RenderObject {
 
     public render = (ctx: CanvasRenderingContext2D): void => {
         ctx.save();
-        ctx.translate(this.x,this.y);
+        ctx.translate(this.x, this.y);
         ctx.rotate(this.angle);
-        ctx.drawImage(this.image, 0, 0);
+        ctx.drawImage(this.image, -this.xImageOffset, -this.yImageOffset);
+        ctx.beginPath();
         ctx.restore();
         // let removeIs: number[] = [];
         // ctx.fillStyle = "white";
@@ -70,7 +83,7 @@ export class ShootingStarView extends RenderObject {
         // ctx.arc(this.x, this.y, 1, 0, Math.PI * 2);
         // ctx.fill();
 
-        if (this.x > App.visualizationModel.width.get() * 3 || this.x < -App.visualizationModel.width.get() * 2 || this.y > App.visualizationModel.height.get() * 3 || this.y < -App.visualizationModel.height.get() * 2) {
+        if (this.x > App.visualizationModel.width.get() * 1.5 || this.x < -App.visualizationModel.width.get() / 2 || this.y > App.visualizationModel.height.get() * 1.5 || this.y < -App.visualizationModel.height.get() / 2) {
             this.onDone.dispatchEvent();
         }
     }
