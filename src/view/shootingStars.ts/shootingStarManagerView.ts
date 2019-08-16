@@ -1,6 +1,5 @@
 import { LayoutView } from "../../../enc/src/ui/layoutControls/layoutView";
-// import { ShootingStarView } from "./shootingStarView";
-import { ShootingStarView } from "./shootingStarView2";
+import { ShootingStarView } from "./shootingStarView";
 import { App } from "../../app";
 import { Dinject } from "../../../enc/src/dinject";
 import { AudioManager } from "../../audioManager";
@@ -19,7 +18,6 @@ export class ShootingStarManager extends LayoutView {
 
         var audioManager = Dinject.getInstance("audio") as AudioManager;
         this.analyser = audioManager.getAnalyser();
-
 
         this.animation = Dinject.getInstance("animation") as EAnimation;
         this.animation.addUpdateFunction(this.update);
