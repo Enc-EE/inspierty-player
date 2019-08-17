@@ -16,22 +16,23 @@ export class PlayerControlsView extends LayoutView {
     private stopIconText = "\uf04d" // "stop"
     private nextIconText = "\uf051" // "next"
     private previousIconText = "\uf048" // "previous"
+    listView: any;
 
     constructor() {
         super();
 
         var audioManager: AudioManager = Dinject.getInstance("audio");
 
-        var listView = new ListView();
-        listView.alignement.verticalAlign = VerticalAlignementOption.Bottom;
-        listView.alignement.margin.bottom = 20;
-        listView.properties.orientation = Orientation.Horizontal;
-        this.children.push(listView);
+        this.listView = new ListView();
+        this.listView.alignement.verticalAlign = VerticalAlignementOption.Bottom;
+        this.listView.alignement.margin.bottom = 20;
+        this.listView.properties.orientation = Orientation.Horizontal;
+        this.children.push(this.listView);
 
         var playPauseBtn = this.createBtn(this.playIconText, () => {
             this.playPause(playPauseBtn, audioManager);
         });
-        listView.addItem(playPauseBtn);
+        this.listView.addItem(playPauseBtn);
 
         var stopBtn = this.createBtn(this.stopIconText, () => {
             audioManager.stop();
@@ -40,25 +41,61 @@ export class PlayerControlsView extends LayoutView {
             }
             this.triggerUpdateLayout();
         });
-        listView.addItem(stopBtn);
-        
+        this.listView.addItem(stopBtn);
+
         var previousBtn = this.createBtn(this.previousIconText, () => {
             audioManager.previous();
         });
-        listView.addItem(previousBtn);
-        
+        this.listView.addItem(previousBtn);
+
         var nextBtn = this.createBtn(this.nextIconText, () => {
             audioManager.next();
         });
-        listView.addItem(nextBtn);
+        this.listView.addItem(nextBtn);
 
-        
+
         document.addEventListener('keyup', (event) => {
             if (event.keyCode == 32) { // space
                 this.playPause(playPauseBtn, audioManager);
             }
         });
     }
+
+    // #region - inactivity
+
+    private lastMoved = Date.now();
+    private inactivityTimeout = 2000;
+    private isVisible = true;
+
+    public mouseInactivityHandler = () => {
+        if (Date.now() - this.lastMoved >= this.inactivityTimeout) {
+            this.setSettingsVisibilityState(false);
+        } else {
+            setTimeout(this.mouseInactivityHandler, this.inactivityTimeout - (Date.now() - this.lastMoved));
+        }
+    }
+
+    private setSettingsVisibilityState = (isVisible: boolean) => {
+        if (isVisible) {
+            this.lastMoved = Date.now();
+            setTimeout(this.mouseInactivityHandler, this.inactivityTimeout);
+            this.children.addItemIfNotExists(this.listView);
+            this.isVisible = true;
+        } else {
+            this.children.removeItemIfExists(this.listView);
+            this.isVisible = false;
+        }
+    }
+
+    private mouseClickShowHideSettings() {
+        this.setSettingsVisibilityState(true);
+    }
+
+    private mouseMoveShowHideSettings() {
+        this.setSettingsVisibilityState(true);
+    }
+
+    // #endregion
 
     private playPause(playPauseBtn: Button, audioManager: AudioManager) {
         if (playPauseBtn.text == this.playIconText) {
@@ -88,5 +125,15 @@ export class PlayerControlsView extends LayoutView {
         for (const child of this.children) {
             child.updateLayout(ctx, this.bounds);
         }
+    }
+
+    public mouseMove = (ev: MouseEvent) => {
+        this.mouseMoveShowHideSettings();
+        super.mouseMove(ev);
+    }
+
+    public click = (ev: MouseEvent) => {
+        this.mouseClickShowHideSettings();
+        super.click(ev);
     }
 }
