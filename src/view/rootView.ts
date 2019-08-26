@@ -45,7 +45,6 @@ export class RootView extends LayoutView {
             var fpsView = new FpsView(this.animation)
             fpsView.bounds = new Rectangle(0, 0, window.innerWidth, window.innerHeight);
             fpsView.alignement.horizontalAlign = HorizontalAlignementOption.Right;
-            // fpsView.triggerUpdateLayout();
             this.children.push(fpsView);
         }
 

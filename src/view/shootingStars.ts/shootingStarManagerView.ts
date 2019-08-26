@@ -24,15 +24,15 @@ export class ShootingStarManager extends LayoutView {
     }
 
     update = (timeDiff: number) => {
-        var limit = 20;
+        var limit = 50;
         if (this.shootingStarViews.length <= limit && this.waitSecondsForNextSpawn <= 0) {
             var data = this.analyser.getSpectrum();
             var relDataValue = this.calculateRelDataValue(data[this.frequencyIndex]);
-            if (Math.random() * relDataValue > 0.6) {
+            if (Math.random() * relDataValue > 0.62) {
                 var angle = Math.PI / 4;
-                angle = angle + Math.PI / 16 * Math.random() - Math.PI / 32;
+                angle = angle + Math.PI / 8 * Math.random() - Math.PI / 16;
 
-                var shootingStarView = new ShootingStarView(Math.random() * 1.3 + 0.7);
+                var shootingStarView = new ShootingStarView(Math.random() * 0.05 + 0.5);
                 shootingStarView.angle = angle;
 
                 var nonHitBorderRatio = 0.2;
@@ -91,12 +91,12 @@ export class ShootingStarManager extends LayoutView {
                 shootingStarView.x = spawnX - spawnOuterBorder;
                 shootingStarView.y = spawnY - spawnOuterBorder;
 
-                shootingStarView.speed = 50 + shootingStarView.size * 150 + Math.random() * 300;
+                shootingStarView.speed = 100 + shootingStarView.size * 150 + Math.random() * 400;
                 shootingStarView.onDone.addEventListener(() => this.removeShootingStar(shootingStarView));
                 this.shootingStarViews.push(shootingStarView);
                 this.children.push(shootingStarView);
 
-                this.waitSecondsForNextSpawn = 1;
+                this.waitSecondsForNextSpawn = 0.1;
             }
         } else {
             this.waitSecondsForNextSpawn -= timeDiff;

@@ -26,7 +26,7 @@ export class ShootingStarView extends RenderObject {
 
     private createImgage = () => {
         var border = 2;
-        var length = this.size * 50 + Math.random() * 80;
+        var length = this.size * 20 + Math.random() * 160;
         var r = this.size;
         var thinR = this.size * (Math.random() / 4);
         const height = (border + r) * 2;
@@ -36,6 +36,7 @@ export class ShootingStarView extends RenderObject {
         var tempCanvas = document.createElement("canvas");
         tempCanvas.width = border + length + r + border;
         tempCanvas.height = height;
+
         var tempCtx = tempCanvas.getContext("2d");
 
         tempCtx.beginPath();
@@ -45,15 +46,16 @@ export class ShootingStarView extends RenderObject {
         tempCtx.lineTo(border, height / 2 + thinR);
         tempCtx.closePath();
 
-        tempCtx.fillStyle = "rgba(255, 255, 255, 1)"
+        tempCtx.fillStyle = "rgba(255, 255, 255, " + (Math.random() / 2 + 0.5) + ")"
+        // tempCtx.fillStyle = "rgba(255, 255, 255, 1)"
         tempCtx.fill();
 
-        var imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+        // var imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
 
-        var newImageData = Helper.blur(imageData, 1);
+        // var newImageData = Helper.blur(imageData, 1);
 
-        tempCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
-        tempCtx.putImageData(newImageData, 0, 0);
+        // tempCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
+        // tempCtx.putImageData(newImageData, 0, 0);
         this.image = new Image();
         this.image.src = tempCanvas.toDataURL();
     }

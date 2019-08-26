@@ -18,9 +18,16 @@ export class App {
     public static visualizationModel = new VisualizationModel(window.innerWidth, window.innerHeight);
 
     public run = () => {
+
+        // todo
+        // - change direction
+        // - sparkle effect
+        // - shooting stars -> smaller and stuff
+
         document.body.style.backgroundColor = "black";
 
         var canvas = ECanvas.createFullScreen();
+        
         var stage = new Stage(canvas);
         var animation = new EAnimation();
         animation.setFps(60);

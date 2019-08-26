@@ -7,7 +7,7 @@ import { ImageScalingMode } from "../../enc/src/ui/controls/imageScalingMode";
 import { AudioManager } from "../audioManager";
 import { AudioGraphNodeAnalyser } from "../../enc/src/audio/audioGraphNodeAnalyser";
 import { Label } from "../../enc/src/ui/controls/label";
-import { Style } from "./style";
+import { SongNameView } from "./songNameView";
 
 export class MainView extends LayoutView {
     analyser: AudioGraphNodeAnalyser;
@@ -16,6 +16,7 @@ export class MainView extends LayoutView {
     private lowerBorder = 0.4;
     private upperBorder = 0.9;
     songName: Label;
+    songNameView: SongNameView;
 
     constructor() {
         super();
@@ -31,7 +32,6 @@ export class MainView extends LayoutView {
 
         var logoNovaEImage = new EImage(logoNova);
         logoNovaEImage.properties.imageScalingMode = ImageScalingMode.FitAndSpace;
-        this.children.push(logoNovaEImage);
 
         var func = logoNovaEImage.render
 
@@ -48,41 +48,11 @@ export class MainView extends LayoutView {
         var logoFront = new EImage(logo);
         logoFront.properties.imageScalingMode = ImageScalingMode.FitAndSpace;
         this.children.push(logoFront);
+        this.children.push(logoNovaEImage);
 
-        audioManager.songChanged.addEventListener(this.songChanged);
-        this.songName = new Label();
-        this.songName.text = audioManager.currentSongName;
-        this.newSongName = audioManager.currentSongName;
-        this.songName.properties.fontSize = 40;
-        this.songName.properties.fillStyle = Style.mousOver;
-        this.songName.properties.fontFamily = "Georgia";
-        this.songName.alignement.verticalAlignmentRatio = 0.6;
-        (document as any).x = this.songName;
-        this.children.push(this.songName);
-    }
-
-    private isSongAnimating = false;
-    private newSongName: string;
-    private songChanged = (songName: string) => {
-        this.newSongName = songName;
-        if (!this.isSongAnimating) {
-            this.isSongAnimating = true;
-            this.songName.deactivate(0.8);
-            setTimeout(() => {
-                this.songName.text = this.newSongName;
-                this.triggerUpdateLayout();
-                this.songName.activate(0.8);
-                setTimeout(() => {
-                    this.isSongAnimating = false;
-                }, 900);
-            }, 900);
-        } else {
-            setTimeout(() => {
-                if (this.newSongName == songName && this.songName.text != songName) {
-                    this.songChanged(songName);
-                }
-            }, 1000);
-        }
+        this.songNameView = new SongNameView(audioManager.currentSongName, window.innerWidth / 2, window.innerHeight / 5 * 3, 40);
+        audioManager.songChanged.addEventListener(this.songNameView.changeSongName);
+        this.children.push(this.songNameView);
     }
 
     private calculateRelDataValue(dataValue: number) {
