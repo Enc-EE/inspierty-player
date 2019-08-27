@@ -1,6 +1,7 @@
 import { AudioGraph } from "../enc/src/audio/audioGraph";
 import { AudioGraphNodeElementSource } from "../enc/src/audio/audioGraphNodeElementSource";
 import { AudioGraphNodeAnalyser } from "../enc/src/audio/audioGraphNodeAnalyser";
+import { EEventT } from "../enc/src/eEvent";
 
 // import FaintAssetMP3 from "./assets/mp3-demo/demo_1_faint_color.mp3"
 // import PrismAssetMP3 from "./assets/mp3-demo/demo_2_prism.mp3"
@@ -13,7 +14,6 @@ import { AudioGraphNodeAnalyser } from "../enc/src/audio/audioGraphNodeAnalyser"
 import FaintAssetMP3 from "./assets/demo/Trailer_faintColor.mp3"
 import DeepAssetMP3 from "./assets/demo/Trailer_DeepField.mp3"
 import DriftingAssetMP3 from "./assets/demo/Trailer_DriftingIntoTheAtmosphere.mp3"
-import { EEventT } from "../enc/src/eEvent";
 
 export class AudioManager {
     private audioGraph: AudioGraph;

@@ -59,7 +59,6 @@ export class SongNameView extends RenderObject {
 
             var alpha = 1 - progress;
 
-            this.tempCtx.scale(progress + 1, progress + 1);
             var ms = this.tempCtx.measureText("test");
             var gradient = this.tempCtx.createLinearGradient(-20, 0, -20, 40);
             gradient.addColorStop(0, "rgba(43, 250, 253, " + alpha + ")");

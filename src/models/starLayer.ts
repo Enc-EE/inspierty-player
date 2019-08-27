@@ -1,4 +1,3 @@
-import { Star } from "./star";
 import { ObservableProperty } from "../../enc/src/ui/observableProperty";
 
 export class StarLayer {
