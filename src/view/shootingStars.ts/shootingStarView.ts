@@ -72,19 +72,8 @@ export class ShootingStarView extends RenderObject {
         ctx.drawImage(this.image, -this.xImageOffset, -this.yImageOffset);
         ctx.beginPath();
         ctx.restore();
-        // let removeIs: number[] = [];
-        // ctx.fillStyle = "white";
-        // ctx.strokeStyle = "white";
-        // ctx.lineCap = "round";
 
-        // for (let j = this.size; j > 0; j -= 0.5) {
-        //     this.drawShootingStarPart(ctx, 0.5, this, j * j * j);
-        // }
-
-        // ctx.arc(this.x, this.y, 1, 0, Math.PI * 2);
-        // ctx.fill();
-
-        if (this.x > App.visualizationModel.width.get() * 1.5 || this.x < -App.visualizationModel.width.get() / 2 || this.y > App.visualizationModel.height.get() * 1.5 || this.y < -App.visualizationModel.height.get() / 2) {
+        if (this.x > App.visualizationModel.size.get().width * 1.5 || this.x < -App.visualizationModel.size.get().width / 2 || this.y > App.visualizationModel.size.get().height * 1.5 || this.y < -App.visualizationModel.size.get().height / 2) {
             this.onDone.dispatchEvent();
         }
     }

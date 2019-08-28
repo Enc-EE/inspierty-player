@@ -17,28 +17,56 @@ export class SongNameView extends RenderObject {
     animation: any;
     public fontSize: number = 2.5;
 
-    constructor(private currentSongName: string, public x: number, public y: number) {
+    public x: number;
+    public y: number;
+
+    private textBorder = 0.85;
+    private textAnimationBorder = 0.75
+
+    constructor(private currentSongName: string) {
         super();
         this.tempCanvas = document.createElement("canvas");
-        this.tempCanvas.width = window.innerWidth;
-        this.tempCanvas.height = window.innerHeight;
+        this.tempCanvas.style.display = "none";
         document.body.append(this.tempCanvas);
-        this.tempCanvas.style.letterSpacing = "8px";
-        this.tempCtx = this.tempCanvas.getContext("2d");
-        this.tempCtx.textAlign = "center";
-        this.tempCtx.textBaseline = "top";
-        if (App.visualizationModel.width.get() < 1000) {
-            this.tempCtx.font = "25px dejavu serif italic";
-        } else {
-            this.tempCtx.font = "2.5vw dejavu serif italic";
-        }
 
         this.animation = Dinject.getInstance("animation");
         this.animation.addUpdateFunction(this.update);
+
+        App.visualizationModel.size.onChanged.addEventListener(this.reset);
+        this.reset();
+    }
+
+    private reset = () => {
+        var width = App.visualizationModel.size.get().width;
+        this.tempCanvas.width = App.visualizationModel.size.get().width;
+        this.tempCanvas.height = App.visualizationModel.size.get().height;
+        this.tempCtx = this.tempCanvas.getContext("2d");
+        if (width < 1000) {
+            this.tempCanvas.style.letterSpacing = "5px";
+            this.tempCtx.font = "28px dejavu serif italic";
+        } else {
+            this.tempCanvas.style.letterSpacing = "8px";
+            this.tempCtx.font = "2.6vw dejavu serif italic";
+        }
+        
+        this.tempCtx.textAlign = "center";
+        this.tempCtx.textBaseline = "top";
+        this.x = App.visualizationModel.size.get().width / 2;
+        this.y = App.visualizationModel.size.get().height / 5 * 3;
+
+        var fms = this.tempCtx.measureText(this.currentSongName);
+        var oldLargeText = this.isLargeText;
+        this.isLargeText = fms.width > App.visualizationModel.size.get().width * this.textBorder;
+        if (this.isLargeText && !oldLargeText) {
+            this.isTextAnimationGoingLeft = true;
+            var diff = fms.width - App.visualizationModel.size.get().width * this.textAnimationBorder
+            this.offsetX = diff / 2;
+        } else if (!this.isLargeText && oldLargeText) {
+            this.offsetX = 0;
+        }
     }
 
     private isLargeText = false;
-    private largeTextAnimation = 0;
     private isTextAnimationGoingLeft = true;
     private offsetX = 0;
 
@@ -49,11 +77,10 @@ export class SongNameView extends RenderObject {
                 this.nextSongName = undefined;
 
                 var fms = this.tempCtx.measureText(this.currentSongName);
-                this.isLargeText = fms.width > App.visualizationModel.width.get() * 0.9;
+                this.isLargeText = fms.width > App.visualizationModel.size.get().width * this.textBorder;
                 if (this.isLargeText) {
-                    this.largeTextAnimation = 0;
                     this.isTextAnimationGoingLeft = true;
-                    var diff = fms.width - App.visualizationModel.width.get() * 0.8
+                    var diff = fms.width - App.visualizationModel.size.get().width * this.textAnimationBorder
                     this.offsetX = diff / 2;
                 } else {
                     this.offsetX = 0;
@@ -66,18 +93,18 @@ export class SongNameView extends RenderObject {
             }
         }
 
-        if (this.isLargeText) {
+        if (this.isLargeText && !this.isAnimating) {
             var fms = this.tempCtx.measureText(this.currentSongName);
-            var diff = fms.width - App.visualizationModel.width.get() * 0.8
+            var diff = fms.width - App.visualizationModel.size.get().width * this.textAnimationBorder
 
             if (this.isTextAnimationGoingLeft) {
-                this.offsetX -= timeDiff * 10;
+                this.offsetX -= timeDiff * 14;
                 if (this.offsetX <= -diff / 2) {
                     this.offsetX = -diff / 2;
                     this.isTextAnimationGoingLeft = false;
                 }
             } else {
-                this.offsetX += timeDiff * 10;
+                this.offsetX += timeDiff * 14;
                 if (this.offsetX >= diff / 2) {
                     this.offsetX = diff / 2;
                     this.isTextAnimationGoingLeft = true;
@@ -102,8 +129,7 @@ export class SongNameView extends RenderObject {
 
             var alpha = 1 - progress;
 
-            var ms = this.tempCtx.measureText("test");
-            var gradient = this.tempCtx.createLinearGradient(-20, 0, -20, 40);
+            var gradient = this.tempCtx.createLinearGradient(0, 0, 0, 40);
             gradient.addColorStop(0, "rgba(43, 250, 253, " + alpha + ")");
             gradient.addColorStop(0.2, "rgba(43, 250, 253, " + alpha + ")");
             gradient.addColorStop(0.5, "rgba(15, 100, 145, " + alpha + ")");

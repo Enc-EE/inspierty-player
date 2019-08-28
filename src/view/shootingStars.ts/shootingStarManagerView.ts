@@ -37,8 +37,8 @@ export class ShootingStarManager extends LayoutView {
 
                 var nonHitBorderRatio = 0.2;
                 var spawnOuterBorder = 5;
-                var screenWidth = App.visualizationModel.width.get() + spawnOuterBorder * 2;
-                var screenHeight = App.visualizationModel.height.get() + spawnOuterBorder * 2;
+                var screenWidth = App.visualizationModel.size.get().width + spawnOuterBorder * 2;
+                var screenHeight = App.visualizationModel.size.get().height + spawnOuterBorder * 2;
                 var hitPointX = Math.random() * (screenWidth * (1 - nonHitBorderRatio * 2)) + screenWidth * nonHitBorderRatio;
                 var hitPointY = Math.random() * (screenHeight * (1 - nonHitBorderRatio * 2)) + screenHeight * nonHitBorderRatio;
 

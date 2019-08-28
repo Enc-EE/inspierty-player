@@ -35,7 +35,7 @@ export class StarLayerSettingsView extends NavigationView {
         numberOfStarsSldr.currentValue = starLayer.numberOfStars.get();
         this.settingsList.addItem(numberOfStarsSldr);
         numberOfStarsSldr.valueChanged.addEventListener((value) => { this.starLayer.numberOfStars.set(Math.round(value)); });
-        starLayer.numberOfStars.OnChanged.addEventListener((oldValue: number, newValue: number) => { numberOfStarsValueLbl.text = Math.round(newValue).toString(); })
+        starLayer.numberOfStars.onChanged.addEventListener((oldValue: number, newValue: number) => { numberOfStarsValueLbl.text = Math.round(newValue).toString(); })
 
         var speedValueLbl = new Label();
         var speedHead = this.createHead("Speed", speedValueLbl, this.round(starLayer.speed.get()).toString());
@@ -48,7 +48,7 @@ export class StarLayerSettingsView extends NavigationView {
         speedSldr.currentValue = starLayer.speed.get();
         this.settingsList.addItem(speedSldr);
         speedSldr.valueChanged.addEventListener((value) => { starLayer.speed.set(value) });
-        starLayer.speed.OnChanged.addEventListener((oldValue: number, newValue: number) => { speedValueLbl.text = this.round(newValue).toString(); })
+        starLayer.speed.onChanged.addEventListener((oldValue: number, newValue: number) => { speedValueLbl.text = this.round(newValue).toString(); })
         
         var sizeValueLbl = new Label();
         var sizeHead = this.createHead("Size", sizeValueLbl, this.round(starLayer.starRadiusLowerBorder.get()) + " - " + this.round(starLayer.starRadiusUpperBorder.get()));
@@ -69,8 +69,8 @@ export class StarLayerSettingsView extends NavigationView {
                 starLayer.starRadiusUpperBorder.set(v2);
             }
         });
-        starLayer.starRadiusLowerBorder.OnChanged.addEventListener((oldValue: number, newValue: number) => { sizeValueLbl.text = this.round(newValue) + " - " + this.round(starLayer.starRadiusUpperBorder.get()) });
-        starLayer.starRadiusUpperBorder.OnChanged.addEventListener((oldValue: number, newValue: number) => { sizeValueLbl.text = this.round(starLayer.starRadiusLowerBorder.get()) + " - " + this.round(newValue) });
+        starLayer.starRadiusLowerBorder.onChanged.addEventListener((oldValue: number, newValue: number) => { sizeValueLbl.text = this.round(newValue) + " - " + this.round(starLayer.starRadiusUpperBorder.get()) });
+        starLayer.starRadiusUpperBorder.onChanged.addEventListener((oldValue: number, newValue: number) => { sizeValueLbl.text = this.round(starLayer.starRadiusLowerBorder.get()) + " - " + this.round(newValue) });
 
         var removeLayerBtn = new Button();
         removeLayerBtn.text = "Remove Layer";

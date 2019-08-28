@@ -15,7 +15,7 @@ import { VisualizationModel } from "./models/visualizationModel";
 import { StarLayer } from "./models/starLayer";
 
 export class App {
-    public static visualizationModel = new VisualizationModel(window.innerWidth, window.innerHeight);
+    public static visualizationModel: VisualizationModel;
 
     public run = () => {
 
@@ -27,7 +27,9 @@ export class App {
         document.body.style.backgroundColor = "black";
 
         var canvas = ECanvas.createFullScreen();
-        
+        canvas.resized.addEventListener(() => { App.visualizationModel.size.set({ width: canvas.width, height: canvas.height }) })
+        App.visualizationModel = new VisualizationModel({ width: canvas.width, height: canvas.height });
+
         var stage = new Stage(canvas);
         var animation = new EAnimation();
         animation.setFps(60);

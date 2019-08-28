@@ -50,7 +50,7 @@ export class MainView extends LayoutView {
         this.children.push(logoFront);
         this.children.push(logoNovaEImage);
 
-        this.songNameView = new SongNameView(audioManager.currentSongName, window.innerWidth / 2, window.innerHeight / 5 * 3);
+        this.songNameView = new SongNameView(audioManager.currentSongName);
         audioManager.songChanged.addEventListener(this.songNameView.changeSongName);
         this.children.push(this.songNameView);
     }

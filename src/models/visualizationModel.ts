@@ -4,12 +4,16 @@ import { ObservableProperty } from "../../enc/src/ui/observableProperty";
 import { ShootingStarConfig } from "./shootingStarConfig";
 
 export class VisualizationModel {
-    public width: ObservableProperty<number>;
-    public height: ObservableProperty<number>;
-    constructor(width: number, height: number) {
-        this.width = new ObservableProperty<number>(width);
-        this.height = new ObservableProperty<number>(height);
+    constructor(size: Size) {
+        this.size = new ObservableProperty(size);
+        this.size.onChangedDelay.delayTime = 0.5;
     }
+    public size: ObservableProperty<Size>
     public starLayers = new ObservableArray<StarLayer>();
     public shootingStars = new ShootingStarConfig();
+}
+
+export class Size {
+    readonly width: number;
+    readonly height: number;
 }
