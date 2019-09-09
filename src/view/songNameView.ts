@@ -25,10 +25,6 @@ export class SongNameView extends RenderObject {
 
     constructor(private currentSongName: string) {
         super();
-        this.tempCanvas = document.createElement("canvas");
-        this.tempCanvas.style.display = "none";
-        document.body.append(this.tempCanvas);
-
         this.animation = Dinject.getInstance("animation");
         this.animation.addUpdateFunction(this.update);
 
@@ -38,25 +34,23 @@ export class SongNameView extends RenderObject {
 
     private reset = () => {
         var width = App.visualizationModel.size.get().width;
-        this.tempCanvas.width = App.visualizationModel.size.get().width;
-        this.tempCanvas.height = App.visualizationModel.size.get().height;
-        this.tempCtx = this.tempCanvas.getContext("2d");
-        if (width < 1000) {
-            this.tempCanvas.style.letterSpacing = "5px";
-            this.tempCtx.font = "28px dejavu serif italic";
-        } else {
-            this.tempCanvas.style.letterSpacing = "8px";
-            this.tempCtx.font = "2.6vw dejavu serif italic";
-        }
-        
-        this.tempCtx.textAlign = "center";
-        this.tempCtx.textBaseline = "top";
-        this.x = App.visualizationModel.size.get().width / 2;
-        this.y = App.visualizationModel.size.get().height / 5 * 3;
+        var height = App.visualizationModel.size.get().height;
 
+        this.resetCanvas(width, height);
+
+        var oldWidth = 0;
         var fms = this.tempCtx.measureText(this.currentSongName);
         var oldLargeText = this.isLargeText;
         this.isLargeText = fms.width > App.visualizationModel.size.get().width * this.textBorder;
+        while (this.isLargeText && oldWidth < fms.width) {
+            var oldWidth = fms.width;
+            this.resetCanvas(fms.width * 1.1, height);
+            var fms = this.tempCtx.measureText(this.currentSongName);
+        }
+
+        this.x = this.tempCanvas.width / 2;
+        this.y = App.visualizationModel.size.get().height / 5 * 3;
+
         if (this.isLargeText && !oldLargeText) {
             this.isTextAnimationGoingLeft = true;
             var diff = fms.width - App.visualizationModel.size.get().width * this.textAnimationBorder
@@ -64,6 +58,7 @@ export class SongNameView extends RenderObject {
         } else if (!this.isLargeText && oldLargeText) {
             this.offsetX = 0;
         }
+        this.mustRedraw = true;
     }
 
     private isLargeText = false;
@@ -113,14 +108,14 @@ export class SongNameView extends RenderObject {
         }
     }
 
+    private mustRedraw = true;
+
     public render = (ctx: CanvasRenderingContext2D) => {
-        this.tempCtx.clearRect(0, 0, this.tempCanvas.width, this.tempCanvas.height);
-
-        this.tempCtx.save()
-
-        this.tempCtx.translate(this.x + this.offsetX, this.y)
-
         if (this.isAnimating) {
+            this.mustRedraw = true;
+            this.tempCtx.clearRect(0, 0, this.tempCanvas.width, this.tempCanvas.height);
+            this.tempCtx.save()
+            this.tempCtx.translate(this.x, this.y)
             var isFirstStep = this.currentAnimationTime < this.animationSwitch
             var progress = isFirstStep
                 ? this.currentAnimationTime / this.animationSwitch
@@ -137,7 +132,13 @@ export class SongNameView extends RenderObject {
             gradient.addColorStop(1.0, "rgba(43, 250, 253, " + alpha + ")");
             this.tempCtx.fillStyle = gradient;
             this.tempCtx.fillText(this.currentSongName, 0, 0);
-        } else {
+            ctx.drawImage(this.tempCanvas, this.offsetX, 0);
+            this.tempCtx.restore()
+        } else if (this.mustRedraw || this.isLargeText) {
+            this.mustRedraw = false;
+            this.tempCtx.clearRect(0, 0, this.tempCanvas.width, this.tempCanvas.height);
+            this.tempCtx.save()
+            this.tempCtx.translate(this.x, this.y)
             var gradient = this.tempCtx.createLinearGradient(0, 0, 0, 40);
             gradient.addColorStop(0, "rgb(43, 250, 253)");
             gradient.addColorStop(0.2, "rgb(43, 250, 253)");
@@ -146,9 +147,11 @@ export class SongNameView extends RenderObject {
             gradient.addColorStop(1.0, "rgb(43, 250, 253)");
             this.tempCtx.fillStyle = gradient;
             this.tempCtx.fillText(this.currentSongName, 0, 0);
+            ctx.drawImage(this.tempCanvas, this.offsetX, 0);
+            this.tempCtx.restore()
+        } else {
+            ctx.drawImage(this.tempCanvas, 0, 0);
         }
-        ctx.drawImage(this.tempCanvas, 0, 0);
-        this.tempCtx.restore()
     }
 
     public changeSongName = (songName: string) => {
@@ -169,6 +172,28 @@ export class SongNameView extends RenderObject {
                 this.nextNextSongName = songName;
             }
         }
+    }
+
+    private resetCanvas(width: number, height: number) {
+        if (this.tempCanvas) {
+            this.tempCanvas.parentNode.removeChild(this.tempCanvas);
+        }
+        this.tempCanvas = document.createElement("canvas");
+        this.tempCanvas.style.display = "none";
+        document.body.append(this.tempCanvas);
+        this.tempCanvas.width = width;
+        this.tempCanvas.height = height;
+        this.tempCtx = this.tempCanvas.getContext("2d");
+        if (width < 1000) {
+            this.tempCanvas.style.letterSpacing = "5px";
+            this.tempCtx.font = "28px dejavu serif italic";
+        }
+        else {
+            this.tempCanvas.style.letterSpacing = "8px";
+            this.tempCtx.font = "2.6vw dejavu serif italic";
+        }
+        this.tempCtx.textAlign = "center";
+        this.tempCtx.textBaseline = "top";
     }
 
     mouseDown(ev: MouseEvent): void { }
