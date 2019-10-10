@@ -78,7 +78,7 @@ export class StarLayerSettingsView extends NavigationView {
         removeLayerBtn.properties.mouseOverFillStyle = Style.mousOver;
         this.settingsList.addItem(removeLayerBtn);
         removeLayerBtn.clicked.addEventListener((sender: Control) => {
-            App.visualizationModel.starLayers.remove(this.starLayer);
+            // App.visualizationModel.starLayers.remove(this.starLayer);
             this.navigationView.onGoBack.dispatchEvent();
         });
 

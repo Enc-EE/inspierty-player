@@ -6,7 +6,7 @@ import { Rectangle } from "../../enc/src/geometry/rectangle";
 import { ListView } from "../../enc/src/ui/layoutControls/listView";
 import { Orientation } from "../../enc/src/ui/alignement/orientation";
 import { Dinject } from "../../enc/src/dinject";
-import { AudioManager } from "../audioManager";
+import { AudioManager } from "../audio/audioManager";
 import { Style } from "./style";
 
 export class PlayerControlsView extends LayoutView {

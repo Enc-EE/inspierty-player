@@ -9,8 +9,8 @@ export class StarLayerManagerView extends LayoutView {
     constructor() {
         super();
         this.disableMouseEvents();
-        App.visualizationModel.starLayers.onAdd.addEventListener(this.addStarLayer);
-        App.visualizationModel.starLayers.onRemove.addEventListener(this.removeStarLayer);
+        // App.visualizationModel.starLayers.onAdd.addEventListener(this.addStarLayer);
+        // App.visualizationModel.starLayers.onRemove.addEventListener(this.removeStarLayer);
     }
 
     private addStarLayer = (starLayer: StarLayer) => {

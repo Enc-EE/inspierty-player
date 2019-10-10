@@ -28,37 +28,37 @@ export class SongNameView extends RenderObject {
         this.animation = Dinject.getInstance("animation");
         this.animation.addUpdateFunction(this.update);
 
-        App.visualizationModel.size.onChanged.addEventListener(this.reset);
+        // App.visualizationModel.size.onChanged.addEventListener(this.reset);
         this.reset();
     }
 
     private reset = () => {
-        var width = App.visualizationModel.size.get().width;
-        var height = App.visualizationModel.size.get().height;
+        // // var width = App.visualizationModel.size.get().width;
+        // // var height = App.visualizationModel.size.get().height;
 
-        this.resetCanvas(width, height);
+        // this.resetCanvas(width, height);
 
-        var oldWidth = 0;
-        var fms = this.tempCtx.measureText(this.currentSongName);
-        var oldLargeText = this.isLargeText;
-        this.isLargeText = fms.width > App.visualizationModel.size.get().width * this.textBorder;
-        while (this.isLargeText && oldWidth < fms.width) {
-            var oldWidth = fms.width;
-            this.resetCanvas(fms.width * 1.1, height);
-            var fms = this.tempCtx.measureText(this.currentSongName);
-        }
+        // var oldWidth = 0;
+        // var fms = this.tempCtx.measureText(this.currentSongName);
+        // var oldLargeText = this.isLargeText;
+        // this.isLargeText = fms.width > App.visualizationModel.size.get().width * this.textBorder;
+        // while (this.isLargeText && oldWidth < fms.width) {
+        //     var oldWidth = fms.width;
+        //     this.resetCanvas(fms.width * 1.1, height);
+        //     var fms = this.tempCtx.measureText(this.currentSongName);
+        // }
 
-        this.x = this.tempCanvas.width / 2;
-        this.y = App.visualizationModel.size.get().height / 5 * 3;
+        // this.x = this.tempCanvas.width / 2;
+        // this.y = App.visualizationModel.size.get().height / 5 * 3;
 
-        if (this.isLargeText && !oldLargeText) {
-            this.isTextAnimationGoingLeft = true;
-            var diff = fms.width - App.visualizationModel.size.get().width * this.textAnimationBorder
-            this.offsetX = diff / 2;
-        } else if (!this.isLargeText && oldLargeText) {
-            this.offsetX = 0;
-        }
-        this.mustRedraw = true;
+        // if (this.isLargeText && !oldLargeText) {
+        //     this.isTextAnimationGoingLeft = true;
+        //     var diff = fms.width - App.visualizationModel.size.get().width * this.textAnimationBorder
+        //     this.offsetX = diff / 2;
+        // } else if (!this.isLargeText && oldLargeText) {
+        //     this.offsetX = 0;
+        // }
+        // this.mustRedraw = true;
     }
 
     private isLargeText = false;
@@ -72,11 +72,11 @@ export class SongNameView extends RenderObject {
                 this.nextSongName = undefined;
 
                 var fms = this.tempCtx.measureText(this.currentSongName);
-                this.isLargeText = fms.width > App.visualizationModel.size.get().width * this.textBorder;
+                // this.isLargeText = fms.width > App.visualizationModel.size.get().width * this.textBorder;
                 if (this.isLargeText) {
                     this.isTextAnimationGoingLeft = true;
-                    var diff = fms.width - App.visualizationModel.size.get().width * this.textAnimationBorder
-                    this.offsetX = diff / 2;
+                    // var diff = fms.width - App.visualizationModel.size.get().width * this.textAnimationBorder
+                    // this.offsetX = diff / 2;
                 } else {
                     this.offsetX = 0;
                 }
@@ -90,21 +90,21 @@ export class SongNameView extends RenderObject {
 
         if (this.isLargeText && !this.isAnimating) {
             var fms = this.tempCtx.measureText(this.currentSongName);
-            var diff = fms.width - App.visualizationModel.size.get().width * this.textAnimationBorder
+            // var diff = fms.width - App.visualizationModel.size.get().width * this.textAnimationBorder
 
-            if (this.isTextAnimationGoingLeft) {
-                this.offsetX -= timeDiff * 14;
-                if (this.offsetX <= -diff / 2) {
-                    this.offsetX = -diff / 2;
-                    this.isTextAnimationGoingLeft = false;
-                }
-            } else {
-                this.offsetX += timeDiff * 14;
-                if (this.offsetX >= diff / 2) {
-                    this.offsetX = diff / 2;
-                    this.isTextAnimationGoingLeft = true;
-                }
-            }
+            // if (this.isTextAnimationGoingLeft) {
+            //     this.offsetX -= timeDiff * 14;
+            //     if (this.offsetX <= -diff / 2) {
+            //         this.offsetX = -diff / 2;
+            //         this.isTextAnimationGoingLeft = false;
+            //     }
+            // } else {
+            //     this.offsetX += timeDiff * 14;
+            //     if (this.offsetX >= diff / 2) {
+            //         this.offsetX = diff / 2;
+            //         this.isTextAnimationGoingLeft = true;
+            //     }
+            // }
         }
     }
 

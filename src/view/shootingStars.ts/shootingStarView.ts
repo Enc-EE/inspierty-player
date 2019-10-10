@@ -73,9 +73,9 @@ export class ShootingStarView extends RenderObject {
         ctx.beginPath();
         ctx.restore();
 
-        if (this.x > App.visualizationModel.size.get().width * 1.5 || this.x < -App.visualizationModel.size.get().width / 2 || this.y > App.visualizationModel.size.get().height * 1.5 || this.y < -App.visualizationModel.size.get().height / 2) {
-            this.onDone.dispatchEvent();
-        }
+        // if (this.x > App.visualizationModel.size.get().width * 1.5 || this.x < -App.visualizationModel.size.get().width / 2 || this.y > App.visualizationModel.size.get().height * 1.5 || this.y < -App.visualizationModel.size.get().height / 2) {
+        //     this.onDone.dispatchEvent();
+        // }
     }
 
     private drawShootingStarPart(ctx: CanvasRenderingContext2D, lineWidth: number, shootingStar: ShootingStarView, length: number) {

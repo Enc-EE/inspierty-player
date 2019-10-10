@@ -52,9 +52,9 @@ export class RootView extends LayoutView {
     }
 
     private onLowPerformance = () => {
-        for (const starLayer of App.visualizationModel.starLayers.items) {
-            starLayer.numberOfStars.set(starLayer.numberOfStars.get() * 0.9);
-        }
+        // for (const starLayer of App.visualizationModel.starLayers.items) {
+        //     starLayer.numberOfStars.set(starLayer.numberOfStars.get() * 0.9);
+        // }
     }
 
     private loadBackground() {

@@ -26,9 +26,9 @@ export class StarLayersSettingsView extends NavigationView {
         this.layerList.alignement.horizontalAlign = HorizontalAlignementOption.Left;
         this.layerList.alignement.verticalAlign = VerticalAlignementOption.Top;
 
-        for (const starLayer of App.visualizationModel.starLayers.items) {
-            this.layerList.addItem(this.createEditLayerBtn(starLayer));
-        }
+        // for (const starLayer of App.visualizationModel.starLayers.items) {
+        //     this.layerList.addItem(this.createEditLayerBtn(starLayer));
+        // }
 
         var btnNewLayer = new Button();
         btnNewLayer.text = "Add Layer";
@@ -36,25 +36,25 @@ export class StarLayersSettingsView extends NavigationView {
         btnNewLayer.properties.mouseOverFillStyle = Style.mousOver;
         btnNewLayer.clicked.addEventListener((sender: Control) => {
             var newStarLayer = new StarLayer();
-            newStarLayer.name.set("Stars " + (App.visualizationModel.starLayers.items.length + 1));
-            App.visualizationModel.starLayers.add(newStarLayer);
+            // newStarLayer.name.set("Stars " + (App.visualizationModel.starLayers.items.length + 1));
+            // App.visualizationModel.starLayers.add(newStarLayer);
         });
         this.addLayerBtn = btnNewLayer;
         this.layerList.addItem(btnNewLayer);
         this.children.push(this.layerList);
 
-        App.visualizationModel.starLayers.onAdd.addEventListener((starLayer) => {
-            this.layerList.removeItem(this.addLayerBtn);
-            this.layerList.addItem(this.createEditLayerBtn(starLayer));
-            this.layerList.addItem(this.addLayerBtn);
-        });
+        // App.visualizationModel.starLayers.onAdd.addEventListener((starLayer) => {
+        //     this.layerList.removeItem(this.addLayerBtn);
+        //     this.layerList.addItem(this.createEditLayerBtn(starLayer));
+        //     this.layerList.addItem(this.addLayerBtn);
+        // });
 
-        App.visualizationModel.starLayers.onRemove.addEventListener((starLayer) => {
-            var layerBtn = this.layerList.items.firstOrDefault(x => x.tag == starLayer);
-            if (layerBtn) {
-                this.layerList.removeItem(layerBtn)
-            }
-        });
+        // App.visualizationModel.starLayers.onRemove.addEventListener((starLayer) => {
+        //     var layerBtn = this.layerList.items.firstOrDefault(x => x.tag == starLayer);
+        //     if (layerBtn) {
+        //         this.layerList.removeItem(layerBtn)
+        //     }
+        // });
     }
 
     private createEditLayerBtn(starLayer: StarLayer) {

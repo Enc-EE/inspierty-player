@@ -4,7 +4,7 @@ import { AssetManager } from "../../enc/src/assetManager";
 import { EImage } from "../../enc/src/ui/controls/image";
 import { Rectangle } from "../../enc/src/geometry/rectangle";
 import { ImageScalingMode } from "../../enc/src/ui/controls/imageScalingMode";
-import { AudioManager } from "../audioManager";
+import { AudioManager } from "../audio/audioManager";
 import { AudioGraphNodeAnalyser } from "../../enc/src/audio/audioGraphNodeAnalyser";
 import { Label } from "../../enc/src/ui/controls/label";
 import { SongNameView } from "./songNameView";
@@ -50,9 +50,9 @@ export class MainView extends LayoutView {
         this.children.push(logoFront);
         this.children.push(logoNovaEImage);
 
-        this.songNameView = new SongNameView(audioManager.currentSongName);
-        audioManager.songChanged.addEventListener(this.songNameView.changeSongName);
-        this.children.push(this.songNameView);
+        // this.songNameView = new SongNameView(audioManager.currentSongName);
+        // audioManager.songChanged.addEventListener(this.songNameView.changeSongName);
+        // this.children.push(this.songNameView);
     }
 
     private calculateRelDataValue(dataValue: number) {

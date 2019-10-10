@@ -4,7 +4,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-    entry: './src/index.ts',
+    entry: './src/index.tsx',
     plugins: [
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({ template: './src/index.html' }),
@@ -20,7 +20,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.ts$/,
+                test: /\.(tsx|ts)$/,
                 use: 'ts-loader',
                 exclude: /node_modules/
             },
@@ -34,6 +34,6 @@ module.exports = {
         ]
     },
     resolve: {
-        extensions: ['.ts', '.js']
+        extensions: ['.ts', '.js', '.tsx', '.jsx']
     },
 };

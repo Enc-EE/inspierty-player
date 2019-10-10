@@ -12,6 +12,8 @@ export class StarLayerView extends RenderObject {
     private x = 0;
     private y = 0;
 
+    private angle: number = Math.PI / 4;
+
     constructor(private starLayer: StarLayer) {
         super();
         this.tag = starLayer;
@@ -32,8 +34,8 @@ export class StarLayerView extends RenderObject {
 
     private createImgage = () => {
         var tempCanvas = document.createElement("canvas");
-        tempCanvas.width = App.visualizationModel.size.get().width;
-        tempCanvas.height = App.visualizationModel.size.get().height;
+        // tempCanvas.width = App.visualizationModel.size.get().width;
+        // tempCanvas.height = App.visualizationModel.size.get().height;
         var tempCtx = tempCanvas.getContext("2d");
         var endlessBorderGap = 3;
         for (const star of this.stars) {
@@ -42,23 +44,23 @@ export class StarLayerView extends RenderObject {
             tempCtx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
             tempCtx.fill();
 
-            if (star.x >= App.visualizationModel.size.get().width - endlessBorderGap) {
-                tempCtx.beginPath();
-                tempCtx.arc(star.x - App.visualizationModel.size.get().width, star.y, star.r, 0, Math.PI * 2);
-                tempCtx.fill();
+            // if (star.x >= App.visualizationModel.size.get().width - endlessBorderGap) {
+            //     tempCtx.beginPath();
+            //     tempCtx.arc(star.x - App.visualizationModel.size.get().width, star.y, star.r, 0, Math.PI * 2);
+            //     tempCtx.fill();
 
-                if (star.y >= App.visualizationModel.size.get().height - endlessBorderGap) {
-                    tempCtx.beginPath();
-                    tempCtx.arc(star.x - App.visualizationModel.size.get().width, star.y - App.visualizationModel.size.get().height, star.r, 0, Math.PI * 2);
-                    tempCtx.fill();
-                }
-            }
+            //     if (star.y >= App.visualizationModel.size.get().height - endlessBorderGap) {
+            //         tempCtx.beginPath();
+            //         tempCtx.arc(star.x - App.visualizationModel.size.get().width, star.y - App.visualizationModel.size.get().height, star.r, 0, Math.PI * 2);
+            //         tempCtx.fill();
+            //     }
+            // }
 
-            if (star.y >= App.visualizationModel.size.get().height - endlessBorderGap) {
-                tempCtx.beginPath();
-                tempCtx.arc(star.x, star.y - App.visualizationModel.size.get().height, star.r, 0, Math.PI * 2);
-                tempCtx.fill();
-            }
+            // if (star.y >= App.visualizationModel.size.get().height - endlessBorderGap) {
+            //     tempCtx.beginPath();
+            //     tempCtx.arc(star.x, star.y - App.visualizationModel.size.get().height, star.r, 0, Math.PI * 2);
+            //     tempCtx.fill();
+            // }
 
             var end = star.r * 3;
             var grad = tempCtx.createRadialGradient(star.x, star.y, star.r, star.x, star.y, end);
@@ -75,7 +77,7 @@ export class StarLayerView extends RenderObject {
     private sizeChanged = (lowerValue: number, upperValue: number) => {
         var currentValueLow = lowerValue;
         var currentValueHigh = upperValue;
-        
+
         var minFix = (currentValueHigh - currentValueLow);
         if (minFix <= 0) {
             minFix = 0.0001
@@ -103,29 +105,30 @@ export class StarLayerView extends RenderObject {
     }
 
     public update = (timeDiff: number) => {
-        this.x += this.starLayer.speed.get() * timeDiff;
-        this.y += this.starLayer.speed.get() * timeDiff;
-        if (this.x > App.visualizationModel.size.get().width) {
-            this.x -= App.visualizationModel.size.get().width;
-        }
-        if (this.y > App.visualizationModel.size.get().height) {
-            this.y -= App.visualizationModel.size.get().height;
-        }
+        this.x += Math.cos(this.angle) * this.starLayer.speed.get() * timeDiff;
+        this.y += Math.sin(this.angle) * this.starLayer.speed.get() * timeDiff;
+
+        // if (this.x > App.visualizationModel.size.get().width) {
+        //     this.x -= App.visualizationModel.size.get().width;
+        // }
+        // if (this.y > App.visualizationModel.size.get().height) {
+        //     this.y -= App.visualizationModel.size.get().height;
+        // }
     }
 
     public render = (ctx: CanvasRenderingContext2D): void => {
         ctx.drawImage(this.image, this.x, this.y);
-        ctx.drawImage(this.image, this.x - App.visualizationModel.size.get().width, this.y);
-        ctx.drawImage(this.image, this.x - App.visualizationModel.size.get().width, this.y - App.visualizationModel.size.get().height);
-        ctx.drawImage(this.image, this.x, this.y - App.visualizationModel.size.get().height);
+        // ctx.drawImage(this.image, this.x - App.visualizationModel.size.get().width, this.y);
+        // ctx.drawImage(this.image, this.x - App.visualizationModel.size.get().width, this.y - App.visualizationModel.size.get().height);
+        // ctx.drawImage(this.image, this.x, this.y - App.visualizationModel.size.get().height);
     }
 
     private addStar() {
-        this.stars.push({
-            x: Math.random() * App.visualizationModel.size.get().width,
-            y: Math.random() * App.visualizationModel.size.get().height,
-            r: Math.random() * (this.starLayer.starRadiusUpperBorder.get() - this.starLayer.starRadiusLowerBorder.get()) + this.starLayer.starRadiusLowerBorder.get()
-        });
+        // this.stars.push({
+        //     x: Math.random() * App.visualizationModel.size.get().width,
+        //     y: Math.random() * App.visualizationModel.size.get().height,
+        //     r: Math.random() * (this.starLayer.starRadiusUpperBorder.get() - this.starLayer.starRadiusLowerBorder.get()) + this.starLayer.starRadiusLowerBorder.get()
+        // });
     }
 
     mouseDown(ev: MouseEvent): void {
