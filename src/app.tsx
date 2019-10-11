@@ -1,11 +1,15 @@
-import React = require("react");
-import * as backgroundPng from "./assets/background.png"
+import React = require("react")
+import { ConnectedBackgroundImage } from "./backgroundImage"
+import { ConnectedVisCanvas } from "./visCanvas"
 
-export class App extends React.Component {
+interface Props { }
+
+export class App extends React.Component<Props> {
     render() {
         return (
-            <div style={{ height: '100%', backgroundImage: `url(${backgroundPng})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
-                {backgroundPng}
+            <div style={{ height: '100%' }}>
+                <ConnectedBackgroundImage />
+                <ConnectedVisCanvas />
             </div>
         )
     }

@@ -1,8 +1,8 @@
-import { Settings, SettingsActionTypes, UPDATE_WIDTH, UPDATE_HEIGHT, UPDATE_STARLAYER_NUMBEROFSTARS, UPDATE_STARLAYER_SPEED, UPDATE_STARLAYER_STARRADIUSLOWERBORDER, UPDATE_STARLAYER_STARRADIUSUPPERBORDER, ADD_STARLAYER, DELETE_STARLAYER } from "./types";
+import { Settings, SettingsActionTypes, UPDATE_STARLAYER_NUMBEROFSTARS, UPDATE_STARLAYER_SPEED, UPDATE_STARLAYER_STARRADIUSLOWERBORDER, UPDATE_STARLAYER_STARRADIUSUPPERBORDER, ADD_STARLAYER, DELETE_STARLAYER, RESIZE } from "./types";
 
 var initialState: Settings = {
-    height: 0,
-    width: 0,
+    height: window.innerHeight,
+    width: window.innerWidth,
     starLayers: {}
 }
 
@@ -11,15 +11,11 @@ export function settingsReducer(
     action: SettingsActionTypes
 ): Settings {
     switch (action.type) {
-        case UPDATE_WIDTH:
+        case RESIZE:
             return {
                 ...state,
-                width: action.value
-            }
-        case UPDATE_HEIGHT:
-            return {
-                ...state,
-                height: action.value
+                width: action.width,
+                height: action.height,
             }
         case UPDATE_STARLAYER_NUMBEROFSTARS:
             return {

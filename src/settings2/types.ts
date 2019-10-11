@@ -11,16 +11,11 @@ export interface StarLayer {
     starRadiusUpperBorder: number
 }
 
-export const UPDATE_WIDTH = 'UPDATE_WIDTH'
-interface UpdateWidthAction {
-    type: typeof UPDATE_WIDTH
-    value: number
-}
-
-export const UPDATE_HEIGHT = 'UPDATE_HEIGHT'
-interface UpdateHeightAction {
-    type: typeof UPDATE_HEIGHT
-    value: number
+export const RESIZE = 'RESIZE'
+interface ResizeAction {
+    type: typeof RESIZE
+    width: number
+    height: number
 }
 
 export const UPDATE_STARLAYER_NUMBEROFSTARS = 'UPDATE_STARLAYER_NUMBEROFSTARS'
@@ -65,8 +60,7 @@ interface DeleteStarLayerAction {
 }
 
 export type SettingsActionTypes =
-    UpdateWidthAction
-    | UpdateHeightAction
+    ResizeAction
     | UpdateStarLayerNumberOfStarsAction
     | UpdateStarLayerSpeedAction
     | UpdateStarLayerStarRadiusLowerBorderAction
@@ -74,21 +68,15 @@ export type SettingsActionTypes =
     | AddStarLayerAction
     | DeleteStarLayerAction
 
-export function UpdateWidth(value: number): SettingsActionTypes {
+export function resize(width: number, height: number): SettingsActionTypes {
     return {
-        type: UPDATE_WIDTH,
-        value
+        type: RESIZE,
+        width: width,
+        height: height,
     }
 }
 
-export function UpdateHeight(value: number): SettingsActionTypes {
-    return {
-        type: UPDATE_HEIGHT,
-        value
-    }
-}
-
-export function UpdateStarLayerNumberOfStars(starLayerId: string, value: number): SettingsActionTypes {
+export function updateStarLayerNumberOfStars(starLayerId: string, value: number): SettingsActionTypes {
     return {
         type: UPDATE_STARLAYER_NUMBEROFSTARS,
         starLayerId,
@@ -96,7 +84,7 @@ export function UpdateStarLayerNumberOfStars(starLayerId: string, value: number)
     }
 }
 
-export function UpdateStarLayerSpeed(starLayerId: string, value: number): SettingsActionTypes {
+export function updateStarLayerSpeed(starLayerId: string, value: number): SettingsActionTypes {
     return {
         type: UPDATE_STARLAYER_SPEED,
         starLayerId,
@@ -104,7 +92,7 @@ export function UpdateStarLayerSpeed(starLayerId: string, value: number): Settin
     }
 }
 
-export function UpdateStarLayerStarRadiusLowerBorder(starLayerId: string, value: number): SettingsActionTypes {
+export function updateStarLayerStarRadiusLowerBorder(starLayerId: string, value: number): SettingsActionTypes {
     return {
         type: UPDATE_STARLAYER_STARRADIUSLOWERBORDER,
         starLayerId,
@@ -112,7 +100,7 @@ export function UpdateStarLayerStarRadiusLowerBorder(starLayerId: string, value:
     }
 }
 
-export function UpdateStarLayerStarRadiusUpperBorder(starLayerId: string, value: number): SettingsActionTypes {
+export function updateStarLayerStarRadiusUpperBorder(starLayerId: string, value: number): SettingsActionTypes {
     return {
         type: UPDATE_STARLAYER_STARRADIUSUPPERBORDER,
         starLayerId,
@@ -120,7 +108,7 @@ export function UpdateStarLayerStarRadiusUpperBorder(starLayerId: string, value:
     }
 }
 
-export function AddStarLayer(starLayerId: string, starLayer: StarLayer): SettingsActionTypes {
+export function addStarLayer(starLayerId: string, starLayer: StarLayer): SettingsActionTypes {
     return {
         type: ADD_STARLAYER,
         starLayerId,
@@ -128,7 +116,7 @@ export function AddStarLayer(starLayerId: string, starLayer: StarLayer): Setting
     }
 }
 
-export function DeleteStarLayer(starLayerId: string): SettingsActionTypes {
+export function deleteStarLayer(starLayerId: string): SettingsActionTypes {
     return {
         type: DELETE_STARLAYER,
         starLayerId
