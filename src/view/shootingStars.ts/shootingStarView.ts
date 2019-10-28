@@ -6,15 +6,15 @@ import { EAnimation } from "../../../enc/src/eAnimation";
 import { Helper } from "../../../enc/src/helper";
 
 export class ShootingStarView extends RenderObject {
-    public x: number;
-    public y: number;
-    public angle: number;
-    public speed: number;
+    public x: number = 0;
+    public y: number = 0;
+    public angle: number = 0;
+    public speed: number = 0;
 
     public onDone = new EEvent();
-    image: HTMLImageElement;
-    xImageOffset: number;
-    yImageOffset: number;
+    image: HTMLImageElement | undefined;
+    xImageOffset: number = 0;
+    yImageOffset: number = 0;
 
     constructor(public size: number) {
         super();
@@ -38,6 +38,9 @@ export class ShootingStarView extends RenderObject {
         tempCanvas.height = height;
 
         var tempCtx = tempCanvas.getContext("2d");
+        if (!tempCtx) {
+            return
+        }
 
         tempCtx.beginPath();
         tempCtx.moveTo(border, height / 2 - thinR);
@@ -69,7 +72,9 @@ export class ShootingStarView extends RenderObject {
         ctx.save();
         ctx.translate(this.x, this.y);
         ctx.rotate(this.angle);
-        ctx.drawImage(this.image, -this.xImageOffset, -this.yImageOffset);
+        if (this.image) {
+            ctx.drawImage(this.image, -this.xImageOffset, -this.yImageOffset);
+        }
         ctx.beginPath();
         ctx.restore();
 

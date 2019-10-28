@@ -1,6 +1,7 @@
 import * as React from "react";
-import { Globals } from "../globals";
+import { Globals, AppState } from "../globals";
 import { AudioManager } from "./audioManager";
+import { connect } from "react-redux";
 
 export interface StateProps {
     isPlaying: boolean,
@@ -11,7 +12,7 @@ export interface DispatchProps {
 
 type Props = StateProps & DispatchProps
 
-export class AudioComponent extends React.Component<Props>{
+class AudioComponent extends React.Component<Props>{
     private audioManager: AudioManager;
 
     constructor(props: Props) {
@@ -28,3 +29,11 @@ export class AudioComponent extends React.Component<Props>{
         </div>)
     }
 }
+
+const mapStateToProps = (state: AppState): StateProps => {
+    return {
+        isPlaying: state.audio.isPlaying
+    }
+}
+
+export const ConnectedAudioComponent = connect(mapStateToProps)(AudioComponent)

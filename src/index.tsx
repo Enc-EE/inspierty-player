@@ -11,7 +11,7 @@ import { Provider } from "react-redux"
 import React = require("react")
 import { App } from "./app"
 import "../enc/src/extensions"
-import { resize } from "./settings2/types"
+import { resize, addStarLayer } from "./settings2/types"
 
 document.addEventListener('DOMContentLoaded', main, false)
 
@@ -53,7 +53,6 @@ function main() {
             dependentItemNames: ["store", "audioManager", "assets"],
             name: "events",
             func: async () => {
-                console.log("resizes in");
                 window.addEventListener("resize", (x: UIEvent) => {
                     Globals.store.dispatch(resize(window.innerWidth, window.innerHeight))
                 })
@@ -64,6 +63,7 @@ function main() {
             name: "init",
             func: async () => {
                 ReactDOM.render(<Provider store={Globals.store}> <App /></Provider >, document.getElementById('root'))
+                Globals.store.dispatch(addStarLayer("test", { numberOfStars: 200, speed: 1, starRadiusLowerBorder: 1, starRadiusUpperBorder: 10 }))
             },
         },
     ])

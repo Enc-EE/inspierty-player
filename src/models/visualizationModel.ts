@@ -14,6 +14,6 @@ export class VisualizationModel {
 }
 
 export class Size {
-    readonly width: number;
-    readonly height: number;
+    readonly width: number = 0;
+    readonly height: number = 0;
 }

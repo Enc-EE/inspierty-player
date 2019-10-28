@@ -4,12 +4,9 @@ import { SettingsView } from "../settings/view/settingsView";
 import { EAnimation } from "../../enc/src/eAnimation";
 import { Dinject } from "../../enc/src/dinject";
 import { PlayerControlsView } from "./playerControlsView";
-import { MainView } from "./mainView";
 import { AssetManager } from "../../enc/src/assetManager";
 import { EImage } from "../../enc/src/ui/controls/image";
 import { ImageScalingMode } from "../../enc/src/ui/controls/imageScalingMode";
-import { StarLayerManagerView } from "./starLayers/starLayerManagerView";
-import { App } from "../app";
 import { ShootingStarManager as ShootingStarManagerView } from "./shootingStars.ts/shootingStarManagerView";
 import { FpsView } from "../../enc/src/ui/fpsView";
 import { HorizontalAlignementOption } from "../../enc/src/ui/alignement/horizontalAlignementOption";
@@ -26,14 +23,14 @@ export class RootView extends LayoutView {
 
         this.loadBackground();
 
-        var starLayerManagerView = new StarLayerManagerView();
-        this.children.push(starLayerManagerView);
+        // var starLayerManagerView = new StarLayerManagerView();
+        // this.children.push(starLayerManagerView);
 
         var shootingStarManagerView = new ShootingStarManagerView();
         this.children.push(shootingStarManagerView);
 
-        var front = new MainView();
-        this.children.push(front);
+        // var front = new MainView();
+        // this.children.push(front);
 
         var playerView = new PlayerControlsView();
         this.children.push(playerView);
@@ -60,10 +57,12 @@ export class RootView extends LayoutView {
     private loadBackground() {
         var assetManager = Dinject.getInstance("assets") as AssetManager;
         var background = assetManager.getImage("background");
-        var backgroundImage = new EImage(background);
-        backgroundImage.disableMouseEvents();
-        backgroundImage.properties.imageScalingMode = ImageScalingMode.FitAndOverfill;
-        this.children.push(backgroundImage);
+        if (background) {
+            var backgroundImage = new EImage(background);
+            backgroundImage.disableMouseEvents();
+            backgroundImage.properties.imageScalingMode = ImageScalingMode.FitAndOverfill;
+            this.children.push(backgroundImage);
+        }
     }
 
     public updateLayout(ctx: CanvasRenderingContext2D, bounds: Rectangle): void {

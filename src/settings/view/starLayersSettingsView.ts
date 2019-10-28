@@ -17,7 +17,7 @@ export class StarLayersSettingsView extends NavigationView {
     private addLayerBtn: Button;
     private layerButtons: Button[] = [];
     layerList: ListView;
-    subView: StarLayerSettingsView;
+    subView: StarLayerSettingsView | undefined;
 
     constructor() {
         super("Star Layers");
@@ -74,7 +74,10 @@ export class StarLayersSettingsView extends NavigationView {
         this.children.removeItem(this.layerList);
         this.subView = new StarLayerSettingsView(starLayer);
         this.subView.navigationView.onGoBack.addEventListener(() => {
-            this.children.removeItem(this.subView);
+            if (this.subView) {
+                this.children.removeItem(this.subView);
+
+            }
             this.subView = undefined;
             this.children.push(this.navigationView);
             this.children.push(this.layerList);

@@ -12,7 +12,7 @@ import { NavigationView } from "./navigationView";
 
 export class SettingsView extends LayoutView {
     private settingsList: ListView;
-    private subView: NavigationView;
+    private subView: NavigationView | undefined;
     starLayersBtn: Button;
 
     constructor() {
@@ -31,7 +31,9 @@ export class SettingsView extends LayoutView {
             this.settingsList.removeItem(this.starLayersBtn);
             this.subView = new StarLayersSettingsView();
             this.subView.navigationView.onGoBack.addEventListener(() => {
-                this.settingsList.removeItem(this.subView);
+                if (this.subView) {
+                    this.settingsList.removeItem(this.subView);
+                }
                 this.subView = undefined;
                 this.settingsList.addItem(this.starLayersBtn);
             });
@@ -52,7 +54,7 @@ export class SettingsView extends LayoutView {
 
     private lastMoved = Date.now();
     private inactivityTimeout = 2000;
-    private showHideSettingsBtn: Button;
+    private showHideSettingsBtn: Button | undefined;
     private settingsIconText = "\uf013"
     private settingsCloseIconText = "\uf00d"
     private settingsVisibilityState: SettingsVisibilityState = SettingsVisibilityState.hidden;
@@ -89,16 +91,19 @@ export class SettingsView extends LayoutView {
     }
 
     private setSettingsVisibilityState = (state: SettingsVisibilityState) => {
+        if (!this.showHideSettingsBtn) {
+            return
+        }
         switch (state) {
             case SettingsVisibilityState.hidden:
                 this.showHideSettingsBtn.text = this.settingsIconText;
-                this.showHideSettingsBtn.properties.backgroundFillStyle = undefined;
+                this.showHideSettingsBtn.properties.backgroundFillStyle = "";
                 this.children.removeItem(this.showHideSettingsBtn);
                 this.settingsVisibilityState = SettingsVisibilityState.hidden;
                 break;
             case SettingsVisibilityState.beforeVisible:
                 this.showHideSettingsBtn.text = this.settingsIconText;
-                this.showHideSettingsBtn.properties.backgroundFillStyle = undefined;
+                this.showHideSettingsBtn.properties.backgroundFillStyle = "";
                 this.lastMoved = Date.now();
                 if (this.settingsVisibilityState == SettingsVisibilityState.hidden) {
                     setTimeout(this.mouseInactivityHandler, this.inactivityTimeout);
@@ -108,7 +113,7 @@ export class SettingsView extends LayoutView {
                     setTimeout(this.mouseInactivityHandler, this.inactivityTimeout);
                     if (this.subView) {
                         this.settingsList.removeItem(this.subView);
-                        this.subView = null;
+                        this.subView = undefined;
                         this.settingsList.addItem(this.starLayersBtn);
                     }
                     this.children.removeItemIfExists(this.settingsList);
@@ -141,6 +146,9 @@ export class SettingsView extends LayoutView {
     // #endregion
 
     public updateLayout(ctx: CanvasRenderingContext2D, bounds: Rectangle): void {
+        if (!this.showHideSettingsBtn) {
+            return
+        }
         super.updateLayout(ctx, bounds);
         this.showHideSettingsBtn.updateLayout(ctx, bounds);
         var space = this.showHideSettingsBtn.dimensions.height * 2;

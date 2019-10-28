@@ -3,8 +3,8 @@ import { Dinject } from "../../enc/src/dinject";
 import { App } from "../app";
 
 export class SongNameView extends RenderObject {
-    private nextSongName: string;
-    private nextNextSongName: string;
+    private nextSongName: string | undefined;
+    private nextNextSongName: string | undefined;
     private isAnimating = false;
 
     private animationTime = 5;
@@ -12,18 +12,18 @@ export class SongNameView extends RenderObject {
     private currentAnimationTime = this.animationTime;
 
     private blurMax = 20;
-    tempCanvas: HTMLCanvasElement;
-    tempCtx: CanvasRenderingContext2D;
+    tempCanvas: HTMLCanvasElement | undefined;
+    tempCtx: CanvasRenderingContext2D | null | undefined;
     animation: any;
     public fontSize: number = 2.5;
 
-    public x: number;
-    public y: number;
+    public x: number = 0;
+    public y: number = 0;
 
     private textBorder = 0.85;
     private textAnimationBorder = 0.75
 
-    constructor(private currentSongName: string) {
+    constructor(private currentSongName: string = "") {
         super();
         this.animation = Dinject.getInstance("animation");
         this.animation.addUpdateFunction(this.update);
@@ -66,8 +66,14 @@ export class SongNameView extends RenderObject {
     private offsetX = 0;
 
     update = (timeDiff: number) => {
+        if (!this.tempCtx) {
+            return
+        }
         if (this.isAnimating) {
             if (this.currentAnimationTime < this.animationSwitch && this.currentAnimationTime + timeDiff > this.animationSwitch) {
+                if (!this.nextSongName) {
+                    return
+                }
                 this.currentSongName = this.nextSongName;
                 this.nextSongName = undefined;
 
@@ -111,6 +117,12 @@ export class SongNameView extends RenderObject {
     private mustRedraw = true;
 
     public render = (ctx: CanvasRenderingContext2D) => {
+        if (!this.tempCtx) {
+            return
+        }
+        if (!this.tempCanvas) {
+            return
+        }
         if (this.isAnimating) {
             this.mustRedraw = true;
             this.tempCtx.clearRect(0, 0, this.tempCanvas.width, this.tempCanvas.height);
@@ -166,6 +178,9 @@ export class SongNameView extends RenderObject {
             } else {
                 if (!this.nextNextSongName) {
                     setTimeout(() => {
+                        if (!this.nextNextSongName) {
+                            return
+                        }
                         this.changeSongName(this.nextNextSongName);
                     }, (this.animationTime - this.currentAnimationTime) * 1000 + 200);
                 }
@@ -176,7 +191,9 @@ export class SongNameView extends RenderObject {
 
     private resetCanvas(width: number, height: number) {
         if (this.tempCanvas) {
-            this.tempCanvas.parentNode.removeChild(this.tempCanvas);
+            if (this.tempCanvas.parentNode) {
+                this.tempCanvas.parentNode.removeChild(this.tempCanvas);
+            }
         }
         this.tempCanvas = document.createElement("canvas");
         this.tempCanvas.style.display = "none";
@@ -184,6 +201,9 @@ export class SongNameView extends RenderObject {
         this.tempCanvas.width = width;
         this.tempCanvas.height = height;
         this.tempCtx = this.tempCanvas.getContext("2d");
+        if (!this.tempCtx) {
+            return
+        }
         if (width < 1000) {
             this.tempCanvas.style.letterSpacing = "5px";
             this.tempCtx.font = "28px dejavu serif italic";
