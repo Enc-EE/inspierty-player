@@ -63,7 +63,9 @@ function main() {
             name: "init",
             func: async () => {
                 ReactDOM.render(<Provider store={Globals.store}> <App /></Provider >, document.getElementById('root'))
-                Globals.store.dispatch(addStarLayer("test", { numberOfStars: 200, speed: 1, starRadiusLowerBorder: 1, starRadiusUpperBorder: 10 }))
+                Globals.store.dispatch(addStarLayer("stars1", { numberOfStars: 300, speed: Math.random() * 1 + 0.1, starRadiusLowerBorder: 0.35, starRadiusUpperBorder: 0.6 }))
+                Globals.store.dispatch(addStarLayer("stars2", { numberOfStars: 300, speed: Math.random() * 1 + 0.1, starRadiusLowerBorder: 0.35, starRadiusUpperBorder: 0.6 }))
+                Globals.store.dispatch(addStarLayer("stars3", { numberOfStars: 300, speed: Math.random() * 1 + 0.1, starRadiusLowerBorder: 0.35, starRadiusUpperBorder: 0.6 }))
             },
         },
     ])

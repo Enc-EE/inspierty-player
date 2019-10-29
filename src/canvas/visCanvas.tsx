@@ -18,16 +18,25 @@ class VisCanvas extends React.Component<Props> {
     private canvasRef: HTMLCanvasElement | null
     private layers: ViewLayer[] = []
     private lastFrameTime: number = Date.now()
+    private updateCanvasSize = false
 
     constructor(props: Props) {
         super(props)
 
         this.canvasRef = null
+
+        Globals.store.subscribe(() => {
+            if (this.canvasRef) {
+                var newState = Globals.store.getState()
+                this.updateCanvasSize = this.canvasRef.height != newState.settings.height
+                    || this.canvasRef.width != newState.settings.width
+            }
+        })
     }
 
     componentDidMount() {
         if (this.canvasRef) {
-            // this.layers.push(new StarLayerManager(Globals.store).initialize())
+            this.layers.push(new StarLayerManager(Globals.store).initialize())
             this.layers.push(new InspiertyLayer(Globals.store).initialize())
             this.draw()
             this.lastFrameTime = Date.now()
@@ -36,8 +45,14 @@ class VisCanvas extends React.Component<Props> {
 
     private draw = () => {
         if (this.canvasRef) {
+            if (this.updateCanvasSize) {
+                this.canvasRef.width = Globals.store.getState().settings.width
+                this.canvasRef.height = Globals.store.getState().settings.height
+                this.updateCanvasSize = false;
+            }
+
             var currentDate = Date.now()
-            var timeDiff = (this.lastFrameTime - currentDate) / 1000
+            var timeDiff = (currentDate - this.lastFrameTime) / 1000
             requestAnimationFrame(this.draw)
             var ctx = this.canvasRef.getContext("2d")
             if (ctx) {

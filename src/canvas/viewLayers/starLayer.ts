@@ -13,12 +13,13 @@ export class StarLayerView implements ViewLayer {
     private starsImage = new Image()
     private x = 0
     private y = 0
-    private starRadiusLowerBorder = 1
-    private starRadiusUpperBorder = 2
+    private borderGap = 40
+    private starRadiusLowerBorder = 0.35
+    private starRadiusUpperBorder = 0.6
     private width = 100
     private height = 100
-    private speed = 0
-    private angle = Math.PI / 4
+    private speed = 1
+    private angle = Math.PI / 4 * 7
 
     public update = (timeDiff: number) => {
         this.x += Math.cos(this.angle) * this.speed * timeDiff
@@ -26,21 +27,40 @@ export class StarLayerView implements ViewLayer {
 
         if (this.x > this.width) {
             this.x -= this.width
-        } else if (this.x < this.width) {
+        } else if (this.x < -this.width) {
             this.x += this.width
         }
         if (this.y > this.height) {
             this.y -= this.height
-        } else if (this.y < this.height) {
+        } else if (this.y < -this.height) {
             this.y += this.height
         }
     }
 
     public draw = (ctx: CanvasRenderingContext2D) => {
+        // texture image strategy
         ctx.drawImage(this.starsImage, this.x, this.y)
-        ctx.drawImage(this.starsImage, this.x - this.width, this.y)
-        ctx.drawImage(this.starsImage, this.x - this.width, this.y - this.height)
-        ctx.drawImage(this.starsImage, this.x, this.y - this.height)
+        var textureWidth = this.width + this.borderGap
+        var textureHeight = this.height + this.borderGap
+        if (this.x < 0) {
+            ctx.drawImage(this.starsImage, this.x + textureWidth, this.y)
+            if (this.y < 0) {
+                ctx.drawImage(this.starsImage, this.x, this.y + textureHeight)
+                ctx.drawImage(this.starsImage, this.x + textureWidth, this.y + textureHeight)
+            } else {
+                ctx.drawImage(this.starsImage, this.x, this.y - textureHeight)
+                ctx.drawImage(this.starsImage, this.x + textureWidth, this.y - textureHeight)
+            }
+        } else {
+            ctx.drawImage(this.starsImage, this.x - textureWidth, this.y)
+            if (this.y < 0) {
+                ctx.drawImage(this.starsImage, this.x, this.y + textureHeight)
+                ctx.drawImage(this.starsImage, this.x - textureWidth, this.y + textureHeight)
+            } else {
+                ctx.drawImage(this.starsImage, this.x, this.y - textureHeight)
+                ctx.drawImage(this.starsImage, this.x - textureWidth, this.y - textureHeight)
+            }
+        }
     }
 
     public updateProperties = (state: Props) => {
@@ -61,7 +81,8 @@ export class StarLayerView implements ViewLayer {
         if (state.starLayer.starRadiusLowerBorder != this.starRadiusLowerBorder
             || state.starLayer.starRadiusUpperBorder != this.starRadiusUpperBorder) {
             recreateImage = true
-            this.resizeStars(state.starLayer.starRadiusLowerBorder, state.starLayer.starRadiusUpperBorder)
+            this.starRadiusLowerBorder = state.starLayer.starRadiusLowerBorder
+            this.starRadiusUpperBorder = state.starLayer.starRadiusUpperBorder
         }
         if (recreateImage) {
             this.createImage()
@@ -70,43 +91,52 @@ export class StarLayerView implements ViewLayer {
 
     private createImage = () => {
         var tempCanvas = document.createElement("canvas")
-        tempCanvas.width = this.width
-        tempCanvas.height = this.height
+        // add border gap to avoid having same star multiple times because of texture image strategy
+        var textureImageWidth = this.width + this.borderGap
+        var textureImageHeight = this.height + this.borderGap
+        tempCanvas.width = textureImageWidth
+        tempCanvas.height = textureImageHeight
         var tempCtx = tempCanvas.getContext("2d")
         if (tempCtx) {
-            var endlessBorderGap = 3
             for (const star of this.stars) {
                 tempCtx.fillStyle = "white"
                 tempCtx.beginPath()
 
-                tempCtx.arc(star.x, star.y, star.r, 0, Math.PI * 2)
-                tempCtx.fill()
+                const starX = star.x * textureImageWidth
+                const starY = star.y * textureImageHeight
+                const starR = this.starRadiusLowerBorder + star.r * (this.starRadiusUpperBorder - this.starRadiusLowerBorder)
 
-                if (star.x >= this.width - endlessBorderGap) {
-                    tempCtx.beginPath()
-                    tempCtx.arc(star.x - this.width, star.y, star.r, 0, Math.PI * 2)
-                    tempCtx.fill()
+                this.drawStarOnCanvas(tempCtx, starX, starY, starR)
 
-                    if (star.y >= this.height - endlessBorderGap) {
-                        tempCtx.beginPath()
-                        tempCtx.arc(star.x - this.width, star.y - this.height, star.r, 0, Math.PI * 2)
-                        tempCtx.fill()
+                // draw stars in range of gap on other side of the texture to make it a texture
+                var xTexture1 = starX <= this.borderGap ? starX + textureImageWidth : null
+                var xTexture2 = starX >= textureImageWidth - this.borderGap ? starX - textureImageWidth : null
+                var yTexture1 = starY <= this.borderGap ? starY + textureImageHeight : null
+                var yTexture2 = starY >= textureImageHeight - this.borderGap ? starY - textureImageHeight : null
+
+                if (xTexture1) {
+                    this.drawStarOnCanvas(tempCtx, xTexture1, starY, starR)
+                    if (yTexture1) {
+                        this.drawStarOnCanvas(tempCtx, starX, yTexture1, starR)
+                        this.drawStarOnCanvas(tempCtx, xTexture1, yTexture1, starR)
+                    } else if (yTexture2) {
+                        this.drawStarOnCanvas(tempCtx, starX, yTexture2, starR)
+                        this.drawStarOnCanvas(tempCtx, xTexture1, yTexture2, starR)
                     }
+                } else if (xTexture2) {
+                    this.drawStarOnCanvas(tempCtx, xTexture2, starY, starR)
+                    if (yTexture1) {
+                        this.drawStarOnCanvas(tempCtx, starX, yTexture1, starR)
+                        this.drawStarOnCanvas(tempCtx, xTexture2, yTexture1, starR)
+                    } else if (yTexture2) {
+                        this.drawStarOnCanvas(tempCtx, starX, yTexture2, starR)
+                        this.drawStarOnCanvas(tempCtx, xTexture2, yTexture2, starR)
+                    }
+                } else if (yTexture1) {
+                    this.drawStarOnCanvas(tempCtx, starX, yTexture1, starR)
+                } else if (yTexture2) {
+                    this.drawStarOnCanvas(tempCtx, starX, yTexture2, starR)
                 }
-
-                if (star.y >= this.height - endlessBorderGap) {
-                    tempCtx.beginPath()
-                    tempCtx.arc(star.x, star.y - this.height, star.r, 0, Math.PI * 2)
-                    tempCtx.fill()
-                }
-
-                var end = star.r * 3
-                var grad = tempCtx.createRadialGradient(star.x, star.y, star.r, star.x, star.y, end)
-                grad.addColorStop(0, 'rgba(255, 255, 255, 0.2)')
-                grad.addColorStop(1, 'rgba(255, 255, 255, 0)')
-                tempCtx.fillStyle = grad
-                tempCtx.arc(star.x, star.y, end, 0, Math.PI * 2)
-                tempCtx.fill()
             }
 
             this.starsImage.src = tempCanvas.toDataURL()
@@ -115,14 +145,28 @@ export class StarLayerView implements ViewLayer {
         }
     }
 
+    private drawStarOnCanvas(ctx: CanvasRenderingContext2D, x: number, y: number, r: number) {
+        var glowSize = 3
+        var end = r * glowSize
+        var grad = ctx.createRadialGradient(x, y, 0, x, y, end)
+        grad.addColorStop(0, 'rgba(255, 255, 255, 1)')
+        grad.addColorStop(1 / glowSize, 'rgba(255, 255, 255, 1)')
+        grad.addColorStop(1 / (glowSize / 2), 'rgba(255, 255, 255, 0.2)')
+        grad.addColorStop(1, 'rgba(255, 255, 255, 0)')
+        ctx.fillStyle = grad
+        ctx.beginPath()
+        ctx.arc(x, y, end, 0, Math.PI * 2)
+        ctx.fill()
+    }
+
     private changeNumberOfStars(newNumberOfStars: number) {
         var difference = newNumberOfStars - this.stars.length
         if (difference > 0) {
             for (let i = 0; i < difference; i++) {
                 this.stars.push({
-                    x: Math.random() * this.width,
-                    y: Math.random() * this.height,
-                    r: Math.random() * (this.starRadiusUpperBorder - this.starRadiusLowerBorder) + this.starRadiusLowerBorder
+                    x: Math.random(),
+                    y: Math.random(),
+                    r: Math.random(),
                 })
             }
         }
