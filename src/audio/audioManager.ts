@@ -42,6 +42,7 @@ export class AudioManager {
     }
 
     public stop = () => {
+        this.pause();
         this.source.stop()
     }
 

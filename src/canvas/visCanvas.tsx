@@ -71,8 +71,6 @@ class VisCanvas extends React.Component<Props> {
     private getBackground(): string {
         var x = Globals.assetManager.getImage("background")
         if (x) {
-            console.log(x.src);
-
             return 'url(' + x.src + ') no-repeat center'
         }
         return ''

@@ -3,63 +3,76 @@ import { AudioState } from "../../audio/types"
 import { Settings } from "../../settings2/types"
 import { AppState, Globals } from "../../globals"
 import { Store, AnyAction } from "redux"
+import { AudioGraphNodeAnalyser } from "../../../enc/src/audio/audioGraphNodeAnalyser"
 
 export class InspiertyLayer extends ViewLayerBase {
     private logo: HTMLImageElement
     private logoNova: HTMLImageElement
-    private x: number = 100
-    private y: number = 100
-    private width: number = 100
-    private height: number = 100
+    private imageX = 0
+    private imageY = 0
+    private viewWidth = 100
+    private viewHeight = 100
+    private imageWidth = 100
+    private imageHeight = 100
     private frequencyIndex = 7
     private lowerBorder = 0.4
     private upperBorder = 0.9
 
+    private analyser: AudioGraphNodeAnalyser
+    private relDataValue = 0
+
     constructor(store: Store<AppState, AnyAction>) {
         super(store)
-        var assetManager = Globals.assetManager;
-
-        // var audioManager = Dinject.getInstance("audio") as AudioManager;
-        // this.analyser = audioManager.getAnalyser();
+        var assetManager = Globals.assetManager
+        this.analyser = Globals.audioManager.getAnalyser()
 
         var logoImage = assetManager.getImage("logo")
-        this.logo = logoImage ? logoImage : new Image();
+        this.logo = logoImage ? logoImage : new Image()
         var logoNovaImage = assetManager.getImage("logo-nova")
-        this.logoNova = logoNovaImage ? logoNovaImage : new Image();
-        // this.songNameView = new SongNameView(audioManager.currentSongName);
-        // audioManager.songChanged.addEventListener(this.songNameView.changeSongName);
-        // this.children.push(this.songNameView);
+        this.logoNova = logoNovaImage ? logoNovaImage : new Image()
+        // this.songNameView = new SongNameView(audioManager.currentSongName)
+        // audioManager.songChanged.addEventListener(this.songNameView.changeSongName)
+        // this.children.push(this.songNameView)
     }
 
     public updateProperties = (state: AppState) => {
-
+        if (state.settings.width != this.viewWidth || state.settings.height != this.viewHeight) {
+            this.resizeImage(state.settings.width, state.settings.height)
+        }
     }
 
     public update = (timeDiff: number) => {
+        var data = this.analyser.getSpectrum()
+        this.relDataValue = this.calculateRelDataValue(data[this.frequencyIndex])
+    }
 
+    private resizeImage(newWidth: number, newHeight: number) {
+        this.viewWidth = newWidth
+        this.viewHeight = newHeight
+        this.imageHeight = this.viewHeight
+        this.imageWidth = this.imageHeight / this.logo.naturalHeight * this.logo.naturalWidth
+        this.imageX = this.viewWidth / 2 - this.imageWidth / 2
     }
 
     public draw = (ctx: CanvasRenderingContext2D) => {
         if (this.logoNova || this.logo) {
-            // var data = this.analyser.getSpectrum();
-            // var relDataValue = this.calculateRelDataValue(data[this.frequencyIndex]);
-            ctx.save();
-            // ctx.globalAlpha = relDataValue;
-            ctx.drawImage(this.logoNova, this.x, this.y, this.width, this.height);
-            ctx.restore();
-            ctx.drawImage(this.logo, this.x, this.y, this.width, this.height);
+            ctx.save()
+            ctx.globalAlpha = this.relDataValue
+            ctx.drawImage(this.logoNova, this.imageX, this.imageY, this.imageWidth, this.imageHeight)
+            ctx.restore()
+            ctx.drawImage(this.logo, this.imageX, this.imageY, this.imageWidth, this.imageHeight)
         }
     }
 
     private calculateRelDataValue(dataValue: number) {
-        var relDataValue = dataValue / 255;
+        var relDataValue = dataValue / 255
         if (relDataValue < this.lowerBorder) {
-            relDataValue = this.lowerBorder;
+            relDataValue = this.lowerBorder
         }
         if (relDataValue > this.upperBorder) {
-            relDataValue = this.upperBorder;
+            relDataValue = this.upperBorder
         }
-        var finalRelDataValue = (relDataValue - this.lowerBorder) / (this.upperBorder - this.lowerBorder);
-        return finalRelDataValue;
+        var finalRelDataValue = (relDataValue - this.lowerBorder) / (this.upperBorder - this.lowerBorder)
+        return finalRelDataValue
     }
 }
