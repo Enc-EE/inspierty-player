@@ -1,6 +1,6 @@
-import { ViewLayer } from "./viewLayerBase"
-import { StarLayer } from "../../settings2/types"
-import { Star } from "../../models/star"
+import { ViewLayer } from "../viewLayerBase"
+import { StarLayer } from "../../../settings/types"
+import { Star } from "./star"
 
 export interface Props {
     width: number

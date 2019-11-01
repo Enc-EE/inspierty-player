@@ -3,7 +3,7 @@ import { AudioGraphNodeElementSource } from "../../enc/src/audio/audioGraphNodeE
 import { AudioGraphNodeAnalyser } from "../../enc/src/audio/audioGraphNodeAnalyser";
 import { Store, AnyAction } from "redux";
 import { AudioState, playPause, changeSong } from "./types";
-import { Settings } from "../settings2/types";
+import { Settings } from "../settings/types";
 import * as AudioConfig from "./audioConfig"
 import { AppState } from "../globals";
 

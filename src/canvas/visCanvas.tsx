@@ -2,8 +2,9 @@ import React = require("react")
 import { AppState, Globals } from "../globals"
 import { connect } from "react-redux"
 import { ViewLayer } from "./viewLayers/viewLayerBase"
-import { StarLayerManager } from "./viewLayers/starLayerManager"
+import { StarLayerManager } from "./viewLayers/starLayers/starLayerManager"
 import { InspiertyLayer } from "./viewLayers/inspiertyLayer"
+import { ShootingStarManager } from "./viewLayers/shootingStars/shootingStarManager"
 
 export interface StateProps {
     width: number
@@ -38,6 +39,7 @@ class VisCanvas extends React.Component<Props> {
         if (this.canvasRef) {
             this.layers.push(new StarLayerManager(Globals.store).initialize())
             this.layers.push(new InspiertyLayer(Globals.store).initialize())
+            this.layers.push(new ShootingStarManager(Globals.store).initialize())
             this.draw()
             this.lastFrameTime = Date.now()
         }

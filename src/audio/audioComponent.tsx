@@ -21,11 +21,14 @@ class AudioComponent extends React.Component<Props>{
     }
 
     render() {
-        return (<div style={{position: "absolute", bottom: 0, left: 0, right: 0, textAlign: "center"}}>
-            <button onClick={e => this.audioManager.playPause()}>{this.props.isPlaying ? "Pause" : "Play"}</button>
-            <button onClick={e => this.audioManager.stop()}>Stop</button>
-            <button onClick={e => this.audioManager.previous()}>Previous</button>
-            <button onClick={e => this.audioManager.next()}>Next</button>
+        return (<div style={{ position: "absolute", bottom: 0, left: 0, right: 0, textAlign: "center" }}>
+            {this.props.isPlaying
+                ? <button onClick={e => this.audioManager.pause()}><i className="fas fa-pause"></i></button>
+                : <button onClick={e => this.audioManager.play()}><i className="fas fa-play"></i></button>
+            }
+            <button onClick={e => this.audioManager.stop()}><i className="fas fa-stop"></i></button>
+            <button onClick={e => this.audioManager.previous()}><i className="fas fa-step-backward"></i></button>
+            <button onClick={e => this.audioManager.next()}><i className="fas fa-step-forward"></i></button>
         </div>)
     }
 }

@@ -1,6 +1,6 @@
-import { ViewLayerBase } from "./viewLayerBase"
-import { AppState } from "../../globals"
-import { StarLayerView } from "./starLayer"
+import { ViewLayerBase } from "../viewLayerBase"
+import { AppState } from "../../../globals"
+import { StarLayerView } from "./starLayerView"
 
 export class StarLayerManager extends ViewLayerBase {
     private starLayers: { [key: string]: StarLayerView } = {}

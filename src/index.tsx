@@ -11,7 +11,7 @@ import { Provider } from "react-redux"
 import React = require("react")
 import { App } from "./app"
 import "../enc/src/extensions"
-import { resize, addStarLayer } from "./settings2/types"
+import { resize, addStarLayer } from "./settings/types"
 
 document.addEventListener('DOMContentLoaded', main, false)
 

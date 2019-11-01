@@ -1,6 +1,6 @@
 import { ViewLayerBase } from "./viewLayerBase"
 import { AudioState } from "../../audio/types"
-import { Settings } from "../../settings2/types"
+import { Settings } from "../../settings/types"
 import { AppState, Globals } from "../../globals"
 import { Store, AnyAction } from "redux"
 import { AudioGraphNodeAnalyser } from "../../../enc/src/audio/audioGraphNodeAnalyser"
