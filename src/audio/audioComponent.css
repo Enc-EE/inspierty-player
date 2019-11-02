@@ -1,0 +1,18 @@
+.audio-control-button {
+    color: rgb(0, 100, 128);
+    font-size: 2em;
+    background: none;
+    border: none;
+    padding: 0.3em;
+    margin: 0.15em;
+}
+
+.audio-control-button:hover {
+    color: rgb(0, 201, 255);
+    cursor: pointer;
+}
+
+.audio-control-button:focus {
+    border: none;
+    outline: none;
+}
