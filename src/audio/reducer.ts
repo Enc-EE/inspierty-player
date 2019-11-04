@@ -1,9 +1,10 @@
 import { AudioState, CHANGE_SONG, PLAY_PAUSE, AudioActionTypes } from "./types"
+import { songs } from "./audioConfig"
 
 var initialState: AudioState = {
     currentSongId: 0,
     isPlaying: false,
-    songs: [],
+    songs: songs,
 }
 
 export function audioReducer(

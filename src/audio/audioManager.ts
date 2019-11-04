@@ -14,7 +14,7 @@ export class AudioManager {
 
     constructor(private store: Store<AppState, AnyAction>) {
         this.audioGraph = new AudioGraph();
-        this.source = this.audioGraph.addMediaElementSource("source", AudioConfig.songs[0][1]);
+        this.source = this.audioGraph.addMediaElementSource("source", AudioConfig.songs[0].assetPath);
         this.source.audioEnded.addEventListener(this.endedNext());
         this.analyser = this.audioGraph.addAnalyzer("analyser");
     }
@@ -53,7 +53,7 @@ export class AudioManager {
             nextSongIndex = 0;
         }
 
-        this.source.setUrl(AudioConfig.songs[nextSongIndex][1]);
+        this.source.setUrl(AudioConfig.songs[nextSongIndex].assetPath);
         this.store.dispatch(changeSong(nextSongIndex));
     }
 
@@ -64,7 +64,7 @@ export class AudioManager {
             previousSongIndex = AudioConfig.songs.length - 1;
         }
 
-        this.source.setUrl(AudioConfig.songs[previousSongIndex][1]);
+        this.source.setUrl(AudioConfig.songs[previousSongIndex].assetPath);
         this.store.dispatch(changeSong(previousSongIndex));
     }
 

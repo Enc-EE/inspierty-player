@@ -13,11 +13,20 @@ import * as DeepAssetMP3 from "../assets/demo/Trailer_DeepField.mp3"
 import * as DriftingAssetMP3 from "../assets/demo/Trailer_DriftingIntoTheAtmosphere.mp3"
 
 export const songs = [
-    ["Faint Color", FaintAssetMP3],
+    {
+        name: "Faint Color",
+        assetPath: FaintAssetMP3,
+    },
     // ["PrismAsset", PrismAssetMP3],
     // ["HopefulAsset", HopefulAssetMP3],
-    ["Deep field", DeepAssetMP3],
+    {
+        name: "Deep field",
+        assetPath: DeepAssetMP3,
+    },
     // ["GravityAsset", GravityAssetMP3],
     // ["JourneyAsset", JourneyAssetMP3],
-    ["Drifting into the Atmosphere", DriftingAssetMP3]
+    {
+        name: "Drifting into the Atmosphere",
+        assetPath: DriftingAssetMP3,
+    },
 ]

@@ -1,10 +1,11 @@
 import React = require("react")
 import { AppState, Globals } from "../globals"
 import { connect } from "react-redux"
-import { ViewLayer } from "./viewLayers/viewLayerBase"
-import { StarLayerManager } from "./viewLayers/starLayers/starLayerManager"
-import { InspiertyLayer } from "./viewLayers/inspiertyLayer"
-import { ShootingStarManager } from "./viewLayers/shootingStars/shootingStarManager"
+import { ViewLayer } from "./visCanvasLayers/viewLayerBase"
+import { StarLayerManager } from "./visCanvasLayers/starLayers/starLayerManager"
+import { InspiertyLayer } from "./visCanvasLayers/inspiertyLayer"
+import { ShootingStarManager } from "./visCanvasLayers/shootingStars/shootingStarManager"
+import { ConnectedSongNameComponent } from "./songName/songNameView"
 
 export interface StateProps {
     width: number
@@ -89,7 +90,10 @@ class VisCanvas extends React.Component<Props> {
 
     render() {
         return (
-            <canvas ref={c => this.canvasRef = c} style={{ height: '100%', width: '100%', background: this.getBackground(), backgroundSize: this.getBackgroundSize() }} />
+            <div>
+                <canvas ref={c => this.canvasRef = c} style={{ height: '100%', width: '100%', background: this.getBackground(), backgroundSize: this.getBackgroundSize() }} />
+                <ConnectedSongNameComponent></ConnectedSongNameComponent>
+            </div>
         )
     }
 }

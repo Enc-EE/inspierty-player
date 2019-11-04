@@ -1,5 +1,10 @@
+export interface SongConfig {
+    name: string
+    assetPath: string
+}
+
 export interface AudioState {
-    songs: string[]
+    songs: SongConfig[]
     currentSongId: number
     isPlaying: boolean
 }
