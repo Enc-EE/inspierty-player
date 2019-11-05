@@ -30,9 +30,6 @@ export class InspiertyLayer extends ViewLayerBase {
         this.logo = logoImage ? logoImage : new Image()
         var logoNovaImage = assetManager.getImage("logo-nova")
         this.logoNova = logoNovaImage ? logoNovaImage : new Image()
-        // this.songNameView = new SongNameView(audioManager.currentSongName)
-        // audioManager.songChanged.addEventListener(this.songNameView.changeSongName)
-        // this.children.push(this.songNameView)
     }
 
     public updateProperties = (state: AppState) => {

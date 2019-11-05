@@ -18,3 +18,9 @@ export abstract class ViewLayerBase implements ViewLayer {
     public abstract update: (timeDiff: number) => void
     public abstract draw: (ctx: CanvasRenderingContext2D) => void
 }
+
+export abstract class AngledViewLayerBase extends ViewLayerBase {
+    constructor(protected store: Store<AppState, AnyAction>, public angle: number) {
+        super(store)
+    }
+}

@@ -19,7 +19,8 @@ export class StarLayerView implements ViewLayer {
     private width = 100
     private height = 100
     private speed = 1
-    private angle = Math.PI / 4 * 7
+
+    constructor(public angle: number) { }
 
     public update = (timeDiff: number) => {
         this.x += Math.cos(this.angle) * this.speed * timeDiff

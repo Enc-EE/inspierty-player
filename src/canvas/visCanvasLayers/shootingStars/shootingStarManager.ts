@@ -1,11 +1,11 @@
-import { ViewLayerBase } from "../viewLayerBase"
+import { AngledViewLayerBase } from "../viewLayerBase"
 import { ShootingStarView } from "./shootingStarView"
 import { AppState, Globals } from "../../../globals"
 import { AnyAction, Store } from "redux";
 import { AudioGraphNodeAnalyser } from "../../../../enc/src/audio/audioGraphNodeAnalyser";
 
 
-export class ShootingStarManager extends ViewLayerBase {
+export class ShootingStarManager extends AngledViewLayerBase {
     private static shootingStarId = 1
     private shootingStars: { [key: string]: ShootingStarView } = {}
 
@@ -18,8 +18,8 @@ export class ShootingStarManager extends ViewLayerBase {
     private viewWidth: number
     private viewHeight: number
 
-    constructor(store: Store<AppState, AnyAction>) {
-        super(store)
+    constructor(store: Store<AppState, AnyAction>, angle: number) {
+        super(store, angle)
         this.viewWidth = store.getState().settings.width
         this.viewHeight = store.getState().settings.height
         this.analyser = Globals.audioManager.getAnalyser()
@@ -39,8 +39,7 @@ export class ShootingStarManager extends ViewLayerBase {
             var data = this.analyser.getSpectrum();
             var relDataValue = this.calculateRelDataValue(data[this.frequencyIndex]);
             if (Math.random() * relDataValue > 0.62) {
-                var angle = Math.PI / 4;
-                angle = angle + Math.PI / 8 * Math.random() - Math.PI / 16;
+                var angle = this.angle + Math.PI / 8 * Math.random() - Math.PI / 16;
 
                 this.shootingStars[ShootingStarManager.shootingStarId] = new ShootingStarView({ height: this.viewHeight, width: this.viewWidth }, Math.random() * 0.05 + 0.5, angle)
                 ShootingStarManager.shootingStarId++

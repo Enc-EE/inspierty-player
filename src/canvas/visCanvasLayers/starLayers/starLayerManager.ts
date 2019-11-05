@@ -1,13 +1,14 @@
-import { ViewLayerBase } from "../viewLayerBase"
+import { AngledViewLayerBase } from "../viewLayerBase"
 import { AppState } from "../../../globals"
 import { StarLayerView } from "./starLayerView"
 
-export class StarLayerManager extends ViewLayerBase {
+export class StarLayerManager extends AngledViewLayerBase {
     private starLayers: { [key: string]: StarLayerView } = {}
 
     public update = (timeDiff: number) => {
         var currentKeys = Object.keys(this.starLayers)
         for (const key of currentKeys) {
+            this.starLayers[key].angle = this.angle
             this.starLayers[key].update(timeDiff)
         }
     }
@@ -33,7 +34,7 @@ export class StarLayerManager extends ViewLayerBase {
                 })
                 currentKeys.splice(currentKeyIndex, 1)
             } else {
-                this.starLayers[newKey] = new StarLayerView()
+                this.starLayers[newKey] = new StarLayerView(this.angle)
                 this.starLayers[newKey].updateProperties({
                     height: state.settings.height,
                     starLayer: state.settings.starLayers[newKey],

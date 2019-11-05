@@ -1,11 +1,12 @@
 import React = require("react")
 import { AppState, Globals } from "../globals"
 import { connect } from "react-redux"
-import { ViewLayer } from "./visCanvasLayers/viewLayerBase"
+import { ViewLayer, AngledViewLayerBase } from "./visCanvasLayers/viewLayerBase"
 import { StarLayerManager } from "./visCanvasLayers/starLayers/starLayerManager"
 import { InspiertyLayer } from "./visCanvasLayers/inspiertyLayer"
 import { ShootingStarManager } from "./visCanvasLayers/shootingStars/shootingStarManager"
 import { ConnectedSongNameComponent } from "./songName/songNameView"
+import { AngleHandler } from "./visCanvasLayers/angleHandler"
 
 export interface StateProps {
     width: number
@@ -19,8 +20,10 @@ type Props = StateProps & DispatchProps
 class VisCanvas extends React.Component<Props> {
     private canvasRef: HTMLCanvasElement | null
     private layers: ViewLayer[] = []
+    private angledLayers: AngledViewLayerBase[] = []
     private lastFrameTime: number = Date.now()
     private updateCanvasSize = false
+    private angleHandler = new AngleHandler()
 
     constructor(props: Props) {
         super(props)
@@ -38,9 +41,18 @@ class VisCanvas extends React.Component<Props> {
 
     componentDidMount() {
         if (this.canvasRef) {
-            this.layers.push(new StarLayerManager(Globals.store).initialize())
+            const starLayerManager = new StarLayerManager(Globals.store, this.angleHandler.angle)
+            starLayerManager.initialize()
+            this.layers.push(starLayerManager)
+            this.angledLayers.push(starLayerManager)
+            
             this.layers.push(new InspiertyLayer(Globals.store).initialize())
-            this.layers.push(new ShootingStarManager(Globals.store).initialize())
+            
+            const shootingStarManager = new ShootingStarManager(Globals.store, this.angleHandler.angle)
+            shootingStarManager.initialize()
+            this.layers.push(shootingStarManager)
+            this.angledLayers.push(shootingStarManager)
+
             this.draw()
             this.lastFrameTime = Date.now()
         }
