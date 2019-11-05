@@ -72,6 +72,10 @@ class VisCanvas extends React.Component<Props> {
             var ctx = this.canvasRef.getContext("2d")
             if (ctx) {
                 ctx.clearRect(0, 0, this.canvasRef.width, this.canvasRef.height)
+                this.angleHandler.update(timeDiff)
+                for (const angleLayer of this.angledLayers) {
+                    angleLayer.angle = this.angleHandler.angle
+                }
                 for (const layer of this.layers) {
                     layer.update(timeDiff)
                 }
