@@ -2,7 +2,7 @@
     position: absolute;
     left: 0;
     width: 100%;
-    transition: all 1s ease-in;
+    transition: all 1.5s ease-in;
     font: 32px dejavu serif italic;
     letter-spacing: 5px;
     opacity: 1;
@@ -13,7 +13,7 @@
     -webkit-text-fill-color: transparent;
 }
 
-.animate {
+.hide {
     opacity: 0;
-    filter: blur(8px);
+    filter: blur(16px);
 }
