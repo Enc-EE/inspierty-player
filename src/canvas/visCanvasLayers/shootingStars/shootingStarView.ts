@@ -8,15 +8,33 @@ export class ShootingStarView {
     private y = 0
     private viewHeight: number
     private viewWidth: number
-    private speed: number
     private image = new Image()
     private xImageOffset = 0
     private yImageOffset = 0
 
+    private angle: number
+    private angleRandomness = Math.PI / 16
+
+    private speed: number
+    private speedMin = 100
+    private speedMax = 800
+
+    private size: number
+    private sizeMin = 0.2
+    private sizeMax = 1
+
+    private distance: number
+    private distanceMin = 1
+    private distanceMax = 3
+
     public isActive = true
 
-    constructor(private state: Props, private size: number, private angle: number) {
-        this.speed = 100 + size * 150 + Math.random() * 400
+    constructor(private state: Props, angle: number) {
+        this.size = this.sizeMin + Math.random() * (this.sizeMax - this.sizeMin)
+        this.distance = this.distanceMin + Math.random() * (this.distanceMax - this.distanceMin)
+        // angle = Math.PI * 5 / 4
+        this.angle = angle - this.angleRandomness / 2 + Math.random() * this.angleRandomness
+        this.speed = this.speedMin + Math.random() * (this.speedMax - this.speedMin)
         this.viewWidth = state.width
         this.viewHeight = state.height
         this.init()
@@ -24,9 +42,9 @@ export class ShootingStarView {
     }
 
     public update = (timeDiff: number) => {
-        this.x += Math.cos(this.angle) * timeDiff * this.speed;
-        this.y += Math.sin(this.angle) * timeDiff * this.speed;
-        
+        this.x += Math.cos(this.angle) * timeDiff * this.speed * (1 / this.distance);
+        this.y += Math.sin(this.angle) * timeDiff * this.speed * (1 / this.distance);
+
         if (this.x > this.viewWidth * 1.5 || this.x < -this.viewWidth / 2 || this.y > this.viewHeight * 1.5 || this.y < -this.viewHeight / 2) {
             this.isActive = false;
         }
@@ -41,6 +59,9 @@ export class ShootingStarView {
         }
         ctx.beginPath();
         ctx.restore();
+        if (this.func) {
+            this.func(ctx)
+        }
     }
 
     public updateProperties = (state: Props) => {
@@ -55,6 +76,8 @@ export class ShootingStarView {
             this.createImage()
         }
     }
+
+    private func: ((ctx: CanvasRenderingContext2D) => void) | undefined
 
     private init() {
         var nonHitBorderRatio = 0.2;
@@ -116,11 +139,13 @@ export class ShootingStarView {
 
     private createImage = () => {
         var border = 2;
-        var length = this.size * 20 + Math.random() * 160;
-        var r = this.size;
-        var thinR = this.size * (Math.random() / 4);
+        var length = this.size * 100 * (1 / this.distance);
+        var r = this.size * (1 / this.distance);
+        var thinR = this.sizeMin / 2 * (1 / this.distance);
         const height = (border + r) * 2;
         this.xImageOffset = border + length;
+        console.log(this.xImageOffset);
+        
         this.xImageOffset = height / 2;
 
         var tempCanvas = document.createElement("canvas");
@@ -135,17 +160,10 @@ export class ShootingStarView {
             tempCtx.bezierCurveTo(border + length + r, height / 2 - r, border + length + r, height / 2 + r, border + length, height / 2 + r);
             tempCtx.lineTo(border, height / 2 + thinR);
             tempCtx.closePath();
-    
-            tempCtx.fillStyle = "rgba(255, 255, 255, " + (Math.random() / 2 + 0.5) + ")"
-            // tempCtx.fillStyle = "rgba(255, 255, 255, 1)"
+
+            tempCtx.fillStyle = "rgba(255, 255, 255, 1)"
             tempCtx.fill();
-    
-            // var imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
-    
-            // var newImageData = Helper.blur(imageData, 1);
-    
-            // tempCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
-            // tempCtx.putImageData(newImageData, 0, 0);
+
             this.image = new Image();
             this.image.src = tempCanvas.toDataURL();
         }

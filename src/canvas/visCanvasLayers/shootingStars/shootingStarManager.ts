@@ -39,11 +39,8 @@ export class ShootingStarManager extends AngledViewLayerBase {
             var data = this.analyser.getSpectrum();
             var relDataValue = this.calculateRelDataValue(data[this.frequencyIndex]);
             if (Math.random() * relDataValue > 0.62) {
-                var angle = this.angle + Math.PI / 8 * Math.random() - Math.PI / 16;
-
-                this.shootingStars[ShootingStarManager.shootingStarId] = new ShootingStarView({ height: this.viewHeight, width: this.viewWidth }, Math.random() * 0.05 + 0.5, angle)
+                this.shootingStars[ShootingStarManager.shootingStarId] = new ShootingStarView({ height: this.viewHeight, width: this.viewWidth }, this.angle)
                 ShootingStarManager.shootingStarId++
-
                 this.waitSecondsForNextSpawn = 0.1;
             }
         } else {

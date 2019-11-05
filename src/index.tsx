@@ -17,7 +17,6 @@ document.addEventListener('DOMContentLoaded', main, false)
 
 function main() {
     // todo
-    // - change direction
     // - sparkle effect
     // - shooting stars -> smaller and stuff
 

@@ -46,12 +46,12 @@ class VisCanvas extends React.Component<Props> {
             this.layers.push(starLayerManager)
             this.angledLayers.push(starLayerManager)
             
-            this.layers.push(new InspiertyLayer(Globals.store).initialize())
-            
             const shootingStarManager = new ShootingStarManager(Globals.store, this.angleHandler.angle)
             shootingStarManager.initialize()
             this.layers.push(shootingStarManager)
             this.angledLayers.push(shootingStarManager)
+
+            this.layers.push(new InspiertyLayer(Globals.store).initialize())
 
             this.draw()
             this.lastFrameTime = Date.now()
