@@ -146,7 +146,7 @@ export class ShootingStarView {
         this.xImageOffset = border + length;
         console.log(this.xImageOffset);
         
-        this.xImageOffset = height / 2;
+        this.yImageOffset = height / 2;
 
         var tempCanvas = document.createElement("canvas");
         tempCanvas.width = border + length + r + border;
