@@ -32,7 +32,6 @@ export class ShootingStarView {
     constructor(private state: Props, angle: number) {
         this.size = this.sizeMin + Math.random() * (this.sizeMax - this.sizeMin)
         this.distance = this.distanceMin + Math.random() * (this.distanceMax - this.distanceMin)
-        // angle = Math.PI * 5 / 4
         this.angle = angle - this.angleRandomness / 2 + Math.random() * this.angleRandomness
         this.speed = this.speedMin + Math.random() * (this.speedMax - this.speedMin)
         this.viewWidth = state.width
@@ -80,7 +79,7 @@ export class ShootingStarView {
     private func: ((ctx: CanvasRenderingContext2D) => void) | undefined
 
     private init() {
-        var nonHitBorderRatio = 0.2;
+        var nonHitBorderRatio = 0.1;
         var spawnOuterBorder = 5;
         var screenWidth = this.viewWidth + spawnOuterBorder * 2;
         var screenHeight = this.viewHeight + spawnOuterBorder * 2;
@@ -144,7 +143,6 @@ export class ShootingStarView {
         var thinR = this.sizeMin / 2 * (1 / this.distance);
         const height = (border + r) * 2;
         this.xImageOffset = border + length;
-        console.log(this.xImageOffset);
         
         this.yImageOffset = height / 2;
 

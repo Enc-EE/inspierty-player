@@ -1,6 +1,8 @@
 import { ViewLayer } from "../viewLayerBase"
 import { StarLayer } from "../../../settings/types"
 import { Star } from "./star"
+import { Sparkling } from "./sparkling"
+import { Globals } from "../../../globals"
 
 export interface Props {
     width: number
@@ -9,6 +11,13 @@ export interface Props {
 }
 
 export class StarLayerView implements ViewLayer {
+    private sparkles: Sparkling[] = []
+    private frequencyIndex = 7
+    private lowerBorder = 0.4
+    private upperBorder = 0.9
+    private limit = 20
+    waitSecondsForNextSpawn: number = 0;
+
     private stars: Star[] = []
     private starsImage = new Image()
     private x = 0
@@ -19,8 +28,11 @@ export class StarLayerView implements ViewLayer {
     private width = 100
     private height = 100
     private speed = 1
+    analyser: any
 
-    constructor(public angle: number) { }
+    constructor(public angle: number) {
+        this.analyser = Globals.audioManager.getAnalyser()
+    }
 
     public update = (timeDiff: number) => {
         this.x += Math.cos(this.angle) * this.speed * timeDiff
@@ -36,6 +48,39 @@ export class StarLayerView implements ViewLayer {
         } else if (this.y < -this.height) {
             this.y += this.height
         }
+
+        for (const sparkle of this.sparkles) {
+            sparkle.update(timeDiff)
+        }
+
+        var removeIndices = this.sparkles.filter(x => !x.isActive).map(x => this.sparkles.indexOf(x))
+        for (const removeIndex of removeIndices.sort((a, b) => b - a)) {
+            this.sparkles.splice(removeIndex, 1)
+        }
+        if (this.sparkles.length < this.limit && this.waitSecondsForNextSpawn <= 0) {
+            var data = this.analyser.getSpectrum();
+            var relDataValue = this.calculateRelDataValue(data[this.frequencyIndex]);
+            if (Math.random() * relDataValue > 0.5) {
+                // if (Math.random() > 0.98) {
+                var sparkle = new Sparkling(this.stars[Math.floor(Math.random() * this.stars.length)], 0.7, this.width + this.borderGap, this.height + this.borderGap, this.x, this.y)
+                this.sparkles.push(sparkle)
+                this.waitSecondsForNextSpawn = 0.3;
+            }
+        } else {
+            this.waitSecondsForNextSpawn -= timeDiff;
+        }
+    }
+
+    private calculateRelDataValue(dataValue: number) {
+        var relDataValue = dataValue / 255;
+        if (relDataValue < this.lowerBorder) {
+            relDataValue = this.lowerBorder;
+        }
+        if (relDataValue > this.upperBorder) {
+            relDataValue = this.upperBorder;
+        }
+        var finalRelDataValue = (relDataValue - this.lowerBorder) / (this.upperBorder - this.lowerBorder);
+        return finalRelDataValue;
     }
 
     public draw = (ctx: CanvasRenderingContext2D) => {
@@ -43,6 +88,9 @@ export class StarLayerView implements ViewLayer {
         ctx.drawImage(this.starsImage, this.x, this.y)
         var textureWidth = this.width + this.borderGap
         var textureHeight = this.height + this.borderGap
+        for (const sparkle of this.sparkles) {
+            sparkle.draw(ctx, this.x, this.y)
+        }
         if (this.x < 0) {
             ctx.drawImage(this.starsImage, this.x + textureWidth, this.y)
             if (this.y < 0) {
