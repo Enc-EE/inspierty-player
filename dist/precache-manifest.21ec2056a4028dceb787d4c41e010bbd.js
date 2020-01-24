@@ -16,31 +16,31 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   },
   {
     "revision": "08f58f7678b545de5960f4ed80d37158",
-    "url": "assets\\static\\DejaVuSerif-Italic.ttf"
+    "url": "assets/static/DejaVuSerif-Italic.ttf"
   },
   {
     "revision": "c903990d451526897103579ae219aeb2",
-    "url": "assets\\static\\icon-128x128.png"
+    "url": "assets/static/icon-128x128.png"
   },
   {
     "revision": "ce17d82b81a7e13d7ef0080c5eb63a1f",
-    "url": "assets\\static\\icon-144x144.png"
+    "url": "assets/static/icon-144x144.png"
   },
   {
     "revision": "cdbeeafa74d7f964ca710067f2142228",
-    "url": "assets\\static\\icon-152x152.png"
+    "url": "assets/static/icon-152x152.png"
   },
   {
     "revision": "5c2bcc045c5b0f07bf0317973e2869bf",
-    "url": "assets\\static\\icon-192x192.png"
+    "url": "assets/static/icon-192x192.png"
   },
   {
     "revision": "7724fe7738355600fe876b2af987697f",
-    "url": "assets\\static\\icon-256x256.png"
+    "url": "assets/static/icon-256x256.png"
   },
   {
     "revision": "c2a89fd27be54f5b34c03de58dcb4282",
-    "url": "assets\\static\\icon-512x512.png"
+    "url": "assets/static/icon-512x512.png"
   },
   {
     "url": "f1ceea5d555947c80281f368bfaf8fa8.mp3"
@@ -50,7 +50,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "index.html"
   },
   {
-    "revision": "6df37edc116543e32cde",
+    "revision": "9d43f669d7b1046be38e",
     "url": "main.js"
   },
   {
