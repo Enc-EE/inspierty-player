@@ -34,9 +34,6 @@ export class ShootingStarView {
         ctx.translate(this.x, this.y);
         ctx.rotate(this.angle);
         if (this.shootingStarImage) {
-            console.log(this.shootingStarImage.image.width);
-            console.log(this.shootingStarImage.sizeFactor);
-            
             ctx.drawImage(
                 this.shootingStarImage.image,
                 -this.shootingStarImage.offsetX * this.shootingStarImage.sizeFactor,

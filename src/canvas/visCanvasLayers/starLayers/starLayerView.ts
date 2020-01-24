@@ -3,6 +3,7 @@ import { Star } from "./star"
 import { Sparkling } from "./sparkling"
 import { Globals, AppState } from "../../../globals"
 import { StarLayerSettings } from "./state/types"
+import { SparkleImageProvider } from "./sparkleImageProvider"
 
 export class StarLayerView implements ViewLayer {
     private sparkles: Sparkling[] = []
@@ -20,9 +21,11 @@ export class StarLayerView implements ViewLayer {
     private width = 100
     private height = 100
     analyser: any
+    sparkleImageProvider: SparkleImageProvider
 
     constructor(public angle: number, private settings: StarLayerSettings) {
         this.analyser = Globals.audioManager.getAnalyser()
+        this.sparkleImageProvider = new SparkleImageProvider()
     }
 
     public update = (timeDiff: number) => {
@@ -51,9 +54,15 @@ export class StarLayerView implements ViewLayer {
         if (this.sparkles.length < this.limit && this.waitSecondsForNextSpawn <= 0) {
             var data = this.analyser.getSpectrum();
             var relDataValue = this.calculateRelDataValue(data[this.frequencyIndex]);
-            if (Math.random() * relDataValue > 0.5) {
-                // if (Math.random() > 0.98) {
-                var sparkle = new Sparkling(this.stars[Math.floor(Math.random() * this.stars.length)], 0.7, this.width + this.borderGap, this.height + this.borderGap, this.x, this.y)
+            if (Math.random() * relDataValue > 0.7) {
+                var sparkle = new Sparkling(
+                    this.stars[Math.floor(Math.random() * this.stars.length)],
+                    this.sparkleImageProvider.getSparkleImage(30),
+                    0.7,
+                    this.width + this.borderGap,
+                    this.height + this.borderGap,
+                    this.x,
+                    this.y)
                 this.sparkles.push(sparkle)
                 this.waitSecondsForNextSpawn = 0.3;
             }

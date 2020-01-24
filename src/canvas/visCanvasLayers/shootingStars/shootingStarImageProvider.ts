@@ -50,14 +50,14 @@ export class ShootingStarImageProvider {
         }
     }
 
-    public GetImage100 = () => {
+    public getImage100 = () => {
         return this.image
     }
 
-    public GetImage = (size: number, flattenPercent: number): ShootingStarImage => {
+    public getImage = (sizePointRadius: number, flattenPercent: number): ShootingStarImage => {
         return {
             ...this.image,
-            sizeFactor: size / 10,
+            sizeFactor: sizePointRadius / 10,
             heightFactor: 1 - (flattenPercent / 100),
         }
     }

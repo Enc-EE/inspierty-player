@@ -48,7 +48,7 @@ export class ShootingStarManager extends AngledViewLayerBase {
                 var shootingStarAngle = this.angle - this.settings.spawnSettings.angleRandomnes / 2 + Math.random() * this.settings.spawnSettings.angleRandomnes
                 var speed = this.settings.spawnSettings.speedMin + Math.random() * (this.settings.spawnSettings.speedMax - this.settings.spawnSettings.speedMin)
 
-                this.shootingStars[ShootingStarManager.shootingStarId] = new ShootingStarView(this.store.getState(), this.shootingStarImageProvider.GetImage(size, flatten), shootingStarAngle, speed)
+                this.shootingStars[ShootingStarManager.shootingStarId] = new ShootingStarView(this.store.getState(), this.shootingStarImageProvider.getImage(size, flatten), shootingStarAngle, speed)
 
                 ShootingStarManager.shootingStarId++
                 this.settings.audioInteractionSettings.waitSecondsForNextSpawn = 0.1;
