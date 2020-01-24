@@ -11,6 +11,7 @@ export abstract class ViewLayerBase implements ViewLayer {
 
     public initialize = (): ViewLayer => {
         this.store.subscribe(() => this.updateProperties(this.store.getState()))
+        this.updateProperties(this.store.getState())
         return this
     }
 

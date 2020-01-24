@@ -3,7 +3,7 @@ import { AppState, Globals } from "../globals"
 import { connect } from "react-redux"
 import { ViewLayer, AngledViewLayerBase } from "./visCanvasLayers/viewLayerBase"
 import { StarLayerManager } from "./visCanvasLayers/starLayers/starLayerManager"
-import { InspiertyLayer } from "./visCanvasLayers/inspiertyLayer"
+import { InspiertyLayer } from "./visCanvasLayers/logoLayer/inspiertyLayer"
 import { ShootingStarManager } from "./visCanvasLayers/shootingStars/shootingStarManager"
 import { ConnectedSongNameComponent } from "./songName/songNameView"
 import { AngleHandler } from "./visCanvasLayers/angleHandler"
@@ -22,7 +22,7 @@ class VisCanvas extends React.Component<Props> {
     private layers: ViewLayer[] = []
     private angledLayers: AngledViewLayerBase[] = []
     private lastFrameTime: number = Date.now()
-    private updateCanvasSize = false
+    private updateCanvasSize = true
     private angleHandler = new AngleHandler()
 
     constructor(props: Props) {

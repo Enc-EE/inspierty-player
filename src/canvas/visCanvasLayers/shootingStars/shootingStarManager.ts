@@ -3,27 +3,25 @@ import { ShootingStarView } from "./shootingStarView"
 import { AppState, Globals } from "../../../globals"
 import { AnyAction, Store } from "redux";
 import { AudioGraphNodeAnalyser } from "../../../../enc/src/audio/audioGraphNodeAnalyser";
+import { ShootingStarSettings } from "./state/types";
 
 
 export class ShootingStarManager extends AngledViewLayerBase {
     private static shootingStarId = 1
     private shootingStars: { [key: string]: ShootingStarView } = {}
 
-    private frequencyIndex = 7;
-    private lowerBorder = 0.4;
-    private upperBorder = 0.9;
     analyser: AudioGraphNodeAnalyser;
-    waitSecondsForNextSpawn: number = 0;
-
-    private viewWidth: number
-    private viewHeight: number
 
     constructor(store: Store<AppState, AnyAction>, angle: number) {
         super(store, angle)
-        this.viewWidth = store.getState().settings.width
-        this.viewHeight = store.getState().settings.height
         this.analyser = Globals.audioManager.getAnalyser()
     }
+
+
+    public get settings(): ShootingStarSettings {
+        return this.store.getState().settings.shootingStarSettings
+    }
+
 
     public update = (timeDiff: number) => {
         var currentKeys = Object.keys(this.shootingStars)
@@ -35,17 +33,17 @@ export class ShootingStarManager extends AngledViewLayerBase {
         }
 
         var limit = 50;
-        if (Object.keys(this.shootingStars).length <= limit && this.waitSecondsForNextSpawn <= 0) {
+        if (Object.keys(this.shootingStars).length <= limit && this.settings.audioInteractionSettings.waitSecondsForNextSpawn <= 0) {
             var data = this.analyser.getSpectrum();
-            var relDataValue = this.calculateRelDataValue(data[this.frequencyIndex]);
+            var relDataValue = this.calculateRelDataValue(data[this.settings.audioInteractionSettings.frequencyIndex]);
             if (Math.random() * relDataValue > 0.62) {
-            // if (Math.random() > 0.98) {
-                this.shootingStars[ShootingStarManager.shootingStarId] = new ShootingStarView({ height: this.viewHeight, width: this.viewWidth }, this.angle)
+                // if (Math.random() > 0.98) {
+                this.shootingStars[ShootingStarManager.shootingStarId] = new ShootingStarView(this.store.getState(), this.angle)
                 ShootingStarManager.shootingStarId++
-                this.waitSecondsForNextSpawn = 0.1;
+                this.settings.audioInteractionSettings.waitSecondsForNextSpawn = 0.1;
             }
         } else {
-            this.waitSecondsForNextSpawn -= timeDiff;
+            this.settings.audioInteractionSettings.waitSecondsForNextSpawn -= timeDiff;
         }
     }
 
@@ -57,8 +55,6 @@ export class ShootingStarManager extends AngledViewLayerBase {
     }
 
     public updateProperties = (state: AppState) => {
-        this.viewWidth = state.settings.width
-        this.viewHeight = state.settings.height
         var currentKeys = Object.keys(this.shootingStars)
         for (const key of currentKeys) {
             this.shootingStars[key].updateProperties({
@@ -70,13 +66,13 @@ export class ShootingStarManager extends AngledViewLayerBase {
 
     private calculateRelDataValue(dataValue: number) {
         var relDataValue = dataValue / 255;
-        if (relDataValue < this.lowerBorder) {
-            relDataValue = this.lowerBorder;
+        if (relDataValue < this.settings.audioInteractionSettings.lowerBorder) {
+            relDataValue = this.settings.audioInteractionSettings.lowerBorder;
         }
-        if (relDataValue > this.upperBorder) {
-            relDataValue = this.upperBorder;
+        if (relDataValue > this.settings.audioInteractionSettings.upperBorder) {
+            relDataValue = this.settings.audioInteractionSettings.upperBorder;
         }
-        var finalRelDataValue = (relDataValue - this.lowerBorder) / (this.upperBorder - this.lowerBorder);
+        var finalRelDataValue = (relDataValue - this.settings.audioInteractionSettings.lowerBorder) / (this.settings.audioInteractionSettings.upperBorder - this.settings.audioInteractionSettings.lowerBorder);
         return finalRelDataValue;
     }
 }

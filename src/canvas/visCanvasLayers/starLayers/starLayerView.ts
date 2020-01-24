@@ -1,14 +1,8 @@
 import { ViewLayer } from "../viewLayerBase"
-import { StarLayer } from "../../../settings/types"
 import { Star } from "./star"
 import { Sparkling } from "./sparkling"
-import { Globals } from "../../../globals"
-
-export interface Props {
-    width: number
-    height: number
-    starLayer: StarLayer
-}
+import { Globals, AppState } from "../../../globals"
+import { StarLayerSettings } from "./state/types"
 
 export class StarLayerView implements ViewLayer {
     private sparkles: Sparkling[] = []
@@ -23,20 +17,17 @@ export class StarLayerView implements ViewLayer {
     private x = 0
     private y = 0
     private borderGap = 40
-    private starRadiusLowerBorder = 0.35
-    private starRadiusUpperBorder = 0.6
     private width = 100
     private height = 100
-    private speed = 1
     analyser: any
 
-    constructor(public angle: number) {
+    constructor(public angle: number, private settings: StarLayerSettings) {
         this.analyser = Globals.audioManager.getAnalyser()
     }
 
     public update = (timeDiff: number) => {
-        this.x += Math.cos(this.angle) * this.speed * timeDiff
-        this.y += Math.sin(this.angle) * this.speed * timeDiff
+        this.x += Math.cos(this.angle) * this.settings.speed * timeDiff
+        this.y += Math.sin(this.angle) * this.settings.speed * timeDiff
 
         if (this.x > this.width) {
             this.x -= this.width
@@ -112,26 +103,26 @@ export class StarLayerView implements ViewLayer {
         }
     }
 
-    public updateProperties = (state: Props) => {
+    public updateProperties = (state: AppState, starLayer: StarLayerSettings) => {
         var recreateImage = false
-        if (state.starLayer.speed != this.speed) {
-            this.speed = state.starLayer.speed
+        if (starLayer.speed != this.settings.speed) {
+            this.settings.speed = starLayer.speed
         }
-        if (state.height != this.height
-            || state.width != this.width) {
-            this.width = state.width
-            this.height = state.height
+        if (state.settings.height != this.height
+            || state.settings.width != this.width) {
+            this.width = state.settings.width
+            this.height = state.settings.height
             recreateImage = true
         }
-        if (state.starLayer.numberOfStars != this.stars.length) {
+        if (starLayer.numberOfStars != this.stars.length) {
             recreateImage = true
-            this.changeNumberOfStars(state.starLayer.numberOfStars)
+            this.changeNumberOfStars(starLayer.numberOfStars)
         }
-        if (state.starLayer.starRadiusLowerBorder != this.starRadiusLowerBorder
-            || state.starLayer.starRadiusUpperBorder != this.starRadiusUpperBorder) {
+        if (starLayer.starRadiusLowerBorder != this.settings.starRadiusLowerBorder
+            || starLayer.starRadiusUpperBorder != this.settings.starRadiusUpperBorder) {
             recreateImage = true
-            this.starRadiusLowerBorder = state.starLayer.starRadiusLowerBorder
-            this.starRadiusUpperBorder = state.starLayer.starRadiusUpperBorder
+            this.settings.starRadiusLowerBorder = starLayer.starRadiusLowerBorder
+            this.settings.starRadiusUpperBorder = starLayer.starRadiusUpperBorder
         }
         if (recreateImage) {
             this.createImage()
@@ -153,7 +144,7 @@ export class StarLayerView implements ViewLayer {
 
                 const starX = star.x * textureImageWidth
                 const starY = star.y * textureImageHeight
-                const starR = this.starRadiusLowerBorder + star.r * (this.starRadiusUpperBorder - this.starRadiusLowerBorder)
+                const starR = this.settings.starRadiusLowerBorder + star.r * (this.settings.starRadiusUpperBorder - this.settings.starRadiusLowerBorder)
 
                 this.drawStarOnCanvas(tempCtx, starX, starY, starR)
 
@@ -226,13 +217,13 @@ export class StarLayerView implements ViewLayer {
         }
     }
 
-    private resizeStars(newLowerBorder: number, newUpperBorder: number) {
-        var currentRange = this.starRadiusUpperBorder - this.starRadiusLowerBorder
-        var newRange = newUpperBorder - newLowerBorder
-        for (const star of this.stars) {
-            star.r = (star.r - this.starRadiusLowerBorder) / currentRange * newRange + newUpperBorder
-        }
-        this.starRadiusLowerBorder = newLowerBorder
-        this.starRadiusUpperBorder = newUpperBorder
-    }
+    // private resizeStars(newLowerBorder: number, newUpperBorder: number) {
+    //     var currentRange = this.starRadiusUpperBorder - this.starRadiusLowerBorder
+    //     var newRange = newUpperBorder - newLowerBorder
+    //     for (const star of this.stars) {
+    //         star.r = (star.r - this.starRadiusLowerBorder) / currentRange * newRange + newUpperBorder
+    //     }
+    //     this.starRadiusLowerBorder = newLowerBorder
+    //     this.starRadiusUpperBorder = newUpperBorder
+    // }
 }

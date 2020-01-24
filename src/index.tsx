@@ -11,15 +11,11 @@ import { Provider } from "react-redux"
 import React = require("react")
 import { App } from "./app"
 import "../enc/src/extensions"
-import { resize, addStarLayer } from "./settings/types"
+import { resize } from "./state/actions"
 
 document.addEventListener('DOMContentLoaded', main, false)
 
 function main() {
-    // todo
-    // - sparkle effect
-    // - shooting stars -> smaller and stuff
-
     console.log("loading app")
     experienceLoad([
         {
@@ -62,9 +58,6 @@ function main() {
             name: "init",
             func: async () => {
                 ReactDOM.render(<Provider store={Globals.store}> <App /></Provider >, document.getElementById('root'))
-                Globals.store.dispatch(addStarLayer("stars1", { numberOfStars: 300, speed: Math.random() * 1 + 0.1, starRadiusLowerBorder: 0.35, starRadiusUpperBorder: 0.6 }))
-                Globals.store.dispatch(addStarLayer("stars2", { numberOfStars: 300, speed: Math.random() * 1 + 0.1, starRadiusLowerBorder: 0.35, starRadiusUpperBorder: 0.6 }))
-                Globals.store.dispatch(addStarLayer("stars3", { numberOfStars: 300, speed: Math.random() * 1 + 0.1, starRadiusLowerBorder: 0.35, starRadiusUpperBorder: 0.6 }))
             },
         },
     ])

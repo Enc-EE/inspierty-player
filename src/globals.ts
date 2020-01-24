@@ -1,7 +1,7 @@
 import { AudioManager } from "./audio/audioManager"
 import { combineReducers, AnyAction, Store } from "redux"
-import { audioReducer } from "./audio/reducer"
-import { settingsReducer } from "./settings/reducer"
+import { audioReducer } from "./audio/state/reducer"
+import { settingsReducer } from "./state/reducer"
 import { AssetManager } from "../enc/src/assetManager"
 
 export const rootReducer = combineReducers({

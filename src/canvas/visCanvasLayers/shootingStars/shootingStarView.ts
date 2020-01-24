@@ -1,3 +1,5 @@
+import { AppState } from "../../../globals"
+
 export interface Props {
     width: number
     height: number
@@ -13,29 +15,18 @@ export class ShootingStarView {
     private yImageOffset = 0
 
     private angle: number
-    private angleRandomness = Math.PI / 16
-
     private speed: number
-    private speedMin = 100
-    private speedMax = 800
-
     private size: number
-    private sizeMin = 0.2
-    private sizeMax = 1
-
     private distance: number
-    private distanceMin = 1
-    private distanceMax = 3
-
     public isActive = true
 
-    constructor(private state: Props, angle: number) {
-        this.size = this.sizeMin + Math.random() * (this.sizeMax - this.sizeMin)
-        this.distance = this.distanceMin + Math.random() * (this.distanceMax - this.distanceMin)
-        this.angle = angle - this.angleRandomness / 2 + Math.random() * this.angleRandomness
-        this.speed = this.speedMin + Math.random() * (this.speedMax - this.speedMin)
-        this.viewWidth = state.width
-        this.viewHeight = state.height
+    constructor(private state: AppState, angle: number) {
+        this.size = this.state.settings.shootingStarSettings.spawnSettings.sizeMin + Math.random() * (this.state.settings.shootingStarSettings.spawnSettings.sizeMax - this.state.settings.shootingStarSettings.spawnSettings.sizeMin)
+        this.distance = this.state.settings.shootingStarSettings.spawnSettings.distanceMin + Math.random() * (this.state.settings.shootingStarSettings.spawnSettings.distanceMax - this.state.settings.shootingStarSettings.spawnSettings.distanceMin)
+        this.angle = angle - this.state.settings.shootingStarSettings.spawnSettings.angleRandomnes / 2 + Math.random() * this.state.settings.shootingStarSettings.spawnSettings.angleRandomnes
+        this.speed = this.state.settings.shootingStarSettings.spawnSettings.speedMin + Math.random() * (this.state.settings.shootingStarSettings.spawnSettings.speedMax - this.state.settings.shootingStarSettings.spawnSettings.speedMin)
+        this.viewWidth = state.settings.width
+        this.viewHeight = state.settings.height
         this.init()
         this.createImage()
     }
@@ -140,7 +131,7 @@ export class ShootingStarView {
         var border = 2;
         var length = this.size * 100 * (1 / this.distance);
         var r = this.size * (1 / this.distance);
-        var thinR = this.sizeMin / 2 * (1 / this.distance);
+        var thinR = this.state.settings.shootingStarSettings.spawnSettings.sizeMin / 2 * (1 / this.distance);
         const height = (border + r) * 2;
         this.xImageOffset = border + length;
         

@@ -1,5 +1,5 @@
 import { AudioState, CHANGE_SONG, PLAY_PAUSE, AudioActionTypes } from "./types"
-import { songs } from "./audioConfig"
+import { songs } from "../audioConfig"
 
 var initialState: AudioState = {
     currentSongId: 0,

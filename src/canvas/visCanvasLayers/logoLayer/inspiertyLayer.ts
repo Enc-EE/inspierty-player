@@ -1,9 +1,9 @@
-import { ViewLayerBase } from "./viewLayerBase"
-import { AudioState } from "../../audio/types"
-import { Settings } from "../../settings/types"
-import { AppState, Globals } from "../../globals"
+import { ViewLayerBase } from "../viewLayerBase"
+import { AudioState } from "../../../audio/state/types"
+import { Settings } from "../../../state/types"
+import { AppState, Globals } from "../../../globals"
 import { Store, AnyAction } from "redux"
-import { AudioGraphNodeAnalyser } from "../../../enc/src/audio/audioGraphNodeAnalyser"
+import { AudioGraphNodeAnalyser } from "../../../../enc/src/audio/audioGraphNodeAnalyser"
 
 export class InspiertyLayer extends ViewLayerBase {
     private logo: HTMLImageElement
@@ -14,6 +14,7 @@ export class InspiertyLayer extends ViewLayerBase {
     private viewHeight = 100
     private imageWidth = 100
     private imageHeight = 100
+    
     private frequencyIndex = 7
     private lowerBorder = 0.4
     private upperBorder = 0.9
@@ -30,6 +31,8 @@ export class InspiertyLayer extends ViewLayerBase {
         this.logo = logoImage ? logoImage : new Image()
         var logoNovaImage = assetManager.getImage("logo-nova")
         this.logoNova = logoNovaImage ? logoNovaImage : new Image()
+        var initialState = store.getState();
+        this.updateProperties(initialState);
     }
 
     public updateProperties = (state: AppState) => {

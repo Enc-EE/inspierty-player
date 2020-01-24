@@ -27,19 +27,11 @@ export class StarLayerManager extends AngledViewLayerBase {
         for (const newKey of newKeys) {
             var currentKeyIndex = currentKeys.indexOf(newKey)
             if (currentKeyIndex >= 0) {
-                this.starLayers[newKey].updateProperties({
-                    height: state.settings.height,
-                    starLayer: state.settings.starLayers[newKey],
-                    width: state.settings.width
-                })
+                this.starLayers[newKey].updateProperties(state, state.settings.starLayers[newKey])
                 currentKeys.splice(currentKeyIndex, 1)
             } else {
-                this.starLayers[newKey] = new StarLayerView(this.angle)
-                this.starLayers[newKey].updateProperties({
-                    height: state.settings.height,
-                    starLayer: state.settings.starLayers[newKey],
-                    width: state.settings.width
-                })
+                this.starLayers[newKey] = new StarLayerView(this.angle, state.settings.starLayers[newKey])
+                this.starLayers[newKey].updateProperties(state, state.settings.starLayers[newKey])
             }
         }
         for (const oldKey of currentKeys) {

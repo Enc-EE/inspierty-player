@@ -2,8 +2,8 @@ import { AudioGraph } from "../../enc/src/audio/audioGraph";
 import { AudioGraphNodeElementSource } from "../../enc/src/audio/audioGraphNodeElementSource";
 import { AudioGraphNodeAnalyser } from "../../enc/src/audio/audioGraphNodeAnalyser";
 import { Store, AnyAction } from "redux";
-import { AudioState, playPause, changeSong } from "./types";
-import { Settings } from "../settings/types";
+import { AudioState, playPause, changeSong } from "./state/types";
+import { Settings } from "../state/types";
 import * as AudioConfig from "./audioConfig"
 import { AppState } from "../globals";
 
