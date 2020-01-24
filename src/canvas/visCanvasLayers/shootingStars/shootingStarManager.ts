@@ -4,6 +4,7 @@ import { AppState, Globals } from "../../../globals"
 import { AnyAction, Store } from "redux";
 import { AudioGraphNodeAnalyser } from "../../../../enc/src/audio/audioGraphNodeAnalyser";
 import { ShootingStarSettings } from "./state/types";
+import { ShootingStarImageProvider } from "./shootingStarImageProvider";
 
 
 export class ShootingStarManager extends AngledViewLayerBase {
@@ -11,10 +12,12 @@ export class ShootingStarManager extends AngledViewLayerBase {
     private shootingStars: { [key: string]: ShootingStarView } = {}
 
     analyser: AudioGraphNodeAnalyser;
+    shootingStarImageProvider: ShootingStarImageProvider;
 
     constructor(store: Store<AppState, AnyAction>, angle: number) {
         super(store, angle)
         this.analyser = Globals.audioManager.getAnalyser()
+        this.shootingStarImageProvider = new ShootingStarImageProvider()
     }
 
 
@@ -38,7 +41,15 @@ export class ShootingStarManager extends AngledViewLayerBase {
             var relDataValue = this.calculateRelDataValue(data[this.settings.audioInteractionSettings.frequencyIndex]);
             if (Math.random() * relDataValue > 0.62) {
                 // if (Math.random() > 0.98) {
-                this.shootingStars[ShootingStarManager.shootingStarId] = new ShootingStarView(this.store.getState(), this.angle)
+
+                var size = this.settings.spawnSettings.sizeMin + Math.random() * (this.settings.spawnSettings.sizeMax - this.settings.spawnSettings.sizeMin)
+                var flatten = this.settings.spawnSettings.flattenMinPercent + Math.random() * (this.settings.spawnSettings.flattenMaxPercent - this.settings.spawnSettings.flattenMinPercent)
+                // var distance = this.settings.spawnSettings.distanceMin + Math.random() * (this.settings.spawnSettings.distanceMax - this.settings.spawnSettings.distanceMin)
+                var shootingStarAngle = this.angle - this.settings.spawnSettings.angleRandomnes / 2 + Math.random() * this.settings.spawnSettings.angleRandomnes
+                var speed = this.settings.spawnSettings.speedMin + Math.random() * (this.settings.spawnSettings.speedMax - this.settings.spawnSettings.speedMin)
+
+                this.shootingStars[ShootingStarManager.shootingStarId] = new ShootingStarView(this.store.getState(), this.shootingStarImageProvider.GetImage(size, flatten), shootingStarAngle, speed)
+
                 ShootingStarManager.shootingStarId++
                 this.settings.audioInteractionSettings.waitSecondsForNextSpawn = 0.1;
             }

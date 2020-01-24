@@ -10,6 +10,8 @@ export interface ShootingStarSpawnSettings {
     speedMax: number
     sizeMin: number
     sizeMax: number
+    flattenMinPercent: number
+    flattenMaxPercent: number
     distanceMin: number
     distanceMax: number
     angleRandomnes: number

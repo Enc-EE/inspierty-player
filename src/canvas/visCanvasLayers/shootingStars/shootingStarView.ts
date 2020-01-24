@@ -1,4 +1,5 @@
 import { AppState } from "../../../globals"
+import { ShootingStarImage } from "./shootingStarImageProvider"
 
 export interface Props {
     width: number
@@ -10,30 +11,18 @@ export class ShootingStarView {
     private y = 0
     private viewHeight: number
     private viewWidth: number
-    private image = new Image()
-    private xImageOffset = 0
-    private yImageOffset = 0
 
-    private angle: number
-    private speed: number
-    private size: number
-    private distance: number
     public isActive = true
 
-    constructor(private state: AppState, angle: number) {
-        this.size = this.state.settings.shootingStarSettings.spawnSettings.sizeMin + Math.random() * (this.state.settings.shootingStarSettings.spawnSettings.sizeMax - this.state.settings.shootingStarSettings.spawnSettings.sizeMin)
-        this.distance = this.state.settings.shootingStarSettings.spawnSettings.distanceMin + Math.random() * (this.state.settings.shootingStarSettings.spawnSettings.distanceMax - this.state.settings.shootingStarSettings.spawnSettings.distanceMin)
-        this.angle = angle - this.state.settings.shootingStarSettings.spawnSettings.angleRandomnes / 2 + Math.random() * this.state.settings.shootingStarSettings.spawnSettings.angleRandomnes
-        this.speed = this.state.settings.shootingStarSettings.spawnSettings.speedMin + Math.random() * (this.state.settings.shootingStarSettings.spawnSettings.speedMax - this.state.settings.shootingStarSettings.spawnSettings.speedMin)
+    constructor(private state: AppState, private shootingStarImage: ShootingStarImage, private angle: number, private speed: number) {
         this.viewWidth = state.settings.width
         this.viewHeight = state.settings.height
         this.init()
-        this.createImage()
     }
 
     public update = (timeDiff: number) => {
-        this.x += Math.cos(this.angle) * timeDiff * this.speed * (1 / this.distance);
-        this.y += Math.sin(this.angle) * timeDiff * this.speed * (1 / this.distance);
+        this.x += Math.cos(this.angle) * timeDiff * this.speed;
+        this.y += Math.sin(this.angle) * timeDiff * this.speed;
 
         if (this.x > this.viewWidth * 1.5 || this.x < -this.viewWidth / 2 || this.y > this.viewHeight * 1.5 || this.y < -this.viewHeight / 2) {
             this.isActive = false;
@@ -41,11 +30,19 @@ export class ShootingStarView {
     }
 
     public draw = (ctx: CanvasRenderingContext2D): void => {
-        ctx.save();
+        ctx.save()
         ctx.translate(this.x, this.y);
         ctx.rotate(this.angle);
-        if (this.image) {
-            ctx.drawImage(this.image, -this.xImageOffset, -this.yImageOffset);
+        if (this.shootingStarImage) {
+            console.log(this.shootingStarImage.image.width);
+            console.log(this.shootingStarImage.sizeFactor);
+            
+            ctx.drawImage(
+                this.shootingStarImage.image,
+                -this.shootingStarImage.offsetX * this.shootingStarImage.sizeFactor,
+                -this.shootingStarImage.offsetY * this.shootingStarImage.sizeFactor * this.shootingStarImage.heightFactor,
+                this.shootingStarImage.image.width * this.shootingStarImage.sizeFactor,
+                this.shootingStarImage.image.height * this.shootingStarImage.sizeFactor * this.shootingStarImage.heightFactor);
         }
         ctx.beginPath();
         ctx.restore();
@@ -55,16 +52,7 @@ export class ShootingStarView {
     }
 
     public updateProperties = (state: Props) => {
-        var recreateImage = false
-        if (state.height != this.viewHeight
-            || state.width != this.viewWidth) {
-            this.viewWidth = state.width
-            this.viewHeight = state.height
-            recreateImage = true
-        }
-        if (recreateImage) {
-            this.createImage()
-        }
+        console.error("Not supported! x202001241920")
     }
 
     private func: ((ctx: CanvasRenderingContext2D) => void) | undefined
@@ -125,36 +113,5 @@ export class ShootingStarView {
 
         this.x = spawnX - spawnOuterBorder;
         this.y = spawnY - spawnOuterBorder;
-    }
-
-    private createImage = () => {
-        var border = 2;
-        var length = this.size * 100 * (1 / this.distance);
-        var r = this.size * (1 / this.distance);
-        var thinR = this.state.settings.shootingStarSettings.spawnSettings.sizeMin / 2 * (1 / this.distance);
-        const height = (border + r) * 2;
-        this.xImageOffset = border + length;
-        
-        this.yImageOffset = height / 2;
-
-        var tempCanvas = document.createElement("canvas");
-        tempCanvas.width = border + length + r + border;
-        tempCanvas.height = height;
-
-        var tempCtx = tempCanvas.getContext("2d");
-        if (tempCtx) {
-            tempCtx.beginPath();
-            tempCtx.moveTo(border, height / 2 - thinR);
-            tempCtx.lineTo(border + length, border);
-            tempCtx.bezierCurveTo(border + length + r, height / 2 - r, border + length + r, height / 2 + r, border + length, height / 2 + r);
-            tempCtx.lineTo(border, height / 2 + thinR);
-            tempCtx.closePath();
-
-            tempCtx.fillStyle = "rgba(255, 255, 255, 1)"
-            tempCtx.fill();
-
-            this.image = new Image();
-            this.image.src = tempCanvas.toDataURL();
-        }
     }
 }
