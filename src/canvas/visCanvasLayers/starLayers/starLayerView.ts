@@ -54,17 +54,17 @@ export class StarLayerView implements ViewLayer {
         if (this.sparkles.length < this.limit && this.waitSecondsForNextSpawn <= 0) {
             var data = this.analyser.getSpectrum();
             var relDataValue = this.calculateRelDataValue(data[this.frequencyIndex]);
-            if (Math.random() * relDataValue > 0.7) {
+            if (Math.random() * relDataValue > 0.75) {
                 var sparkle = new Sparkling(
                     this.stars[Math.floor(Math.random() * this.stars.length)],
-                    this.sparkleImageProvider.getSparkleImage(30),
+                    this.sparkleImageProvider.getSparkleImage(15),
                     0.7,
                     this.width + this.borderGap,
                     this.height + this.borderGap,
                     this.x,
                     this.y)
                 this.sparkles.push(sparkle)
-                this.waitSecondsForNextSpawn = 0.3;
+                this.waitSecondsForNextSpawn = 0.5;
             }
         } else {
             this.waitSecondsForNextSpawn -= timeDiff;
