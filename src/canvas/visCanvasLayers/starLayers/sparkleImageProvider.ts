@@ -14,7 +14,7 @@ export class SparkleImageProvider {
     private sparkleImages: SparkleImage[] = []
 
     constructor() {
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < 200; i++) {
             this.sparkleImages.push(this.createSparkleImage())
         }
     }
@@ -88,7 +88,18 @@ export class SparkleImageProvider {
             ctx.lineTo(x, y)
         }
         ctx.closePath()
-        ctx.fillStyle = "white"
+
+        //0-50 170-240 350-10
+        // 50 120 130
+        var h = Math.round(Math.random() * 130);
+        if (h > 120) {
+            h += 130
+        } else if (h > 50) {
+            h += 120
+        }
+        const l = Math.round(Math.random() * 40) + 60
+
+        ctx.fillStyle = "hsl(" + h + ", 100%, " + l + "%)";
         ctx.fill()
     }
 }

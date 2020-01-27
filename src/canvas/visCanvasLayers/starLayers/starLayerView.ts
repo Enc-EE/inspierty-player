@@ -10,7 +10,7 @@ export class StarLayerView implements ViewLayer {
     private frequencyIndex = 7
     private lowerBorder = 0.4
     private upperBorder = 0.9
-    private limit = 20
+    private limit = 30
     waitSecondsForNextSpawn: number = 0;
 
     private stars: Star[] = []
@@ -54,10 +54,10 @@ export class StarLayerView implements ViewLayer {
         if (this.sparkles.length < this.limit && this.waitSecondsForNextSpawn <= 0) {
             var data = this.analyser.getSpectrum();
             var relDataValue = this.calculateRelDataValue(data[this.frequencyIndex]);
-            if (Math.random() * relDataValue > 0.75) {
+            if (Math.random() * relDataValue > 0.65) {
                 var sparkle = new Sparkling(
                     this.stars[Math.floor(Math.random() * this.stars.length)],
-                    this.sparkleImageProvider.getSparkleImage(15),
+                    this.sparkleImageProvider.getSparkleImage(17),
                     0.7,
                     this.width + this.borderGap,
                     this.height + this.borderGap,

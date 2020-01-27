@@ -16,7 +16,7 @@ export class InspiertyLayer extends ViewLayerBase {
     private imageHeight = 100
     
     private frequencyIndex = 7
-    private lowerBorder = 0.4
+    private lowerBorder = 0.45
     private upperBorder = 0.9
 
     private analyser: AudioGraphNodeAnalyser
@@ -57,7 +57,7 @@ export class InspiertyLayer extends ViewLayerBase {
     public draw = (ctx: CanvasRenderingContext2D) => {
         if (this.logoNova || this.logo) {
             ctx.save()
-            ctx.globalAlpha = this.relDataValue
+            ctx.globalAlpha = 0.25 + this.relDataValue * 0.75 / 1
             ctx.drawImage(this.logoNova, this.imageX, this.imageY, this.imageWidth, this.imageHeight)
             ctx.restore()
             ctx.drawImage(this.logo, this.imageX, this.imageY, this.imageWidth, this.imageHeight)

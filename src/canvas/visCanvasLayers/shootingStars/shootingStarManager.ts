@@ -35,7 +35,7 @@ export class ShootingStarManager extends AngledViewLayerBase {
             }
         }
 
-        var limit = 50;
+        var limit = 70;
         if (Object.keys(this.shootingStars).length <= limit && this.settings.audioInteractionSettings.waitSecondsForNextSpawn <= 0) {
             var data = this.analyser.getSpectrum();
             var relDataValue = this.calculateRelDataValue(data[this.settings.audioInteractionSettings.frequencyIndex]);
@@ -51,7 +51,7 @@ export class ShootingStarManager extends AngledViewLayerBase {
                 this.shootingStars[ShootingStarManager.shootingStarId] = new ShootingStarView(this.store.getState(), this.shootingStarImageProvider.getImage(size, flatten), shootingStarAngle, speed)
 
                 ShootingStarManager.shootingStarId++
-                this.settings.audioInteractionSettings.waitSecondsForNextSpawn = 0.2;
+                this.settings.audioInteractionSettings.waitSecondsForNextSpawn = 0.3;
             }
         } else {
             this.settings.audioInteractionSettings.waitSecondsForNextSpawn -= timeDiff;
