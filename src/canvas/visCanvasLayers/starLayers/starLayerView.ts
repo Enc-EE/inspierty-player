@@ -7,9 +7,9 @@ import { SparkleImageProvider } from "./sparkleImageProvider"
 
 export class StarLayerView implements ViewLayer {
     private sparkles: Sparkling[] = []
-    private frequencyIndex = 7
+    private frequencyIndex = 28
     private lowerBorder = 0.4
-    private upperBorder = 0.9
+    private upperBorder = 0.8
     private limit = 30
     waitSecondsForNextSpawn: number = 0;
 
@@ -54,7 +54,7 @@ export class StarLayerView implements ViewLayer {
         if (this.sparkles.length < this.limit && this.waitSecondsForNextSpawn <= 0) {
             var data = this.analyser.getSpectrum();
             var relDataValue = this.calculateRelDataValue(data[this.frequencyIndex]);
-            if (Math.random() * relDataValue > 0.65) {
+            if (Math.random() * relDataValue > 0.5) {
                 var sparkle = new Sparkling(
                     this.stars[Math.floor(Math.random() * this.stars.length)],
                     this.sparkleImageProvider.getSparkleImage(17),

@@ -97,7 +97,7 @@ export class SparkleImageProvider {
         } else if (h > 50) {
             h += 120
         }
-        const l = Math.round(Math.random() * 40) + 60
+        const l = Math.round(Math.random() * 40) + 50
 
         ctx.fillStyle = "hsl(" + h + ", 100%, " + l + "%)";
         ctx.fill()

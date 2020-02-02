@@ -5,7 +5,7 @@ import { ConnectedAudioComponent } from "./audio/audioComponent"
 interface Props { }
 
 export class App extends React.Component<Props> {
-    private appVersion = "2020-01-27 23:17"
+    private appVersion = "2020-02-02 16:12"
     render() {
         return (
             <div>

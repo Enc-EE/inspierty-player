@@ -11,13 +11,13 @@ var initialState: Settings = {
     },
     shootingStarSettings: {
         audioInteractionSettings: {
-            frequencyIndex: 7,
-            lowerBorder: 0.4,
-            upperBorder: 0.9,
+            frequencyIndex: 28,
+            lowerBorder: 0.6,
+            upperBorder: 0.75,
             waitSecondsForNextSpawn: 0,
         },
         spawnSettings: {
-            angleRandomnes: Math.PI / 16,
+            angleRandomnes: Math.PI / 2,
             distanceMin: 1,
             distanceMax: 3,
             sizeMin: 3.5,
